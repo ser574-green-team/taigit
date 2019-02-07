@@ -1,0 +1,103 @@
+$font-stack: Helvetica, sans-serif;
+$grape: #6C4F70;
+$dark-grape: #39324B;
+$cerulean: #56B1BF;
+$teal: #08708A;
+$white-wash: #EBECED;
+
+$app-background: $white-wash;
+$nav-background: $cerulean; 
+$nav-hover: $teal;
+
+.App {
+  text-align: center;
+  font: 100% $font-stack;
+}
+
+.body {
+  background-color: $app-background;
+}
+
+.app-page {
+  margin-left: 5em;
+  padding-left: 1em;
+}
+
+.navbar {
+  height: 100vh;
+  width: 5em;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: $nav-background;
+  margin-right: 1em;
+  padding-top: 1.25em;
+}
+
+.navFont {
+  color: white;
+  margin: 0 auto;
+  width: 2em;
+}
+
+.navButton {
+  background-color: $nav-background;
+  text-align: center;
+  min-height: 3.5em;
+  padding: 0.5em;
+
+  svg {
+    // SOS Please someone save me
+  }
+}
+
+.navButton:hover {
+  background-color: $nav-hover;
+}
+
+.chart {
+  float: left;
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+
+.chart-horizontal-primary {
+  height: 15em;
+  width: 35em;
+  background-color: rgb(236, 238, 228);
+}
+
+.chart-square-primary {
+  height: 15em;
+  width: 15em;
+  background-color: rgb(236, 238, 228);
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
