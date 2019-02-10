@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
-import './App.scss';
+import './styles/App.scss';
 // import 'icons';
 
 import User from './components/User';
