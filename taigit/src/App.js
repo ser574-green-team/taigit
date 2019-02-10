@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
-import logo from './logo.svg';
 import './App.scss';
 // import 'icons';
 
@@ -8,7 +7,7 @@ import User from './components/User';
 import GitHub from './components/GitHub';
 import Taiga from './components/Taiga';
 import Overview from './components/Overview';
-import NavBar from './SideNavBar';
+import NavBar from './components/SideNavBar';
 
 class App extends Component {
   render() {

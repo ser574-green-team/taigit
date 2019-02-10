@@ -1,3 +1,4 @@
+// Sass variables (Colors and Font)
 $font-stack: Helvetica, sans-serif;
 $grape: #6C4F70;
 $dark-grape: #39324B;
@@ -5,14 +6,10 @@ $cerulean: #56B1BF;
 $teal: #08708A;
 $white-wash: #EBECED;
 
+// Setting app and navbar colors
 $app-background: $white-wash;
 $nav-background: $cerulean; 
 $nav-hover: $teal;
-
-.App {
-  text-align: center;
-  font: 100% $font-stack;
-}
 
 .body {
   background-color: $app-background;
@@ -71,33 +68,4 @@ $nav-hover: $teal;
   height: 15em;
   width: 15em;
   background-color: rgb(236, 238, 228);
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
