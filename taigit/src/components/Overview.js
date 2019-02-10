@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import LineChart from './charts/LineChart';
 
 export default class Overview extends Component {
   render() {
@@ -10,6 +11,9 @@ export default class Overview extends Component {
           asdlfja;sdlfkja;ldsfkjal;djfl;adjfklasdf
           asdlfkjasd;lfjadsflkj
         </p>
+        <div className="chart chart-horizontal-primary">
+          <LineChart/>
+        </div>
       </div>
     );
   }
