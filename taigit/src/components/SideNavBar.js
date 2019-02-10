@@ -30,7 +30,7 @@ export default class Taiga extends Component {
             <FontAwesomeIcon className="navFont" icon={faCertificate} size="2x"/>
           </div>
         </Link>
-        <Link to="/user">
+        <Link to="/team">
           <div className='navButton'>
             <FontAwesomeIcon className="navFont" icon={faUsers} size="2x"/>
           </div>

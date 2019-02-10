@@ -1,0 +1,34 @@
+@import 'Variables';
+
+.team-members {
+  display: flex;
+  justify-content: space-between;
+}
+
+.team-member-card {
+  width: 15em;
+  height: 20em;
+  background-color: $white-wash;
+  text-align: center;
+  padding: 1em;
+  float: left;
+  margin-right: 1em;
+}
+
+.team-member-picture {
+  display: inline-block;
+  width: 12em;
+  height: 12em;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.team-member-info {
+  h3 {
+    color: $teal;
+  }
+}
+
