@@ -1,15 +1,4 @@
-// Sass variables (Colors and Font)
-$font-stack: Helvetica, sans-serif;
-$grape: #6C4F70;
-$dark-grape: #39324B;
-$cerulean: #56B1BF;
-$teal: #08708A;
-$white-wash: #EBECED;
-
-// Setting app and navbar colors
-$app-background: $white-wash;
-$nav-background: $cerulean; 
-$nav-hover: $teal;
+@import 'Variables';
 
 .body {
   background-color: $app-background;
