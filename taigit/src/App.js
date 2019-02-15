@@ -8,6 +8,7 @@ import GitHub from './components/GitHub';
 import Taiga from './components/Taiga';
 import Overview from './components/Overview';
 import NavBar from './components/SideNavBar';
+import MemberProfile from './components/MemberProfile';
 
 class App extends Component {
   render() {
@@ -19,7 +20,8 @@ class App extends Component {
             <Route path="/" component={Overview} exact/>
             <Route path="/github" component={GitHub}/>
             <Route path="/taiga" component={Taiga}/>
-            <Route path="/team" component={Team}/>
+            <Route path="/team" component={Team} exact/>
+            <Route path="/team/members/:memberId" component={MemberProfile} exact/>
           </Switch>
         </div>
       </Router>

@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default class Taiga extends Component {
+export default class SideNavBar extends Component {
   render() {
     return(
       <div className="navbar">
