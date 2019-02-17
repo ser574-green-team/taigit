@@ -7,10 +7,10 @@ export default class RadialChart extends Component {
       <div>
       <Radar
         data = {{
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+          labels: ["Commits", "Tasks Completed", "PRs Reviewed", "Taiga Edits", "Issues Documented"],
           datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 15, 15, 14, 10],
+            label: 'Work Distribution',
+            data: [12, 19, 15, 10, 2],
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255,99,132,1)',
             borderWidth: 1,
