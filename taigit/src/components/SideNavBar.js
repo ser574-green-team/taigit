@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default class Taiga extends Component {
+export default class SideNavBar extends Component {
   render() {
     return(
       <div className="navbar">
@@ -30,7 +30,7 @@ export default class Taiga extends Component {
             <FontAwesomeIcon className="navFont" icon={faCertificate} size="2x"/>
           </div>
         </Link>
-        <Link to="/user">
+        <Link to="/team">
           <div className='navButton'>
             <FontAwesomeIcon className="navFont" icon={faUsers} size="2x"/>
           </div>
