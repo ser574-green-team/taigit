@@ -7,16 +7,19 @@ export class GetMileStoneIds {
         sprintDetailsArray = respForFutureExtraction.milestones;
         let sprintDetail:any;
         let sprintId:any;
+        
         for (sprintDetail of sprintDetailsArray) {
-            sprintId = sprintDetail.id;
-            //console.log(sprintId);
+            //sprintId = sprintDetail.id;
+            console.log( "Sprint Name :: " + sprintDetail.name + " sprint Id: " + sprintId);
             // sprintId will be used to get all the sprint details
 
-            this.printSprintIds(tokenId, sprintId, (projectId: any) => {
+            this.printSprintIds(tokenId, sprintDetail, (projectId: any, sprintId: any) => {
                 // we need to call task details here.
-                //console.log(sprintId + " projectId :: " + projectId);
+                console.log(sprintId + " projectId :: " + projectId);
+                
                 this.printTaskCount(tokenId, sprintId, projectId, (taskCount:any) => {
                     //console.log("taskCount:any :: " + taskCount);
+                    console.log("Length of dict :: " + Object.keys(taskCount).length);
                     for(let key in taskCount) {
                         let value = taskCount[key];
                         console.log( "For " + value + ", " + key);
@@ -57,8 +60,9 @@ export class GetMileStoneIds {
             
         });
     }
-    printSprintIds(tokenId: number, sprintId: string, callB:(projectId:any) => any) {
+    printSprintIds(tokenId: number, sprintDetail: any, callB:(projectId:any, sprintId: any) => any) {
         let tok = 'Bearer ' + tokenId;
+        let sprintId:any, projectId: any;
         let options: any = {
             headers: { 
                 'Content-Type': 'application/json',
@@ -66,9 +70,10 @@ export class GetMileStoneIds {
             },
             json: true
         }
-
+        sprintId = sprintDetail.id; 
         request.get('https://api.taiga.io/api/v1/milestones/' + sprintId, options, (error:any, response: any, body:any) => {
-            callB(body.project_extra_info.id);
+            projectId = body.project_extra_info.id;
+            callB(projectId, sprintId);
             
         });
     } 
