@@ -4,10 +4,10 @@ import {Bar, Line, Pie} from 'react-chartjs-2';
 export default class LineChart extends Component {
 
 chartData = {
-  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+  labels: ["1/31", "2/3", "2/7", "2/10", "2/14", "2/17"],
   datasets: [{
-    label: '# of Votes',
-    data: [12, 19, 3, 5, 2, 3],
+    label: 'Commits by #1',
+    data: [1, 2, 1, 2, 1, 2],
     backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -43,10 +43,10 @@ chartOptions = {
       <div>
       <Line
         data = {{
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+          labels: ["1/31", "2/3", "2/7", "2/10", "2/14", "2/17"],
           datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Commits by #1',
+            data: [1, 2, 1, 2, 1, 2],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -65,8 +65,8 @@ chartOptions = {
             ],
             borderWidth: 1
           }, {
-            label: '#2 of Votes',
-            data: [2, 50, 13, 25, 12, 3],
+            label: 'Commits  by #2',
+            data: [1, 0, 1, 2, 0, 1],
             backgroundColor: 'rgba(100,100,100,0.1)',
             borderColor: 'rgba(0,100,0,1)',
             borderWidth: 1,
