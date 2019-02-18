@@ -27,7 +27,7 @@ export default class Taiga extends Component {
         </div>
         <div className="chart chart-stacked-bar">
           <span className="chart-title">Taiga Tasks</span>
-          <StackedBarChart chartData={stackBarChartData}/>       
+          <StackedBarChart chartData={stackBarChartData}/>
         </div>
       </div>
     );
