@@ -14,10 +14,8 @@ export default class GitHub extends Component {
               <BarChart chartData={barChartData}/>
           </div>
 
-          <div className="pull-req-stats">
-              <NumberDisplay number="13" statistic="Pull Requests Created"/>
-              <NumberDisplay number="6" statistic="Pull Requests Reviewed"/>
-          </div>
+          <NumberDisplay number="13" statistic="Pull Requests Created"/>
+          <NumberDisplay number="6" statistic="Pull Requests Reviewed"/>
 
       </div>
     );
