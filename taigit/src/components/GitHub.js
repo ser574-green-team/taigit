@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BarChart from './charts/BarChart';
-import {getNumCommitsFromUser} from '../libraries/numCommitsFromUser';
+import * as GH from '../libraries/GitHub/GitHub';
 
 export default class GitHub extends Component {
   render() {
@@ -8,7 +8,7 @@ export default class GitHub extends Component {
       <div className="app-page">
         <h2>GitHub</h2>
         <div className="chart chart-horizontal-primary">
-        <BarChart/>       
+        <BarChart/>
         </div>
         <div className="chart chart-square-primary"></div>
         <div className="chart chart-horizontal-primary"></div>
