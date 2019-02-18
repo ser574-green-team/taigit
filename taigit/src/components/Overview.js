@@ -6,7 +6,6 @@ export default class Overview extends Component {
     return(
       <div className="app-page">
         <h2>Overview</h2>
-        <p>GitHub Contributions</p>
         <div className="chart chart-horizontal-primary">
           <LineChart/>
         </div>

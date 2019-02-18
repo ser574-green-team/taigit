@@ -41,6 +41,7 @@ chartOptions = {
   render() {
     return (
       <div>
+      <span className="chart-title">GitHub Contributions</span>
       <Line
         data = {{
           labels: ["1/31", "2/3", "2/7", "2/10", "2/14", "2/17"],
