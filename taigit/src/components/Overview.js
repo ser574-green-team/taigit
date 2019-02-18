@@ -5,12 +5,13 @@ import DoughnutChart from './charts/DoughnutChart';
 
 export default class Overview extends Component {
   render() {
-    return(
+    return (
       <div className="app-page">
         <h2>Overview</h2>
         <NumberDisplay number="43" statistic="Total Commits"/>
         <div className="chart chart-vertical-primary">
           <DoughnutChart title="Technologies Used" chartData={technologiesUsed} options={{}}/>
+        </div>
         <div className="chart chart-horizontal-primary">
           <LineChart/>
         </div>
