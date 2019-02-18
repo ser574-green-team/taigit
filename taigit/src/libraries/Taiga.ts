@@ -19,3 +19,11 @@ project_info(slug : string) : Promise<Object> {
         {id: data.data.id, name: data.data.name, slug: data.data.slug, created_date: data.data.created_date};
     return (info);
 }
+
+// This call returns project stats based on project id
+export async function
+project_stats(projId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/projects/" + projId.toString() + '/stats');
+    
+    return (data.data);
+}
