@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
 import './styles/App.scss';
-// import 'icons';
 
 import User from './components/User';
 import GitHub from './components/GitHub';
@@ -16,7 +15,7 @@ class App extends Component {
         <div>
           <NavBar/>
           <Switch>
-            <Route path="/" component={Overview} exact/>
+            <Route path="/" component={Overview} />
             <Route path="/github" component={GitHub}/>
             <Route path="/taiga" component={Taiga}/>
             <Route path="/user" component={User}/>

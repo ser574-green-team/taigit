@@ -6,7 +6,7 @@ import {
 import {
   faUser,
   faUsers,
-  faChartPie,
+  faChartLine,
   faCertificate
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,7 @@ export default class Taiga extends Component {
       <div className="navbar">
         <Link to="/">
           <div className='navButton'>
-            <FontAwesomeIcon className="navFont" icon={faChartPie} size="2x"/>
+            <FontAwesomeIcon className="navFont" icon={faChartLine} size="2x"/>
           </div>
         </Link>
         <Link to="/gitHub">
