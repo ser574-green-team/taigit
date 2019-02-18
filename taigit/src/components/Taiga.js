@@ -28,7 +28,9 @@ export default class Taiga extends Component {
     });
     event.preventDefault();
   }
+
     /*
+    //testing taiga_sprint function
     on_us(event) {
         taiga_sprint(this.state.username).then((ret)=>{
             if(ret) alert("taiga us: successful");
