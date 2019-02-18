@@ -27,4 +27,16 @@ taiga_userstory(sprintid: string) :  Promise<Object>{
     return (sprintRequest);
 }
 
+//after auth, given id of a sprint and project, will return task information.
+export async function
+taiga_userstory(sprintid: string,projectid: string) :  Promise<Object>{
+    let url3="https://api.taiga.io/api/v1/milestones?project="
+    let sprintRequest = await axios.get(url3+sprintid)
+    let url4="https://api.taiga.io/api/v1/tasks?"
+    let taskRequest = await axios.get(url4+"milestone="+(sprintRequest.json()[sprintid][projectid]))
+    return (taskRequest);
+}
+
+
+
 
