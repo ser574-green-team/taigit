@@ -1,21 +1,23 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import RadialChart from './charts/RadialChart'
 import TeamMemberCard from './TeamMemberCard'
 import NumberDisplay from './NumberDisplay'
 
-export default class MemberProfile extends Component {
+class MemberProfile extends Component {
   render() {
+    let member = this.props.teamMembers.filter(member => member.githubId == this.props.match.params.memberId)[0];
     return(
       <div className="app-page">
         <h2>TeamMemberId: {this.props.match.params.memberId}</h2>
         <div>
-          <TeamMemberCard taigaId='broutzong' githubId='broutzong' name='Bailey Routzong' pictureUrl='https://baileyroutzong.com/wp-content/uploads/2015/03/circle-man.png'/>
+          <TeamMemberCard taigaId={member.taigaId} githubId={member.githubId} name={member.name} pictureUrl={member.pictureUrl}/>
         </div>
         <div className="team-member-stats">
           <div className="team-member-radar-chart">
             <RadialChart/>
           </div>
-          <NumberDisplay number="45" statistic="Total Commits"/>
+          <NumberDisplay number={member.totalCommits} statistic="Total Commits"/>
           <NumberDisplay number="52" statistic="PRs Reviewed"/>
           <NumberDisplay number="23" statistic="Tasks Completed"/>
         </div>
@@ -23,3 +25,11 @@ export default class MemberProfile extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    teamMembers: state.teamMembers
+  }
+}
+
+export default connect(mapStateToProps)(MemberProfile)
