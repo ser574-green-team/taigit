@@ -27,3 +27,10 @@ project_stats(projId : number) : Promise<Object> {
     
     return (data.data);
 }
+
+//This call returns sprint stats based on sprintId
+export async function
+sprint_info(sprintId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats');
+     return (data.data);
+}
