@@ -3,8 +3,6 @@ import StackedBarChart from './charts/StackedBarChart';
 import stackBarChartData from './charts/stackedBarChartData';
 import DoughnutChart from './charts/DoughnutChart';
 
-
-
 let taigaUsProgress = {
   labels: ["Completed", "In Progress", "Not Done"],
   datasets: [{
@@ -29,9 +27,7 @@ export default class Taiga extends Component {
         <div className="chart chart-stacked-bar">
           <span className="chart-title">Taiga Tasks</span>
           <StackedBarChart chartData={stackBarChartData}/>
-
         </div>
-
       </div>
     );
   }
