@@ -53,3 +53,4 @@ task_stats(taskId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/task-statuses/" + taskId.toString());
     //test link:  https://api.taiga.io/api/v1/task-statuses/1550500
     return (data.data)
+}
