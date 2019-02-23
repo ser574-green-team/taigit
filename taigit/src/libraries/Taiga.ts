@@ -34,3 +34,13 @@ sprint_stats(sprintId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats');
      return (data.data);
 }
+
+
+
+//This call returns user story  stats based on userstory Id
+export async function
+userstory_stats(userstoryId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/userstory-statuses/"+userstoryId.toString());
+    //test link:  https://api.taiga.io/api/v1/userstory-statuses/1124228
+    return (data.data)
+}
