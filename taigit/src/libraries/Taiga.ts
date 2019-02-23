@@ -39,7 +39,7 @@ sprint_stats(sprintId : number) : Promise<Object> {
 
 //This call returns user story  stats based on userstory Id
 export async function
-userstory_stats(userstoryId : number) : Promise<Object> {
+userstory_statuses(userstoryId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/userstory-statuses/"+userstoryId.toString());
     //test link:  https://api.taiga.io/api/v1/userstory-statuses/1124228
     return (data.data)
@@ -49,7 +49,7 @@ userstory_stats(userstoryId : number) : Promise<Object> {
 
 //This call returns task stats based on task Id
 export async function
-task_stats(taskId : number) : Promise<Object> {
+task_statuses(taskId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/task-statuses/" + taskId.toString());
     //test link:  https://api.taiga.io/api/v1/task-statuses/1550500
     return (data.data)
