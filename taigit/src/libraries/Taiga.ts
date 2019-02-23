@@ -44,3 +44,12 @@ userstory_stats(userstoryId : number) : Promise<Object> {
     //test link:  https://api.taiga.io/api/v1/userstory-statuses/1124228
     return (data.data)
 }
+
+
+
+//This call returns task stats based on task Id
+export async function
+task_stats(taskId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/task-statuses/" + taskId.toString());
+    //test link:  https://api.taiga.io/api/v1/task-statuses/1550500
+    return (data.data)
