@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {taiga_login, project_info, project_stats, sprint_stats}  from './libraries/Taiga'
+import {taiga_login, project_info, project_stats, sprint_stats, userstory_statuses, task_statuses}  from './libraries/Taiga'
 
 export default class TaigaTest extends Component {
     constructor(props) {
@@ -9,7 +9,10 @@ export default class TaigaTest extends Component {
             username: '',
             password: '',
             projectData: {'projectId':'', 'projectName': '', 'projectCreated': ''},
-            projStatuses: {}
+            projStats: {'sprints': [{'name': ''}], 'assignedpts': '', 'closedpts': ''},
+            sprintStats: {},
+            usStatuses: {},
+            taskStatuses: {}
         };
 
         this.on_change = this.on_change.bind(this);
@@ -31,10 +34,37 @@ export default class TaigaTest extends Component {
     }
 
     componentDidMount() {
-        project_info('halcyonaura-quiz-creator').then(val => {
-            console.log(val)
-            let data = {'projectId': val.id, 'projectName': val.name, 'projectCreated': val.created_date}
+        project_info('sanaydevi-ser-574').then(val => {
+            let data = {'projectId': val.id, 'projectName': val.name, 'projectCreated': val.created_date};
             this.setState({projectData: data});
+        });
+
+        project_stats(306316).then(val => {
+            let data = {'sprints': val.milestones, 'assignedpts': val.assigned_points, 
+                'closedpts': val.closed_points};
+                console.log('st', val)
+            this.setState({projStats: data});
+        });
+
+        sprint_stats(220781).then(val => {
+            let data = {};
+            console.log('spr', val)
+            this.setState({sprintStats: data});
+        });
+
+        // A discussion that needs to be had...
+        userstory_statuses(1124228).then(val => {
+            let data = {};
+            console.log('us', val)
+
+            this.setState({usStatuses: data});
+        });
+
+        task_statuses(1550500).then(val => {
+            let data = {};
+            console.log('task', val)
+
+            this.setState({taskStatuses: data});
         });
     }
 
@@ -67,20 +97,32 @@ export default class TaigaTest extends Component {
 
             <div>
                 <p>These are the results from the project_info call.</p>
-                {console.log(this.state.projectData)}
                 <p>Project ID: {this.state.projectData.projectId}</p>
                 <p>Project Name: {this.state.projectData.projectName}</p>
                 <p>Project Created: {this.state.projectData.projectCreated}</p>
             </div>
                 
-            {/*<div>
-                <p>These are the results from the project_info call.</p>
-                <p>{project_stats()}</p>
+            <div>
+                <p>These are the results from the project_stats call.</p>
+                <p>Sprint Names</p>
+                {this.state.projStats.sprints.map(s => {
+                return <p>{s.name}</p>})}
+                <p>Assigned Points {this.state.projStats.assignedpts}</p>
+                <p>Closed Points {this.state.projStats.closedpts}</p>
             </div>
             <div>
-                <p>These are the results from the project_info call.</p>
-            <p>{sprint_stats()}</p>
-            </div>*/}
+                <p>These are the results from the sprint_stats call.</p>
+            <p>{}</p>
+            </div>
+
+            <div>
+                <p>These are the results from the userstory_statuses call.</p>
+                <p>{}</p>
+            </div>
+            <div>
+                <p>These are the results from the task_statuses call.</p>
+            <p>{}</p>
+            </div>
         </div>
         );
     }
