@@ -10,7 +10,8 @@ export default class TaigaTest extends Component {
             password: '',
             projectData: {'projectId':'', 'projectName': '', 'projectCreated': ''},
             projStats: {'sprints': [{'name': ''}], 'assignedpts': '', 'closedpts': ''},
-            sprintStats: {},
+            sprintStats: {'name': '', 'start': '', 'end': '', 
+            'tasks': '', 'userstories': '', 'days': []},
             usStatuses: {},
             taskStatuses: {}
         };
@@ -39,15 +40,17 @@ export default class TaigaTest extends Component {
             this.setState({projectData: data});
         });
 
+        //Project ID from above
         project_stats(306316).then(val => {
             let data = {'sprints': val.milestones, 'assignedpts': val.assigned_points, 
                 'closedpts': val.closed_points};
-                console.log('st', val)
             this.setState({projStats: data});
         });
 
+        // A SprintID from above
         sprint_stats(220781).then(val => {
-            let data = {};
+            let data = {'name': val.name, 'start': val.estimated_start, 'end': val.estimated_finish, 
+                'tasks': val.total_tasks, 'userstories': val.total_userstories, 'days': val.days};
             console.log('spr', val)
             this.setState({sprintStats: data});
         });
@@ -107,21 +110,17 @@ export default class TaigaTest extends Component {
                 <p>Sprint Names</p>
                 {this.state.projStats.sprints.map(s => {
                 return <p>{s.name}</p>})}
-                <p>Assigned Points {this.state.projStats.assignedpts}</p>
-                <p>Closed Points {this.state.projStats.closedpts}</p>
+                <p>Assigned Points: {this.state.projStats.assignedpts}</p>
+                <p>Closed Points: {this.state.projStats.closedpts}</p>
             </div>
             <div>
                 <p>These are the results from the sprint_stats call.</p>
-            <p>{}</p>
-            </div>
-
-            <div>
-                <p>These are the results from the userstory_statuses call.</p>
-                <p>{}</p>
-            </div>
-            <div>
-                <p>These are the results from the task_statuses call.</p>
-            <p>{}</p>
+                <p>Sprint Name: {this.state.sprintStats.name}</p>
+                <p>Sprint Start: {this.state.sprintStats.start}</p>
+                <p>Sprint End: {this.state.sprintStats.end}</p>
+                {this.state.sprintStats.days.map(d => {
+                    return <p>Day: {d.day} Open Points: {d.open_points} Closed Points: {d.optimal_points}</p>
+                })}
             </div>
         </div>
         );
