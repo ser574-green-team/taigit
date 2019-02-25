@@ -64,3 +64,15 @@ userstory_total_points(userstoryId : number) : Promise<Object> {
     let info : {total_points: number} ={total_points: data.data.total_points};
     return (info);
 }
+
+
+
+//This call returns user stats based on user Id
+    export async function
+    user_stats(userId : number) : Promise<Object> {
+        let data = await axios.get("https://api.taiga.io/api/v1/users/"+userId.toString() + '/stats');
+        //test link: https://api.taiga.io/api/v1/users/321272/stats
+        let info : {total_num_projects: number, roles: string, total_num_contacts: number, total_num_closed_userstories: number} =
+            {total_num_projects: data.data.total_num_projects, roles: data.data.roles, total_num_contacts: data.data.total_num_contacts, total_num_closed_userstories: data.data.total_num_closed_userstories};
+        return (info);
+    }
