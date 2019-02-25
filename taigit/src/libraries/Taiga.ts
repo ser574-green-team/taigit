@@ -58,7 +58,7 @@ task_statuses(taskId : number) : Promise<Object> {
 
 //This call returns total points of a user story based on user story Id
 export async function
-userstory_points(userstoryId : number) : Promise<Object> {
+userstory_total_points(userstoryId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/userstories/" + userstoryId.toString());
     //test link:  https://api.taiga.io/api/v1/userstories/2698838
     let info : {total_points: number} ={total_points: data.data.total_points};
