@@ -8,6 +8,9 @@ import barChartData from './charts/barChartData';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 
+import HorizBarChart from './charts/HorizBarChart'
+import commitPerBranchData from './charts/commitPerBranchData'
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
 let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
@@ -80,6 +83,11 @@ class GitHub extends Component {
             </div>
           </div>
         </ResponsiveReactGridLayout>
+
+          <div className="chart horizontal-bar">
+              <span className = "chart-title">Commits Per Branch</span>
+              <HorizBarChart chartData={commitPerBranchData}/>
+          </div>
       </div>
     );
   }
