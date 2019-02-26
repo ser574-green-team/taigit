@@ -4,10 +4,11 @@ import { getBranchList, getCommitsPerUser, getPullRequests, getContributorData }
 import { selectBranchList, selectNumCommitsChartData, selectNumPullRequestsData, selectCommitsPerContributorChartData } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
-import barChartData from './charts/barChartData';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import ScrollableList from './ScrollableList';
+import HorizBarChart from './charts/HorizBarChart'
+import commitPerBranchData from './charts/commitPerBranchData'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
@@ -45,6 +46,7 @@ class GitHub extends Component {
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
+
   render() {
     return(
       <div className="app-page">
@@ -80,6 +82,10 @@ class GitHub extends Component {
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
         </ResponsiveReactGridLayout>
+          <div className="chart horizontal-bar">
+              <span className = "chart-title">Commits Per Branch</span>
+              <HorizBarChart chartData={commitPerBranchData}/>
+          </div>
       </div>
     );
   }
