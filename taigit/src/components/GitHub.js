@@ -82,6 +82,7 @@ class GitHub extends Component {
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
         </ResponsiveReactGridLayout>
+
           <div className="chart horizontal-bar">
               <span className = "chart-title">Commits Per Branch</span>
               <HorizBarChart chartData={commitPerBranchData}/>
