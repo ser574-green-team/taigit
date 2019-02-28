@@ -15,7 +15,7 @@ taiga_login(username : string, password : string) : Promise<boolean> {
 export async function
 project_info(slug : string) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/by_slug?slug=" + slug)
-    let info : {id: number, name: string, slug: string, created_date: Date} = 
+    let info : {id: number, name: string, slug: string, created_date: Date} =
         {id: data.data.id, name: data.data.name, slug: data.data.slug, created_date: data.data.created_date};
     return (info);
 }
@@ -24,7 +24,7 @@ project_info(slug : string) : Promise<Object> {
 export async function
 project_stats(projId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/" + projId.toString() + '/stats');
-    
+
     return (data.data);
 }
 
@@ -35,8 +35,6 @@ sprint_stats(sprintId : number) : Promise<Object> {
      return (data.data);
 }
 
-
-
 //This call returns user story  stats based on userstory Id
 export async function
 userstory_statuses(userstoryId : number) : Promise<Object> {
@@ -45,12 +43,39 @@ userstory_statuses(userstoryId : number) : Promise<Object> {
     return (data.data)
 }
 
-
-
 //This call returns task stats based on task Id
 export async function
 task_statuses(taskId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/task-statuses/" + taskId.toString());
     //test link:  https://api.taiga.io/api/v1/task-statuses/1550500
     return (data.data)
+}
+
+/**
+ * @summary Get the History for a task
+ * @param taskId the ID for the task to get history for
+ * @returns array of history objects
+ * {
+ *      date : number,         // Date and time of history entry in milliseconds since epoch
+ *      user : object,         // Taiga User Object
+ *      diff_types : String[], // Names of entries in diff_values
+ *      diff_values : Object   // Values of the changes listed in diff_types
+ * }
+ */
+export async function
+task_history(taskId : number) : Promise<Object> {
+    let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
+
+    let output : Array<Object> = [];
+    for(let entry of data) {
+        let new_entry = {
+            date : new Date(entry.created_at).getTime(),
+            user : entry.user,
+            diff_types : Object.keys(entry.diff),
+            diff_values : entry.values_diff
+        }
+        output.push(new_entry);
+    }
+
+    return output;
 }
