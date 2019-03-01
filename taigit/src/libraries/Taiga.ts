@@ -78,3 +78,12 @@ user_stats(userId : number) : Promise<Object> {
          {total_num_projects: data.data.total_num_projects, roles: data.data.roles, total_num_contacts: data.data.total_num_contacts, total_num_closed_userstories: data.data.total_num_closed_userstories};
      return (info);
 }
+
+//This call returns project wiki based on project Id
+export async function
+project_wiki(projectId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/wiki?project="+projectId.toString());
+    //test link: //https://api.taiga.io/api/v1/wiki?project=309976
+    //test2: 286226
+    return (data.data);
+}
