@@ -83,7 +83,13 @@ task_history(taskId : number) : Promise<Object> {
 
 
 
-//This call returns total points of a user story based on user story Id
+
+/**
+* @summary This call returns total points of a user story based on user story Id
+* @param userstoryId the ID for the User Story to get total points for
+    * @returns total points
+*/
+
 export async function
 userstory_total_points(userstoryId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/userstories/" + userstoryId.toString());
@@ -92,7 +98,18 @@ userstory_total_points(userstoryId : number) : Promise<Object> {
     return (info);
 }
 
-//This call returns user stats based on user Id
+/**
+ * @summary This call returns user stats based on user Id
+ * @param user Id the ID for the user to get stats for
+ * @returns array of history objects
+ * {
+      total_num_projects: number
+      roles: string
+      total_num_contacts: number
+      total_num_closed_userstories: number
+ * }
+ */
+
     export async function
     user_stats(userId : number) : Promise<Object> {
         let data = await axios.get("https://api.taiga.io/api/v1/users/"+userId.toString() + '/stats');
@@ -102,8 +119,12 @@ userstory_total_points(userstoryId : number) : Promise<Object> {
         return (info);
     }
 
+/**
+ * @summary his call returns project wiki based on project Id
+ * @param project Id the ID for the project to get Wiki for
+ * @returns project wiki
+ */
 
-//This call returns project wiki based on project Id
 export async function
 project_wiki(projectId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/wiki?project="+projectId.toString());
