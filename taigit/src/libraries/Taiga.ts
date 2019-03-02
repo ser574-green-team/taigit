@@ -94,15 +94,15 @@ task_history(taskId : number) : Promise<Object> {
  * }
  */
 export async function
-issues(projId : number) : Promise<Object>{
+taiga_issues(projId : number) : Promise<Object>{
     let data = (await axios.get(`https://api.taiga.io/api/v1/issues?project=${projId}`)).data;
     let output : Array<Object> = [];
     for(let entry of data) {
         let new_entry = {
             date : new Date(entry.created_date).getTime(),
             note : entry.blocked_note,
-            blocked : entry.isBlocked,
-            closed : entry.isClosed,
+            blocked : entry.is_blocked,
+            closed : entry.is_closed,
             sprint : entry.milestone,
             priority : entry.priority
         }
