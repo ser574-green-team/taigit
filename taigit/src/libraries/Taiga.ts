@@ -1,5 +1,11 @@
 import axios from "axios"
 
+/**
+ * @summary Return the response for a login
+ * @param username the username to login with
+ * @param password the password to login with
+ * @returns boolean dictating success of login
+ */
 export async function
 taiga_login(username : string, password : string) : Promise<boolean> {
     let response = await axios.post("https://api.taiga.io/api/v1/auth", {
@@ -11,16 +17,31 @@ taiga_login(username : string, password : string) : Promise<boolean> {
     return (response.status == 200);
 }
 
-// This call returns key project information
+/**
+ * @summary Get the project information for a slug
+ * @param slug the url name of the project
+ * @returns object of project information
+ * {
+ *      id : number,          // Project id
+ *      name : string,        // Project name
+ *      created_date : number // Date project was created
+ * }
+ */
 export async function
 project_info(slug : string) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/by_slug?slug=" + slug)
-    let info : {id: number, name: string, slug: string, created_date: Date} =
-        {id: data.data.id, name: data.data.name, slug: data.data.slug, created_date: data.data.created_date};
+    let info : {id: number, name: string, created_date: Date} =
+        {id: data.data.id, name: data.data.name, created_date: data.data.created_date};
     return (info);
 }
 
-// This call returns project stats based on project id
+/**
+ * @summary Get the stats of a project
+ * @param projId the ID for project to get stats of
+ * @returns project stats object
+ * {
+ * }
+ */
 export async function
 project_stats(projId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/" + projId.toString() + '/stats');
@@ -28,13 +49,20 @@ project_stats(projId : number) : Promise<Object> {
     return (data.data);
 }
 
-//This call returns sprint stats based on sprintId
+/**
+ * @summary Get the stats for a sprint
+ * @param sprintId the ID for the sprint to get stats for
+ * @returns sprint stats object
+ * {
+
+ * }
+ */
 export async function
 sprint_stats(sprintId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats');
      return (data.data);
 }
-
+// TODO: This API calls are not useful to frontend and Taiga and will be deprecated.
 //This call returns user story  stats based on userstory Id
 export async function
 userstory_statuses(userstoryId : number) : Promise<Object> {
@@ -43,6 +71,7 @@ userstory_statuses(userstoryId : number) : Promise<Object> {
     return (data.data)
 }
 
+// TODO: This API calls are not useful to frontend and Taiga and will be deprecated.
 //This call returns task stats based on task Id
 export async function
 task_statuses(taskId : number) : Promise<Object> {
