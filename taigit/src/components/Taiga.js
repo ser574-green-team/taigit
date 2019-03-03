@@ -22,12 +22,11 @@ export default class Taiga extends Component {
       <div className="app-page">
         <h2>Taiga</h2>
         <div className="chart chart-pie">
-          <span className="chart-title">User Stories</span>
-          <DoughnutChart chartData={taigaUsProgress} options={{}}/>
+          <DoughnutChart title="User Stories" chartData={taigaUsProgress} options={{}}/>
         </div>
         <div className="chart chart-stacked-bar">
           <span className="chart-title">Taiga Tasks</span>
-          <StackedBarChart chartData={stackBarChartData}/>       
+          <StackedBarChart chartData={stackBarChartData}/>
         </div>
       </div>
     );
