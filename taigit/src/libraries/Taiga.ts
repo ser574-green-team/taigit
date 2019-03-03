@@ -147,6 +147,13 @@ task_history(taskId : number) : Promise<Object> {
     return output;
 }
 
+// This call returns user story history information
+export async function
+us_history(userstoryId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/history/userstory/" + userstoryId.toString());
+    //test link to add
+    return (data.data);
+}
 /**
  * @summary Get the list of user's full name in a project
  * @param project_id Project id to get the data
