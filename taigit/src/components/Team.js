@@ -21,9 +21,14 @@ class Team extends Component {
   }
 }
 
+/**
+ * mapStateToProps
+ * maps state in redux store (right)
+ * to component props property (left)
+ */
 const mapStateToProps = state => {
   return {
-    teamMembers: state.teamMembers
+    teamMembers: state.team.teamMembers
   }
 }
 
