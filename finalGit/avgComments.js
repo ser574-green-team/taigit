@@ -36,33 +36,62 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var axios_1 = require("axios");
-function getNumCommets(owner, repo, number) {
+function getNumCommets(owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
-        var comments, dict_1, numberOfpullRequests, averageNumberOfComments, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var issue_comment, dict_1, issueNumberArray_2, _i, issueNumberArray_1, isse_no, uniqueId, _a, uniqueId_1, id, commentsPerReq, numberOfpullRequests, averageNumberOfComments, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, axios_1["default"].get("https://api.github.com/repos/" + owner +
                             "/" + repo + "/issues/comments")];
                 case 1:
-                    comments = _a.sent();
+                    issue_comment = _b.sent();
                     dict_1 = {};
-                    comments.data.forEach(function (req) {
-                        if (dict_1.hasOwnProperty(req.issue_url)) {
-                            dict_1[req.issue_url] += 1;
+                    issueNumberArray_2 = [];
+                    issue_comment.data.forEach(function (req) {
+                        // console.log(req.issue_url);
+                        var issue_number_array = req.issue_url.split('/');
+                        var issue_number = issue_number_array[issue_number_array.length - 1];
+                        issueNumberArray_2.push(issue_number);
+                        //
+                        // }
+                        // else {
+                        //     issueNumberArray.push(issue_number)
+                        // }
+                        if (dict_1.hasOwnProperty(issue_number)) {
+                            dict_1[issue_number] += 1;
                         }
                         else {
-                            dict_1[req.issue_url] = 1;
+                            dict_1[issue_number] = 1;
                         }
                     });
+                    for (_i = 0, issueNumberArray_1 = issueNumberArray_2; _i < issueNumberArray_1.length; _i++) {
+                        isse_no = issueNumberArray_1[_i];
+                        // getNumberCommentsPerPullRequest(owner, repo, isse_no)
+                    }
+                    issueNumberArray_2.sort();
+                    uniqueId = issueNumberArray_2.filter(function (elem, index, self) {
+                        return index === self.indexOf(elem);
+                    });
+                    // console.log(uniqueId)
+                    //  getNumberCommentsPerPullRequest(owner,repo,1);
+                    for (_a = 0, uniqueId_1 = uniqueId; _a < uniqueId_1.length; _a++) {
+                        id = uniqueId_1[_a];
+                        commentsPerReq = getNumberCommentsPerPullRequest(owner, repo, id);
+                        if (dict_1.hasOwnProperty(id)) {
+                            dict_1[id] += Number(commentsPerReq);
+                        }
+                    }
+                    console.log(dict_1);
                     numberOfpullRequests = Object.keys(dict_1).length;
-                    averageNumberOfComments = numberOfpullRequests / comments.data.length;
-                    console.log(numberOfpullRequests);
-                    console.log(averageNumberOfComments.toFixed(2));
-                    return [2 /*return*/, 1];
+                    averageNumberOfComments = (Number(numberOfpullRequests) / issue_comment.data.length).toFixed(2);
+                    //console.log(issue_comment.data.length)
+                    // console.log(averageNumberOfComments)
+                    console.log(Number(averageNumberOfComments));
+                    return [2 /*return*/, Number(averageNumberOfComments)];
                 case 2:
-                    error_1 = _a.sent();
+                    error_1 = _b.sent();
                     console.log(error_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/, -1];
@@ -70,4 +99,27 @@ function getNumCommets(owner, repo, number) {
         });
     });
 }
-getNumCommets("ser574-green-team", "taigit", 1);
+exports.getNumCommets = getNumCommets;
+function getNumberCommentsPerPullRequest(owner, repo, number) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pullReq_comment, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, axios_1["default"].get("https://api.github.com/repos/" + owner +
+                            "/" + repo + "/pulls/" + number + "#/comments")];
+                case 1:
+                    pullReq_comment = _a.sent();
+                    return [2 /*return*/, pullReq_comment.data["comments"]];
+                case 2:
+                    error_2 = _a.sent();
+                    console.log(error_2);
+                    return [2 /*return*/, -1];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getNumberCommentsPerPullRequest = getNumberCommentsPerPullRequest;
+getNumCommets("ser574-green-team", "taigit");
