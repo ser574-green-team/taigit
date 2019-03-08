@@ -6,6 +6,7 @@ import { grabTaigaData } from '../actions/taigaActions';
 import stackBarChartData from './charts/stackedBarChartData';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
+import colors from '../styles/colors';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
@@ -77,9 +78,9 @@ let taigaUsProgress = {
     label: 'User Story Progress',
     data: [5, 4, 13],
     backgroundColor: [
-        'rgb(242, 105, 104, 1)',
-        'rgb(242, 173, 159, 1)',
-        'rgb(223, 226, 210, 1)',
+        colors.blue.dark,
+        colors.blue.base,
+        colors.none
     ],
   }]
 }
