@@ -38,27 +38,22 @@ exports.__esModule = true;
 var axios_1 = require("axios");
 function getNumCommets(owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
-        var issue_comment, dict_1, issueNumberArray_2, _i, issueNumberArray_1, isse_no, uniqueId, _a, uniqueId_1, id, commentsPerReq, numberOfpullRequests, averageNumberOfComments, error_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var issue_comment, dict_1, issueNumberArray_1, uniqueId, _i, uniqueId_1, id, commentsPerReq, numberOfpullRequests, averageNumberOfComments, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
+                    _a.trys.push([0, 6, , 7]);
                     return [4 /*yield*/, axios_1["default"].get("https://api.github.com/repos/" + owner +
                             "/" + repo + "/issues/comments")];
                 case 1:
-                    issue_comment = _b.sent();
+                    issue_comment = _a.sent();
                     dict_1 = {};
-                    issueNumberArray_2 = [];
+                    issueNumberArray_1 = [];
                     issue_comment.data.forEach(function (req) {
                         // console.log(req.issue_url);
                         var issue_number_array = req.issue_url.split('/');
                         var issue_number = issue_number_array[issue_number_array.length - 1];
-                        issueNumberArray_2.push(issue_number);
-                        //
-                        // }
-                        // else {
-                        //     issueNumberArray.push(issue_number)
-                        // }
+                        issueNumberArray_1.push(issue_number);
                         if (dict_1.hasOwnProperty(issue_number)) {
                             dict_1[issue_number] += 1;
                         }
@@ -66,35 +61,44 @@ function getNumCommets(owner, repo) {
                             dict_1[issue_number] = 1;
                         }
                     });
-                    for (_i = 0, issueNumberArray_1 = issueNumberArray_2; _i < issueNumberArray_1.length; _i++) {
-                        isse_no = issueNumberArray_1[_i];
-                        // getNumberCommentsPerPullRequest(owner, repo, isse_no)
-                    }
-                    issueNumberArray_2.sort();
-                    uniqueId = issueNumberArray_2.filter(function (elem, index, self) {
+                    // for(var isse_no of issueNumberArray ){
+                    //    // getNumberCommentsPerPullRequest(owner, repo, isse_no)
+                    // }
+                    //console.log(dict)
+                    issueNumberArray_1.sort();
+                    uniqueId = issueNumberArray_1.filter(function (elem, index, self) {
                         return index === self.indexOf(elem);
                     });
-                    // console.log(uniqueId)
-                    //  getNumberCommentsPerPullRequest(owner,repo,1);
-                    for (_a = 0, uniqueId_1 = uniqueId; _a < uniqueId_1.length; _a++) {
-                        id = uniqueId_1[_a];
-                        commentsPerReq = getNumberCommentsPerPullRequest(owner, repo, id);
-                        if (dict_1.hasOwnProperty(id)) {
-                            dict_1[id] += Number(commentsPerReq);
-                        }
+                    _i = 0, uniqueId_1 = uniqueId;
+                    _a.label = 2;
+                case 2:
+                    if (!(_i < uniqueId_1.length)) return [3 /*break*/, 5];
+                    id = uniqueId_1[_i];
+                    return [4 /*yield*/, getNumberCommentsPerPullRequest(owner, repo, id)];
+                case 3:
+                    commentsPerReq = _a.sent();
+                    console.log(commentsPerReq);
+                    console.log(dict_1[id]);
+                    if (dict_1.hasOwnProperty(id)) {
+                        dict_1[id] = dict_1[id] + Number(commentsPerReq);
                     }
+                    _a.label = 4;
+                case 4:
+                    _i++;
+                    return [3 /*break*/, 2];
+                case 5:
                     console.log(dict_1);
                     numberOfpullRequests = Object.keys(dict_1).length;
-                    averageNumberOfComments = (Number(numberOfpullRequests) / issue_comment.data.length).toFixed(2);
+                    averageNumberOfComments = (Number(numberOfpullRequests) / uniqueId.length).toFixed(2);
                     //console.log(issue_comment.data.length)
                     // console.log(averageNumberOfComments)
                     console.log(Number(averageNumberOfComments));
                     return [2 /*return*/, Number(averageNumberOfComments)];
-                case 2:
-                    error_1 = _b.sent();
+                case 6:
+                    error_1 = _a.sent();
                     console.log(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/, -1];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/, -1];
             }
         });
     });
@@ -102,7 +106,7 @@ function getNumCommets(owner, repo) {
 exports.getNumCommets = getNumCommets;
 function getNumberCommentsPerPullRequest(owner, repo, number) {
     return __awaiter(this, void 0, void 0, function () {
-        var pullReq_comment, error_2;
+        var pullReq_comment, commentsPerReq, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -111,7 +115,8 @@ function getNumberCommentsPerPullRequest(owner, repo, number) {
                             "/" + repo + "/pulls/" + number + "#/comments")];
                 case 1:
                     pullReq_comment = _a.sent();
-                    return [2 /*return*/, pullReq_comment.data["comments"]];
+                    commentsPerReq = pullReq_comment.data["comments"];
+                    return [2 /*return*/, Number(commentsPerReq)];
                 case 2:
                     error_2 = _a.sent();
                     console.log(error_2);
