@@ -120,7 +120,7 @@ userstory_total_points(userstoryId : number) : Promise<Object> {
     }
 
 /**
- * @summary his call returns project wiki based on project Id
+ * @summary This call returns project wiki based on project Id
  * @param project Id the ID for the project to get Wiki for
  * @returns project wiki
  */
