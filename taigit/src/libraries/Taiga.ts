@@ -79,3 +79,44 @@ task_history(taskId : number) : Promise<Object> {
 
     return output;
 }
+
+/**
+ * @summary This call assess a task based on task_assessment_state_trans based on task Id
+ * @param taskId the ID for the task to assess task
+ * @returns  whether the task is abnormal,task status transition, date based on task Id
+ * * {
+ * Current in Use
+ *      state_trans_invalid: Boolean       // true, the task state transition is not valid; false, the task is valid.
+ *      date : number,         // Date and time of history entry in milliseconds since epoch
+ *      user : object,         // Taiga User Object
+ *      status_trans:entry.String[],//Status transition array
+ *
+ *  Can be added
+ *      diff_types : String[], // Names of entries in diff_values //diff_values : entry.values_diff,
+ *      diff_values : Object   // Values of the changes listed in diff_types //diff_values : entry.values_diff,
+ * }
+ */
+export async function
+task_assessment_state_trans(taskId : number) : Promise<Object> {
+let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
+    //test case :https://api.taiga.io/api/v1/history/task/2577741
+let output : Array<Object> = [];
+for(let entry of data) {
+    let new_entry = {
+        state_trans_invalid: false,
+        date : new Date(entry.created_at).getTime(),
+        user : entry.user,
+        status_trans:entry.values_diff.status
+    }
+
+    //Only three status transistion is valid
+    //which is  ["New", "In progress"] ["In progress", "Ready for test"]  ["Ready for test", "Closed"])
+    if((new_entry.status_trans[0]!="New"&&new_entry.status_trans[1]!="In progress")
+        &&(new_entry.status_trans[0]!="In progress"&&new_entry.status_trans[1]!="Ready for test")
+        &&(new_entry.status_trans[0]!="Ready for test"&&new_entry.status_trans[1]!="Closed"))
+        new_entry.state_trans_invalid= true;
+    output.push(new_entry);
+}
+
+return output;
+}
