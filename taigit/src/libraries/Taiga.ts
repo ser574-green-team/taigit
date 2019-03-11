@@ -83,7 +83,7 @@ task_history(taskId : number) : Promise<Object> {
 /**
  * @summary This call assess a task based on task_assessment_state_trans based on task Id
  * @param taskId the ID for the task to assess task
- * @returns  whether the task is abnormal,task status transition, date based on task Id
+ * @returns  whether the task's state transition is valid,task status transition, date based on task Id
  * * {
  * Current in Use
  *      state_trans_invalid: Boolean       // true, the task state transition is not valid; false, the task is valid.
