@@ -4,6 +4,8 @@ import StackedBarChart from './charts/StackedBarChart';
 import stackBarChartData from './charts/stackedBarChartData';
 import DoughnutChart from './charts/DoughnutChart';
 import { connect } from 'react-redux';
+import GridLayout from 'react-grid-layout';
+import { Doughnut, Bar } from 'react-chartjs-2';
 import { grabTaigaData } from '../actions/taigaActions';
 
 let taigaUsProgress = {
@@ -28,14 +30,21 @@ class Taiga extends Component {
     return(
       <div className="app-page">
         <h2>Taiga</h2>
-        <div className="chart chart-pie">
-          <DoughnutChart title="User Stories" chartData={taigaUsProgress} options={{}}/>
-        </div>
-        <div className="chart chart-stacked-bar">
-          <span className="chart-title">Taiga Tasks</span>
-          <StackedBarChart chartData={stackBarChartData}/>
-        </div>
-        <h4>{this.props.storeData}</h4>
+        <GridLayout className="layout" cols={12} rowHeight={30} width={1200}>
+          <div className='box' key="1" data-grid={{ w: 3, h: 5, x: 0, y: 0, minW: 3, minH: 5 }}>
+            <div className="chart chart-pie">
+              <span className="chart-title">User Story Progress</span>
+              <Doughnut data={taigaUsProgress} options={{maintainAspectRatio: true, responsive: true}}/>
+            </div>
+          </div>
+          <div className='box' key="2" data-grid={{ w: 5, h: 7, x: 3, y: 0, minW: 2, minH: 3 }}>
+            <div className="chart">
+              <span className="chart-title">Taiga Tasks</span>
+              <Bar data={stackBarChartData}/>
+            </div>
+          </div>
+          <h4>{this.props.storeData}</h4>
+        </GridLayout>
       </div>
     );
   }
