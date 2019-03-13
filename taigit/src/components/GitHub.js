@@ -9,6 +9,7 @@ export default class GitHub extends Component {
     return(
       <div className="app-page">
         <h2>GitHub</h2>
+          {console.log(GH.userAuthentication())}
           <div className="chart chart-bar">
               <span className="chart-title">Commits Per Member</span>
               <BarChart chartData={barChartData}/>
