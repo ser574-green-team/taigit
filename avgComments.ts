@@ -1,7 +1,7 @@
  import axios from 'axios';
 
 export async function
-getNumCommets(owner : string, repo: string){
+getNumComments(owner : string, repo: string){
      try{
          let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
              "/" + repo + "/issues?state=closed");
@@ -54,5 +54,5 @@ getNumCommets(owner : string, repo: string){
  }
 
 
-// getNumCommets("ser574-green-team", "taigit");
+// getNumComments("ser574-green-team", "taigit");
 
