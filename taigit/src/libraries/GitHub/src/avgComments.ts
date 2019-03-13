@@ -1,5 +1,9 @@
 import axios from 'axios';
-
+/**
+ * The following function returns the Average Number Of Comments 
+ * on all closed Pull Requests by considering direct comments on
+ * pull requests and review comments.
+ */
 export async function
 getNumComments(owner : string, repo: string){
     try{
