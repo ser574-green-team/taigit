@@ -11,7 +11,7 @@ getNumComments(owner : string, repo: string){
             "/" + repo + "/issues?state=closed");
         let lengthOfClosedPullRequests = issue_comment.data.length
         let issueNumberArray = Array()
-        console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
+       // console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
         let totalComments = 0
         issue_comment.data.forEach(function(req : {url:string} ) {
             let closedIssueNumberArray = req.url.split('/');
@@ -24,9 +24,9 @@ getNumComments(owner : string, repo: string){
             totalComments = totalComments + Number(commentsPerIssue)
             console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))}
 
-        console.log("Total Number Of Comments on PR: "+totalComments)
+       // console.log("Total Number Of Comments on PR: "+totalComments)
         let averageNoOfComments = (totalComments/lengthOfClosedPullRequests).toFixed(2)
-        console.log("Average Number Of Comments: " +averageNoOfComments)
+       // console.log("Average Number Of Comments: " +averageNoOfComments)
         return averageNoOfComments;
 
     }
