@@ -54,5 +54,5 @@ getNumCommets(owner : string, repo: string){
  }
 
 
- getNumCommets("ser574-green-team", "taigit");
+// getNumCommets("ser574-green-team", "taigit");
 
