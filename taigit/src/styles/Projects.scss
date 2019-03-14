@@ -1,0 +1,33 @@
+@import 'Variables';
+
+.body {
+  background-color: $app-background;
+}
+
+.project {
+  border-left-style: solid;
+  text-indent: 20px;
+}
+
+.project:link, .project:visited {
+  background-color: #f44336;
+  color: blue;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.project:hover, .project:active {
+  background-color: azure;
+}
+
+.title {
+  background-color: #56B1BF;
+  margin-left: -1em;
+  font-size: 50px;
+  color: white;
+  text-align: center;
+  letter-spacing: 4px;
+  font-family: Athelas;
+}
