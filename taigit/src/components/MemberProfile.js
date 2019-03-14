@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import RadialChart from './charts/RadialChart'
 import TeamMemberCard from './TeamMemberCard'
 import NumberDisplay from './NumberDisplay'
 import GridLayout from 'react-grid-layout';
+import { Radar } from 'react-chartjs-2';
 
 class MemberProfile extends Component {
   render() {
@@ -19,7 +19,7 @@ class MemberProfile extends Component {
           </div>
           <div className='box' key="2" data-grid={{ w: 4, h: 7, x: 3, y: 0, minW: 2, minH: 3 }}>
             <div className="chart">
-              <RadialChart/>
+              <Radar data={radarChartData}/>
             </div>
           </div>
           <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 3, y: 0, minW: 2, minH: 5 }}>
@@ -46,6 +46,17 @@ const mapStateToProps = state => {
   return {
     teamMembers: state.team.teamMembers
   }
+}
+
+const radarChartData = {
+  labels: ["Commits", "Tasks Completed", "PRs Reviewed", "Taiga Edits", "Issues Documented"],
+  datasets: [{
+    label: 'Work Distribution',
+    data: [12, 19, 15, 10, 2],
+    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+    borderColor: 'rgba(255,99,132,1)',
+    borderWidth: 1,
+  }]
 }
 
 export default connect(mapStateToProps)(MemberProfile)

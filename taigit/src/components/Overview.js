@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import LineChart from './charts/LineChart';
 import NumberDisplay from './NumberDisplay'
-import DoughnutChart from './charts/DoughnutChart';
 import GridLayout from 'react-grid-layout';
 import {Doughnut, Line} from 'react-chartjs-2';
 

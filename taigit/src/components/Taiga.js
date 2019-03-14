@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import StackedBarChart from './charts/StackedBarChart';
-import stackBarChartData from './charts/stackedBarChartData';
-import DoughnutChart from './charts/DoughnutChart';
 import { connect } from 'react-redux';
 import GridLayout from 'react-grid-layout';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { grabTaigaData } from '../actions/taigaActions';
+import stackBarChartData from './charts/stackedBarChartData';
 
 let taigaUsProgress = {
   labels: ["Completed", "In Progress", "Not Done"],
