@@ -144,12 +144,11 @@ task_assessment_endstate(taskId : number) : Promise<Object> {
             user : entry.user,
             status_trans : entry.values_diff.status
         }
-        endstatus=new_entry.status_trans[1];
+        endstatus = new_entry.status_trans[1];
         output.push(new_entry);
     }
 
-    //endstatus="Ready for test";//For test use
-    let  t_finished : boolean;
+    let t_finished : boolean;
     let t_fin_per : number;
     let t_num_stat : number;
      if(endstatus != "Closed") {
