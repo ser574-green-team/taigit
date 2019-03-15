@@ -1,13 +1,43 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
-import GridLayout from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout';
 import { getBranchList, getCommitsPerUser } from '../actions/githubActions';
 import { selectBranchList, selectNumCommitsChartData } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import barChartData from './charts/barChartData';
+import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+
+const layoutname = 'github-layout';
+const originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
 
 class GitHub extends Component {
+  static defaultProps = {
+    className: "layout",
+    cols: 12,
+    rowHeight: 10,
+    width: 1200,
+    onLayoutChange: function() {}
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      layout: JSON.parse(JSON.stringify(originalLayout))
+    };
+
+    this.onLayoutChange = this.onLayoutChange.bind(this);
+  }
+
+  onLayoutChange(layout) {
+    console.log('about to save to local storage');
+    saveToLocalStorage(layoutname, "layout", layout);
+    this.setState({layout});
+    console.log('new layout', layout);
+    this.props.onLayoutChange(layout);
+  }
+
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
     this.props.getBranchList();
@@ -18,7 +48,7 @@ class GitHub extends Component {
     return(
       <div className="app-page">
         <h2>GitHub</h2>
-        <GridLayout className="layout" cols={12} rowHeight={30} width={1200}>
+        <ReactGridLayout layout={this.state.layout} onLayoutChange={this.onLayoutChange} cols={12} rowHeight={30} width={1200}>
           <div className='box' key="1" data-grid={{ w: 4, h: 6, x: 0, y: 0, minW: 2, minH: 5 }}>
             <div className="chart">
                 <span className="chart-title">Commits Per Member</span>
@@ -43,7 +73,7 @@ class GitHub extends Component {
                 <Bar data={this.props.commitChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-        </GridLayout>
+        </ReactGridLayout>
       </div>
     );
   }
