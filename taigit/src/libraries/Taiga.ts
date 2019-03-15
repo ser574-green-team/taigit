@@ -25,13 +25,14 @@ taiga_login(username : string, password : string) : Promise<boolean> {
  *      id : number,          // Project id
  *      name : string,        // Project name
  *      created_date : number // Date project was created
+ *      members: Object[]     // Array containing role (number), string for role_name, full_name, username
  * }
  */
 export async function
 project_info(slug : string) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/by_slug?slug=" + slug)
-    let info : {id: number, name: string, created_date: Date} =
-        {id: data.data.id, name: data.data.name, created_date: data.data.created_date};
+    let info : {id: number, name: string, created_date: Date, members: Object[]} =
+        {id: data.data.id, name: data.data.name, created_date: data.data.created_date, members: data.data.members};
     return (info);
 }
 
@@ -40,12 +41,12 @@ project_info(slug : string) : Promise<Object> {
  * @param projId the ID for project to get stats of
  * @returns project stats object
  * {
- *      assigned_pts: number,               // Number of assigned points
- *      assigned_pts_per_role: Object[],    // Distribution of assigned points across roles
- *      closed_pts: number,                 // Number of closed points
- *      closed_pts_per_role: Object[] //TODO: Figure out Role IDs,
- *      num_sprints: number,                // Number of sprints
- *      total_pts: number,                  // Total points in the project
+ *      assigned_pts : number,               // Number of assigned points
+ *      assigned_pts_per_role : Object[],    // Distribution of assigned points across roles
+ *      closed_pts : number,                 // Number of closed points
+ *      closed_pts_per_role : Object[],      // Point distribution based on roles
+ *      num_sprints : number,                // Number of sprints
+ *      total_pts : number,                  // Total points in the project
  * }
  */
 export async function
@@ -56,7 +57,7 @@ project_stats(projId : number) : Promise<Object> {
             {assigned_pts: data.data.assigned_points, assigned_pts_per_role: data.data.assigned_points_per_role, 
             closed_pts: data.data.closed_points, closed_pts_per_role: data.data.closed_points_per_role,
             num_sprints: data.data.total_milestones, total_pts: data.data.total_points};
-    return (data.data);
+    return (info);
 }
 
 /**
@@ -64,15 +65,15 @@ project_stats(projId : number) : Promise<Object> {
  * @param sprintId the ID for the sprint to get stats for
  * @returns sprint stats object
  * {
- *      completed_pts: Object[],    // Distribution of completed points across roles
- *      total_pts: Object[],        // Total number of points
- *      completed_tsks: number,     // Number of completed tasks
- *      total_tsks: number,         // Total number of tasks
- *      completed_us: number,       // Number of completed user stories
- *      total_us: number,           // Total number of user stories
- *      sprint_start: string,       // Sprint start date as a string
- *      sprint_end: string,         // Sprint end date as a string
- *      burndown: Object[],         // Array object containing day, open_points, optimal_points
+ *      completed_pts : Object[],    // Distribution of completed points across roles
+ *      total_pts : Object[],        // Total number of points
+ *      completed_tsks : number,     // Number of completed tasks
+ *      total_tsks : number,         // Total number of tasks
+ *      completed_us : number,       // Number of completed user stories
+ *      total_us : number,           // Total number of user stories
+ *      sprint_start : string,       // Sprint start date as a string
+ *      sprint_end : string,         // Sprint end date as a string
+ *      burndown : Object[],         // Array object containing date(string), open_points(number), optimal_points(number)
  * }
  */
 export async function
