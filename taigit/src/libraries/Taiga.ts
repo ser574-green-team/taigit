@@ -79,3 +79,34 @@ task_history(taskId : number) : Promise<Object> {
 
     return output;
 }
+
+/**
+ * @summary Get a list of issues for a project
+ * @param projId the ID for the project to get list of issues from
+ * @returns array of issue objects
+ * {
+ *      date : number,         // Date and time of history entry in milliseconds since epoch
+ *      note : String,         // Taiga User Object
+ *      blocked : boolean,     // Is issue blocked
+ *      closed : boolean,      // Is issue closed
+ *      sprint : number,       // Sprint the issue is in
+ *      priority : number      // Issue priority
+ * }
+ */
+export async function
+taiga_issues(projId : number) : Promise<Object>{
+    let data = (await axios.get(`https://api.taiga.io/api/v1/issues?project=${projId}`)).data;
+    let output : Array<Object> = [];
+    for(let entry of data) {
+        let new_entry = {
+            date : new Date(entry.created_date).getTime(),
+            note : entry.blocked_note,
+            blocked : entry.is_blocked,
+            closed : entry.is_closed,
+            sprint : entry.milestone,
+            priority : entry.priority
+        }
+        output.push(new_entry);
+    }
+    return output;
+}
