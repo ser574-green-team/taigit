@@ -21,7 +21,7 @@ export default class Overview extends Component {
           <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 2, minH: 3 }}>
             <div className="chart chart-horizontal-primary">
               <span className="chart-title">Github Contributions</span>
-              <Line data={lineData} options={{maintainAspectRatio: false, responsive: true}}/>
+              <Line data={lineData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="4" data-grid={{ w: 2, h: 3, x: 6, y: 0, minW: 2, minH: 3 }}>

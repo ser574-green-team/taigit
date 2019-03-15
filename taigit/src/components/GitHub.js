@@ -19,10 +19,10 @@ class GitHub extends Component {
       <div className="app-page">
         <h2>GitHub</h2>
         <GridLayout className="layout" cols={12} rowHeight={30} width={1200}>
-          <div className='box' key="1" data-grid={{ w: 4, h: 5, x: 0, y: 0, minW: 2, minH: 5 }}>
+          <div className='box' key="1" data-grid={{ w: 4, h: 6, x: 0, y: 0, minW: 2, minH: 5 }}>
             <div className="chart">
                 <span className="chart-title">Commits Per Member</span>
-                <Bar data={barChartData}/>
+                <Bar data={barChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 2, minH: 5 }}>
@@ -40,7 +40,7 @@ class GitHub extends Component {
           <div className='box' key="5" data-grid={{ w: 3, h: 5, x: 4, y: 0, minW: 2, minH: 5 }}>
             <div className="chart">
                 <span className="chart-title">(Redux) Commits Per Member</span>
-                <Bar data={this.props.commitChartData} options={{maintainAspectRatio: false, responsive: true}}/>
+                <Bar data={this.props.commitChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
         </GridLayout>

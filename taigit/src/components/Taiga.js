@@ -38,7 +38,7 @@ class Taiga extends Component {
           <div className='box' key="2" data-grid={{ w: 5, h: 7, x: 3, y: 0, minW: 2, minH: 3 }}>
             <div className="chart">
               <span className="chart-title">Taiga Tasks</span>
-              <Bar data={stackBarChartData}/>
+              <Bar data={stackBarChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <h4>{this.props.storeData}</h4>
