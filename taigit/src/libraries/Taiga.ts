@@ -79,3 +79,22 @@ task_history(taskId : number) : Promise<Object> {
 
     return output;
 }
+
+/**
+ * @summary Get the all the user story name
+ * @param slug project/slug name
+ * @returns array of user-stories name
+ * {
+ *  userStory1, userStory2,...
+ * }
+ */
+export async function
+getUserStoryTitles(slug: string): Promise<Object> {
+    let projectId = (await axios.get(`https://api.taiga.io/api/v1/projects/by_slug?slug=${slug}`)).data.id;
+    let response = (await axios.get(`https://api.taiga.io/api/v1/userstories?project=${projectId}`)).data;
+    let userStorySubs : Array<Object> = [];
+    for(let entry of response) {
+        userStorySubs.push(entry.subject);
+    }
+    return(userStorySubs);
+}
