@@ -5,7 +5,6 @@ import stackBarChartData from './charts/stackedBarChartData';
 import DoughnutChart from './charts/DoughnutChart';
 import { connect } from 'react-redux';
 import { grabTaigaData } from '../actions/taigaActions';
-import {getTaskStatusCount} from '../libraries/Taiga';
 
 let taigaUsProgress = {
   labels: ["Completed", "In Progress", "Not Done"],
@@ -37,11 +36,6 @@ class Taiga extends Component {
           <StackedBarChart chartData={stackBarChartData}/>
         </div>
         <h4>{this.props.storeData}</h4>
-        <div>
-        {console.log(getTaskStatusCount('sanaydevi-ser-574').then((val)=> 
-              {console.log('fe1: ', val)}
-              ))}
-        </div>
       </div>
     );
   }
