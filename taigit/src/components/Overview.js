@@ -1,14 +1,44 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
-import GridLayout from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout';
 import {Doughnut, Line} from 'react-chartjs-2';
+import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+
+const layoutname = 'overview-layout';
+const originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
 
 export default class Overview extends Component {
+  static defaultProps = {
+    className: "layout",
+    cols: 12,
+    rowHeight: 10,
+    width: 1200,
+    onLayoutChange: function() {}
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      layout: JSON.parse(JSON.stringify(originalLayout))
+    };
+
+    this.onLayoutChange = this.onLayoutChange.bind(this);
+  }
+
+  onLayoutChange(layout) {
+    console.log('about to save to local storage');
+    saveToLocalStorage(layoutname, "layout", layout);
+    this.setState({layout});
+    console.log('new layout', layout);
+    this.props.onLayoutChange(layout);
+  }
+
   render() {
     return (
       <div className="app-page">
         <h2>Team Project Name</h2>
-        <GridLayout className="layout" cols={12} rowHeight={30} width={1200}>
+        <ReactGridLayout layout={this.state.layout} onLayoutChange={this.onLayoutChange} cols={12} rowHeight={30} width={1200}>
           <div className='box' key="1" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 2, minH: 5 }}>
             <NumberDisplay number="43" statistic="Total Commits"/>
           </div>
@@ -24,13 +54,13 @@ export default class Overview extends Component {
               <Line data={lineData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="4" data-grid={{ w: 2, h: 3, x: 6, y: 0, minW: 2, minH: 3 }}>
+          <div className='box' key="4" data-grid={{ w: 2, h: 2, x: 6, y: 0, minW: 2, minH: 3 }}>
             <span className="text">4</span>
           </div>
-          <div className='box' key="5" data-grid={{ w: 2, h: 3, x: 8, y: 0, minW: 2, minH: 3 }}>
+          <div className='box' key="5" data-grid={{ w: 2, h: 2, x: 8, y: 0, minW: 2, minH: 3 }}>
             <span className="text">5</span>
           </div>
-        </GridLayout>
+        </ReactGridLayout>
       </div>
     )
   }
