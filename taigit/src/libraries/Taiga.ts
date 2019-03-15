@@ -80,7 +80,6 @@ task_history(taskId : number) : Promise<Object> {
     return output;
 }
 
-// This returns an array of member's full name in a project 
 /**
  * @summary Get the list of user's full name in a project
  * @param projeName slug/project name to get the data
