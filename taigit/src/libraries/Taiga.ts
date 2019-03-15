@@ -81,6 +81,55 @@ task_history(taskId : number) : Promise<Object> {
 }
 
 /**
+* @summary This call returns total points of a user story based on user story Id
+* @param userstoryId the ID for the User Story to get total points for
+    * @returns total points
+*/
+
+export async function
+userstory_total_points(userstoryId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/userstories/" + userstoryId.toString());
+    //test link:  https://api.taiga.io/api/v1/userstories/2698838
+    let info : {total_points: number} = {total_points: data.data.total_points};
+    return (info);
+}
+
+/**
+ * @summary This call returns user stats based on user Id
+ * @param user Id the ID for the user to get stats for
+ * @returns array of history objects
+ * {
+      total_num_projects: number
+      roles: string
+      total_num_contacts: number
+      total_num_closed_userstories: number
+ * }
+ */
+
+    export async function
+    user_stats(userId : number) : Promise<Object> {
+        let data = await axios.get("https://api.taiga.io/api/v1/users/"+userId.toString() + '/stats');
+        //test link: https://api.taiga.io/api/v1/users/321272/stats
+        let info : {total_num_projects: number, roles: string, total_num_contacts: number, total_num_closed_userstories: number} =
+            {total_num_projects: data.data.total_num_projects, roles: data.data.roles, total_num_contacts: data.data.total_num_contacts, total_num_closed_userstories: data.data.total_num_closed_userstories};
+        return (info);
+    }
+
+/**
+ * @summary This call returns project wiki based on project Id
+ * @param project Id the ID for the project to get Wiki for
+ * @returns project wiki
+ */
+
+export async function
+project_wiki(projectId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/wiki?project="+projectId.toString());
+    //test link: //https://api.taiga.io/api/v1/wiki?project=309976
+    //test2: 286226
+    return (data.data);
+}
+
+/**
  * @summary Get a list of issues for a project
  * @param projId the ID for the project to get list of issues from
  * @returns array of issue objects
