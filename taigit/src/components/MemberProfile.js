@@ -7,14 +7,10 @@ import { Radar } from 'react-chartjs-2';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 
 const layoutname = 'member-layout';
-const originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
+let originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
 
 class MemberProfile extends Component {
   static defaultProps = {
-    className: "layout",
-    cols: 12,
-    rowHeight: 10,
-    width: 1200,
     onLayoutChange: function() {}
   };
 
@@ -29,11 +25,15 @@ class MemberProfile extends Component {
   }
 
   onLayoutChange(layout) {
-    console.log('about to save to local storage');
+    // console.log('about to save to local storage');
     saveToLocalStorage(layoutname, "layout", layout);
-    this.setState({layout});
-    console.log('new layout', layout);
+    this.setState({ layout: layout });
     this.props.onLayoutChange(layout);
+  }
+
+  componentWillMount() {
+    originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
+    this.setState({ layout: JSON.parse(JSON.stringify(originalLayout)) });
   }
 
   render() {

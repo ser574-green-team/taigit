@@ -8,7 +8,7 @@ import stackBarChartData from './charts/stackedBarChartData';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 
 const layoutname = 'taiga-layout';
-const originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
+let originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
 
 let taigaUsProgress = {
   labels: ["Completed", "In Progress", "Not Done"],
@@ -25,10 +25,6 @@ let taigaUsProgress = {
 
 class Taiga extends Component {
   static defaultProps = {
-    className: "layout",
-    cols: 12,
-    rowHeight: 10,
-    width: 1200,
     onLayoutChange: function() {}
   };
 
@@ -43,15 +39,15 @@ class Taiga extends Component {
   }
 
   onLayoutChange(layout) {
-    console.log('about to save to local storage');
     saveToLocalStorage(layoutname, "layout", layout);
-    this.setState({layout});
-    console.log('new layout', layout);
+    this.setState({ layout: layout});
     this.props.onLayoutChange(layout);
   }
 
   componentWillMount() {
     this.props.grabTaigaData();
+    originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
+    this.setState({ layout: JSON.parse(JSON.stringify(originalLayout)) });
   }
 
   render() {
