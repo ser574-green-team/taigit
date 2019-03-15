@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import GridLayout from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { grabTaigaData } from '../actions/taigaActions';
 import stackBarChartData from './charts/stackedBarChartData';
+import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+
+const layoutname = 'taiga-layout';
+const originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
 
 let taigaUsProgress = {
   labels: ["Completed", "In Progress", "Not Done"],
@@ -20,6 +24,32 @@ let taigaUsProgress = {
 }
 
 class Taiga extends Component {
+  static defaultProps = {
+    className: "layout",
+    cols: 12,
+    rowHeight: 10,
+    width: 1200,
+    onLayoutChange: function() {}
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      layout: JSON.parse(JSON.stringify(originalLayout))
+    };
+
+    this.onLayoutChange = this.onLayoutChange.bind(this);
+  }
+
+  onLayoutChange(layout) {
+    console.log('about to save to local storage');
+    saveToLocalStorage(layoutname, "layout", layout);
+    this.setState({layout});
+    console.log('new layout', layout);
+    this.props.onLayoutChange(layout);
+  }
+
   componentWillMount() {
     this.props.grabTaigaData();
   }
@@ -28,7 +58,7 @@ class Taiga extends Component {
     return(
       <div className="app-page">
         <h2>Taiga</h2>
-        <GridLayout className="layout" cols={12} rowHeight={30} width={1200}>
+        <ReactGridLayout layout={this.state.layout} onLayoutChange={this.onLayoutChange} cols={12} rowHeight={30} width={1200}>
           <div className='box' key="1" data-grid={{ w: 3, h: 5, x: 0, y: 0, minW: 3, minH: 5 }}>
             <div className="chart chart-pie">
               <span className="chart-title">User Story Progress</span>
@@ -42,7 +72,7 @@ class Taiga extends Component {
             </div>
           </div>
           <h4>{this.props.storeData}</h4>
-        </GridLayout>
+        </ReactGridLayout>
       </div>
     );
   }
