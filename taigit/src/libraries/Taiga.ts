@@ -277,7 +277,7 @@ return output;
  * * {
  * 
  *      finished: Boolean           // true, the task is finished.
- *      fin_per: number            // finished percentage % default [0%,10%,60%,100%]
+ *      fin_per: number            // finished percentage % default [0%,10%,80%,100%]
  *      end_status: string,       // current task status  ["New", "In progress","Ready for test", "Closed"]
  *      num_stat:number           // current task status [0 1 2 3] corresponding to string in end_status
  *
@@ -319,7 +319,7 @@ task_assessment_endstate(taskId : number) : Promise<Object> {
             break;
         }
         case "Ready for test":{
-            t_fin_per = 60;
+            t_fin_per = 80;
             t_num_stat = 2;
             break;
         }
@@ -329,7 +329,7 @@ task_assessment_endstate(taskId : number) : Promise<Object> {
             break;
         }
         case "New":{
-            t_fin_per = 60;
+            t_fin_per = 0;
             t_num_stat = 0;
             break;
         }
