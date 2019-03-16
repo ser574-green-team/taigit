@@ -7,6 +7,7 @@ import Taiga from './components/Taiga';
 import Overview from './components/Overview';
 import NavBar from './components/SideNavBar';
 import MemberProfile from './components/MemberProfile';
+import Projects from './components/Projects';
 
 class App extends Component {
   render() {
@@ -20,6 +21,7 @@ class App extends Component {
             <Route path="/taiga" component={Taiga}/>
             <Route path="/team" component={Team} exact/>
             <Route path="/team/members/:memberId" component={MemberProfile} exact/>
+            <Route path="/projects" component={Projects}/>
           </Switch>
         </div>
       </Router>
