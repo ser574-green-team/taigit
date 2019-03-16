@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import StackedBarChart from './charts/StackedBarChart';
 import stackBarChartData from './charts/stackedBarChartData';
 import DoughnutChart from './charts/DoughnutChart';
+import {us_history} from '../libraries/Taiga';
+
 
 let taigaUsProgress = {
   labels: ["Completed", "In Progress", "Not Done"],
@@ -27,6 +29,7 @@ export default class Taiga extends Component {
         <div className="chart chart-stacked-bar">
           <span className="chart-title">Taiga Tasks</span>
           <StackedBarChart chartData={stackBarChartData}/>
+          {console.log(us_history(2657204).then(val => console.log(val)))}
         </div>
       </div>
     );
