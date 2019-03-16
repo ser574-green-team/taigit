@@ -1,43 +1,55 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
-import ReactGridLayout from 'react-grid-layout';
 import {Doughnut, Line} from 'react-chartjs-2';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { WidthProvider, Responsive } from "react-grid-layout";
+
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const layoutname = 'overview-layout';
-let originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
+let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
 
 export default class Overview extends Component {
-  static defaultProps = {
-    onLayoutChange: function() {}
-  };
-
   constructor(props) {
     super(props);
 
     this.state = {
-      layout: JSON.parse(JSON.stringify(originalLayout))
+      layouts: JSON.parse(JSON.stringify(originalLayouts))
     };
-
-    this.onLayoutChange = this.onLayoutChange.bind(this);
   }
+  
+  static get defaultProps() {
+    return {
+      className: "layout",
+      cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+      rowHeight: 30
+    }
+  };
 
-  onLayoutChange(layout) {
-    saveToLocalStorage(layoutname, "layout", layout);
-    this.setState({ layout: layout });
-    this.props.onLayoutChange(layout);
+  onLayoutChange(layout, layouts) {
+    saveToLocalStorage(layoutname, 'layouts', layouts);
+    this.setState({ layouts: layouts });
+    // this.props.onLayoutChange(layouts);
   }
 
   componentWillMount() {
-    originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
-    this.setState({ layout: JSON.parse(JSON.stringify(originalLayout)) });
+    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
   render() {
     return (
       <div className="app-page">
         <h2>Team Project Name</h2>
-        <ReactGridLayout layout={this.state.layout} onLayoutChange={this.onLayoutChange} cols={12} rowHeight={30} width={1200}>
+        <ResponsiveReactGridLayout
+          className="layout"
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={30}
+          layouts={this.state.layouts}
+          onLayoutChange={(layout, layouts) =>
+            this.onLayoutChange(layout, layouts)
+          }
+        >
           <div className='box' key="1" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 2, minH: 5 }}>
             <NumberDisplay number="43" statistic="Total Commits"/>
           </div>
@@ -59,7 +71,7 @@ export default class Overview extends Component {
           <div className='box' key="5" data-grid={{ w: 2, h: 2, x: 8, y: 0, minW: 2, minH: 3 }}>
             <span className="text">5</span>
           </div>
-        </ReactGridLayout>
+        </ResponsiveReactGridLayout>
       </div>
     )
   }
