@@ -146,15 +146,3 @@ task_history(taskId : number) : Promise<Object> {
 
     return output;
 }
-
-export async function sprint_list(projId : number) : Promise<Object> {
-    return (await axios.get(`https://api.taiga.io/api/v1/milestones?project=${projId}`)).data;
-  }
-  
-  export async function userstory_list(sprintId : number) : Promise<Object> {
-    return (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
-  }
-  
-  export async function task_list(userstoryId : number) : Promise<Object> {
-    return (await axios.get(`https://api.taiga.io/api/v1/tasks?user_story=${userstoryId}`)).data;
-  }
