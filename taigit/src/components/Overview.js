@@ -5,7 +5,6 @@ import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
 const layoutname = 'overview-layout';
 let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
 
@@ -29,7 +28,6 @@ export default class Overview extends Component {
   onLayoutChange(layout, layouts) {
     saveToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
-    // this.props.onLayoutChange(layouts);
   }
 
   componentWillMount() {

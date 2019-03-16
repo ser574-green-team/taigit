@@ -2,38 +2,39 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TeamMemberCard from './TeamMemberCard'
 import NumberDisplay from './NumberDisplay'
-import ReactGridLayout from 'react-grid-layout';
+import { WidthProvider, Responsive } from "react-grid-layout";
 import { Radar } from 'react-chartjs-2';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'member-layout';
-let originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
+let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
 
 class MemberProfile extends Component {
-  static defaultProps = {
-    onLayoutChange: function() {}
-  };
-
   constructor(props) {
     super(props);
 
     this.state = {
-      layout: JSON.parse(JSON.stringify(originalLayout))
+      layouts: JSON.parse(JSON.stringify(originalLayouts))
     };
-
-    this.onLayoutChange = this.onLayoutChange.bind(this);
   }
+  
+  static get defaultProps() {
+    return {
+      className: "layout",
+      cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+      rowHeight: 30
+    }
+  };
 
-  onLayoutChange(layout) {
-    // console.log('about to save to local storage');
-    saveToLocalStorage(layoutname, "layout", layout);
-    this.setState({ layout: layout });
-    this.props.onLayoutChange(layout);
+  onLayoutChange(layout, layouts) {
+    saveToLocalStorage(layoutname, 'layouts', layouts);
+    this.setState({ layouts: layouts });
   }
 
   componentWillMount() {
-    originalLayout = getFromLocalStorage(layoutname, 'layout') || [];
-    this.setState({ layout: JSON.parse(JSON.stringify(originalLayout)) });
+    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
   render() {
@@ -41,7 +42,15 @@ class MemberProfile extends Component {
     return(
       <div className="app-page">
         <h2>TeamMemberId: {this.props.match.params.memberId}</h2>
-        <ReactGridLayout layout={this.state.layout} onLayoutChange={this.onLayoutChange} cols={12} rowHeight={30} width={1200}>
+        <ResponsiveReactGridLayout
+          className="layout"
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={30}
+          layouts={this.state.layouts}
+          onLayoutChange={(layout, layouts) =>
+            this.onLayoutChange(layout, layouts)
+          }
+        >          
           <div className='box' key="1" data-grid={{ w: 3, h: 9, x: 0, y: 0, minW: 2, minH: 3 }}>
             <div className="chart">
               <TeamMemberCard taigaId={member.taigaId} githubId={member.githubId} name={member.name} pictureUrl={member.pictureUrl}/>
@@ -61,7 +70,7 @@ class MemberProfile extends Component {
           <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 9, y: 0, minW: 2, minH: 3 }}>
             <NumberDisplay number="23" statistic="Tasks Completed"/>
           </div>
-        </ReactGridLayout>
+        </ResponsiveReactGridLayout>
       </div>
     );
   }
