@@ -11,7 +11,7 @@ export async function
 getNumComments(owner : string, repo: string){
     try{
         let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
-            "/" + repo + "/issues?state=closed");
+            "/" + repo + "/pulls?state=closed");
         let lengthOfClosedPullRequests = issue_comment.data.length
         let issueNumberArray = Array()
        // console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
