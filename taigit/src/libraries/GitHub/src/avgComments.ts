@@ -25,7 +25,8 @@ getNumComments(owner : string, repo: string){
         for(let issue_number of issueNumberArray){
             let commentsPerIssue = await getNumberCommentsPerPullRequest(owner,repo,Number(issue_number))
             totalComments = totalComments + Number(commentsPerIssue)
-            //console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))}
+            //console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))
+        }
 
        // console.log("Total Number Of Comments on PR: "+totalComments)
         let averageNoOfComments = (totalComments/lengthOfClosedPullRequests).toFixed(2)
