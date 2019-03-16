@@ -25,14 +25,18 @@ taiga_login(username : string, password : string) : Promise<boolean> {
  *      id : number,          // Project id
  *      name : string,        // Project name
  *      created_date : number // Date project was created
- *      members: Object[]     // Array containing role (number), string for role_name, full_name, username
  * }
  */
 export async function
 project_info(slug : string) : Promise<Object> {
+    interface prj_info {
+        id: number, 
+        name: string, 
+        created_date: Date, 
+    }
     let data = await axios.get("https://api.taiga.io/api/v1/projects/by_slug?slug=" + slug)
-    let info : {id: number, name: string, created_date: Date, members: Object[]} =
-        {id: data.data.id, name: data.data.name, created_date: data.data.created_date, members: data.data.members};
+    let info : prj_info = {id: data.data.id, name: data.data.name, 
+                           created_date: data.data.created_date};
     return (info);
 }
 
@@ -52,11 +56,18 @@ project_info(slug : string) : Promise<Object> {
 export async function
 project_stats(projId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/" + projId.toString() + '/stats');
-    let info : {assigned_pts: number, assigned_pts_per_role: Object[], closed_pts: number, closed_pts_per_role: Object[],
-                num_sprints: number, total_pts: number} = 
-            {assigned_pts: data.data.assigned_points, assigned_pts_per_role: data.data.assigned_points_per_role, 
-            closed_pts: data.data.closed_points, closed_pts_per_role: data.data.closed_points_per_role,
-            num_sprints: data.data.total_milestones, total_pts: data.data.total_points};
+    interface prj_stats {
+        assigned_pts: number, 
+        assigned_pts_per_role: Object[], 
+        closed_pts: number, 
+        closed_pts_per_role: Object[],
+        num_sprints: number, 
+        total_pts: number
+    }
+    let info : prj_stats = {assigned_pts: data.data.assigned_points, 
+                            assigned_pts_per_role: data.data.assigned_points_per_role, 
+                            closed_pts: data.data.closed_points, closed_pts_per_role: data.data.closed_points_per_role,
+                            num_sprints: data.data.total_milestones, total_pts: data.data.total_points};
     return (info);
 }
 
@@ -79,14 +90,22 @@ project_stats(projId : number) : Promise<Object> {
 export async function
 sprint_stats(sprintId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats');
-    let info : {completed_pts: Object[], total_pts: number, completed_tsks: number, total_tsks: number, 
-                completed_us: number, total_us: number, sprint_start: string, sprint_end: string,
-                burndown: Object[]} = 
-            {completed_pts: data.data.completed_points, total_pts: data.data.total_points, 
-            completed_tsks: data.data.completed_tasks, total_tsks: data.data.total_tasks,
-            completed_us: data.data.completed_userstories, total_us: data.data.total_userstories,
-            sprint_start: data.data.estimated_start, sprint_end: data.data.estimated_finish,
-            burndown: data.data.days};
+    interface spr_stats {
+        completed_pts: Object[], 
+        total_pts: number, 
+        completed_tsks: number, 
+        total_tsks: number, 
+        completed_us: number, 
+        total_us: number, 
+        sprint_start: string, 
+        sprint_end: string,
+        burndown: Object[]
+    }
+    let info : spr_stats = {completed_pts: data.data.completed_points, total_pts: data.data.total_points, 
+                            completed_tsks: data.data.completed_tasks, total_tsks: data.data.total_tasks,
+                            completed_us: data.data.completed_userstories, total_us: data.data.total_userstories,
+                            sprint_start: data.data.estimated_start, sprint_end: data.data.estimated_finish,
+                            burndown: data.data.days};
     return (info);
 }
 
