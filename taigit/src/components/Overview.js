@@ -48,25 +48,25 @@ export default class Overview extends Component {
             this.onLayoutChange(layout, layouts)
           }
         >
-          <div className='box' key="1" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 2, minH: 5 }}>
+          <div className='box' key="1" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number="43" statistic="Total Commits"/>
           </div>
-          <div className='box' key="2" data-grid={{ w: 3, h: 5, x: 2, y: 0, minW: 3, minH: 5 }}>
+          <div className='box' key="2" data-grid={{ w: 3, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
             <span className="chart-title">Technologies Used</span>
             <Doughnut data={technologiesUsed} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 2, minH: 3 }}>
+          <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-horizontal-primary">
               <span className="chart-title">Github Contributions</span>
               <Line data={lineData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="4" data-grid={{ w: 2, h: 2, x: 6, y: 0, minW: 2, minH: 3 }}>
+          <div className='box' key="4" data-grid={{ w: 2, h: 2, x: 6, y: 0, minW: 0, minH: 0 }}>
             <span className="text">4</span>
           </div>
-          <div className='box' key="5" data-grid={{ w: 2, h: 2, x: 8, y: 0, minW: 2, minH: 3 }}>
+          <div className='box' key="5" data-grid={{ w: 2, h: 2, x: 8, y: 0, minW: 0, minH: 0 }}>
             <span className="text">5</span>
           </div>
         </ResponsiveReactGridLayout>

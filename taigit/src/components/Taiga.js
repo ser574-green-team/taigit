@@ -52,13 +52,13 @@ class Taiga extends Component {
             this.onLayoutChange(layout, layouts)
           }
         >
-          <div className='box' key="1" data-grid={{ w: 3, h: 5, x: 0, y: 0, minW: 3, minH: 5 }}>
+          <div className='box' key="1" data-grid={{ w: 3, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
               <span className="chart-title">User Story Progress</span>
               <Doughnut data={taigaUsProgress} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="2" data-grid={{ w: 5, h: 7, x: 3, y: 0, minW: 2, minH: 3 }}>
+          <div className='box' key="2" data-grid={{ w: 5, h: 7, x: 3, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className="chart-title">Taiga Tasks</span>
               <Bar data={stackBarChartData} options={{maintainAspectRatio: true, responsive: true}}/>

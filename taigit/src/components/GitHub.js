@@ -55,25 +55,25 @@ class GitHub extends Component {
             this.onLayoutChange(layout, layouts)
           }
         >
-          <div className='box' key="1" data-grid={{ w: 4, h: 6, x: 0, y: 0, minW: 2, minH: 5 }}>
+          <div className='box' key="1" data-grid={{ w: 4, h: 6, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
                 <span className="chart-title">Commits Per Member</span>
                 <Bar data={barChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 2, minH: 5 }}>
+          <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number="13" statistic="Pull Requests Created"/>
           </div>
-          <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 2, minH: 5 }}>
+          <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number="6" statistic="Pull Requests Reviewed"/>
           </div>
-          <div className='box' key="4" data-grid={{ w: 2, h: 9, x: 0, y: 0, minW: 2, minH: 5 }}>
+          <div className='box' key="4" data-grid={{ w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
             <h3>List of Branches</h3>
             {this.props.branches.map((branchName) => {
               return <p>{branchName}</p>
             })}
           </div>
-          <div className='box' key="5" data-grid={{ w: 3, h: 5, x: 4, y: 0, minW: 2, minH: 5 }}>
+          <div className='box' key="5" data-grid={{ w: 3, h: 5, x: 4, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
                 <span className="chart-title">(Redux) Commits Per Member</span>
                 <Bar data={this.props.commitChartData} options={{maintainAspectRatio: true, responsive: true}}/>
