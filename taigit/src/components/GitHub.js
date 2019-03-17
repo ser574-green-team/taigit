@@ -38,7 +38,7 @@ class GitHub extends Component {
   componentWillMount() {
     this.props.getBranchList();
     this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey');
-    this.props.getPullRequests('vmadaraj', 'SER515_codesquad');
+    this.props.getPullRequests('ser574-green-team', 'taigit');
     originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -81,7 +81,7 @@ class GitHub extends Component {
             </div>
           </div>
           <div className='box' key="6" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests"/>
+            <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
         </ResponsiveReactGridLayout>
       </div>

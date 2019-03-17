@@ -24,7 +24,7 @@ export const getCommitsPerUser = (infoForApiCall) => dispatch => {
 
 export const getPullRequests = (infoForApiCall) => dispatch => {
   console.log('about to get number of pull requests');
-  getNumPullRequests('vmadaraj', 'SER515_codesquad')
+  getNumPullRequests('ser574-green-team', 'taigit')
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );

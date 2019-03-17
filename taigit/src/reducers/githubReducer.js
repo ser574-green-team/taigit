@@ -28,7 +28,7 @@ const githubReducer = (state = {}, action) => {
         numOfCommits: action.payload
       }
     case GET_NUM_PULL_REQUESTS:
-      console.log('payload is: ', action.payload);
+      console.log('payload for pull req is: ', action.payload);
       return {
         ...state,
         numPullRequests: action.payload
