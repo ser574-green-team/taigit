@@ -87,11 +87,11 @@ task_history(taskId : number) : Promise<Object> {
  * [name1,name2,name3,...]
  */
 export async function
-getUserList(projName: string) : Promise<Object> {
+get_user_list(projName: string) : Promise<Object> {
     let response = await axios.get('https://api.taiga.io/api/v1/projects/by_slug?slug=' + projName);
-    let membersInProject = [];
+    let members_in_project = [];
     for (let content of response.data.members) {
-        membersInProject.push(content.full_name);
+        members_in_project.push(content.full_name);
     }
-    return(membersInProject);
+    return(members_in_project);
 }
