@@ -11,3 +11,4 @@ export default combineReducers({
 
 export const selectBranchList = (state) => fromGithub.selectBranchList(state.github);
 export const selectNumCommitsChartData = (state) => fromGithub.selectNumCommitsChartData(state.github);
+export const selectNumPullRequestsData = (state) => fromGithub.selectNumPullRequestsData(state.github);
