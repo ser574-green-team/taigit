@@ -89,12 +89,12 @@ task_history(taskId : number) : Promise<Object> {
  * }
  */
 export async function
-getUserStoryTitles(slug: string): Promise<Object> {
-    let projectId = (await axios.get(`https://api.taiga.io/api/v1/projects/by_slug?slug=${slug}`)).data.id;
-    let response = (await axios.get(`https://api.taiga.io/api/v1/userstories?project=${projectId}`)).data;
-    let userStorySubs : Array<Object> = [];
+get_user_story_titles(slug: string): Promise<Object> {
+    let project_id = (await axios.get(`https://api.taiga.io/api/v1/projects/by_slug?slug=${slug}`)).data.id;
+    let response = (await axios.get(`https://api.taiga.io/api/v1/userstories?project=${project_id}`)).data;
+    let user_story_subs : Array<Object> = [];
     for(let entry of response) {
-        userStorySubs.push(entry.subject);
+        user_story_subs.push(entry.subject);
     }
-    return(userStorySubs);
+    return(user_story_subs);
 }
