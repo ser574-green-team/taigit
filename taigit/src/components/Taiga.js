@@ -57,8 +57,8 @@ class Taiga extends Component {
             ...theme,
             colors: {
             ...theme.colors,
-              primary25: 'hotpink',
-              primary: 'black',
+              primary25: colors.yellow.light,
+              primary: colors.blue.light,
             },
           })} />
         </div>
