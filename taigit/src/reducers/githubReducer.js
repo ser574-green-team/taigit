@@ -75,15 +75,7 @@ export const selectNumCommitsChartData = (state) => {
 }
 
 export const selectNumPullRequestsData = (state) => {
-  return {
-    labels: ['Venkata Akhil Madaraju'],
-    datasets: [{
-      label: 'Pull Requests',
-      data: [state.numPullRequests],
-      backgroundColor: 'rgba(255, 99, 132, 1)',
-      borderWidth: 1
-    }],
-  }
+  return state.numPullRequests;
 }
 
 
