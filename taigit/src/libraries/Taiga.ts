@@ -28,10 +28,10 @@ project_stats(projId : number) : Promise<Object> {
     return (data.data);
 }
 
-//This call returns sprint stats based on sprintId
+//This call returns sprint stats based on sprint_id
 export async function
-sprint_stats(sprintId : number) : Promise<Object> {
-    let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats');
+sprint_stats(sprint_id : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprint_id.toString()+ '/stats');
      return (data.data);
 }
 
@@ -85,102 +85,102 @@ task_history(taskId : number) : Promise<Object> {
  * @param projName project/slug Name
  * @returns array of each members along with task count for all sprints 
  * {
- *      inProgressTaskCount: number
+ *      inprogress_task_count: number
  *      name: string
- *      newTaskCount: number
- *      sprintName: string
- *      taskReadyForTestCount: number
- *      taskWithUnknownStatusCount: number
- *      totalTaskCount: number 
+ *      new_task_count: number
+ *      sprint_name: string
+ *      task_ready_for_test_count: number
+ *      task_with_unknown_status_count: number
+ *      total_task_count: number 
  * }
  */
 export async function
-getTaskStatusCount(projName: string): Promise<Object> {
+get_task_status_count(projName: string): Promise<Object> {
     let response = await axios.get('https://api.taiga.io/api/v1/projects/by_slug?slug=' + projName);
     
-    let sprintDetailsArray = response.data.milestones;
+    let sprint_details_array = response.data.milestones;
     
-    let totalTaskDetails: any = [];
+    let total_task_details: any = [];
     // Project Id will be same for a project, so calculate only once with first sprint Id
-    let sprintId = sprintDetailsArray[0].id;
-    let projectId = await getProjectId(sprintId);
+    let sprint_id = sprint_details_array[0].id;
+    let project_id = await get_project_id(sprint_id);
 
-    for (let sprintDetail of sprintDetailsArray) {
-        let sprintId = sprintDetail.id;
-        let sprintName = sprintDetail.name;
-        let taskCountDetailsInASprint =  getTaskDetails(sprintId, projectId, sprintName);
+    for (let sprint_detail of sprint_details_array) {
+        let sprint_id = sprint_detail.id;
+        let sprint_name = sprint_detail.name;
+        let task_count_details_in_a_sprint =  get_task_details(sprint_id, project_id, sprint_name);
         
-        totalTaskDetails.push(taskCountDetailsInASprint);
+        total_task_details.push(task_count_details_in_a_sprint);
     }
-    return (totalTaskDetails);
+    return (total_task_details);
 }
 
 /**
- * @summary Get the projectId
- * @param sprintId sprint/Milestone Id
+ * @summary Get the project_id
+ * @param sprint_id sprint/Milestone Id
  * @returns project Id of the sprint 
  */
 
 export async function
-getProjectId(sprintId: number) : Promise<Object> {
-    let response = (await axios.get(`https://api.taiga.io/api/v1/milestones/${sprintId}`));
+get_project_id(sprint_id: number) : Promise<Object> {
+    let response = (await axios.get(`https://api.taiga.io/api/v1/milestones/${sprint_id}`));
     return (response.data.project_extra_info.id);
 }
 
 /**
  * @summary Get the Task count with its status for a sprint in  a project
- * @param sprintId : Milestone Id 
- * @param projectId: Project Id 
- * @param sprintName: Sprint name
+ * @param sprint_id : Milestone Id 
+ * @param project_id: Project Id 
+ * @param sprint_name: Sprint name
  * @returns array of each members along with task count for a single sprint 
  * {
- *      inProgressTaskCount: number
+ *      inprogress_task_count: number
  *      name: string
- *      newTaskCount: number
- *      sprintName: string
- *      taskReadyForTestCount: number
- *      taskWithUnknownStatusCount: number
- *      totalTaskCount: number 
+ *      new_task_count: number
+ *      sprint_name: string
+ *      task_ready_for_test_count: number
+ *      task_with_unknown_status_count: number
+ *      total_task_count: number 
  * }
  */
 
 async function
-getTaskDetails(sprintId: number, projectId: any, sprintName: string)  : Promise<Object> {
+get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Promise<Object> {
 
-    let dictTaskCount: any = {};
-    let jsonObj: any = {};
-    let bigObj: any = [];
-    let response = (await axios.get(`https://api.taiga.io/api/v1/tasks?milestone=${sprintId}&&project=${projectId}`)).data;
+    let dict_task_count: any = {};
+    let json_obj: any = {};
+    let big_obj: any = [];
+    let response = (await axios.get(`https://api.taiga.io/api/v1/tasks?milestone=${sprint_id}&&project=${project_id}`)).data;
     
-    for (let taskName of response) {
+    for (let task_name of response) {
         let name : string;
-        if (taskName.assigned_to_extra_info != null) {
-            name = taskName.assigned_to_extra_info.full_name_display;
+        if (task_name.assigned_to_extra_info != null) {
+            name = task_name.assigned_to_extra_info.full_name_display;
         } else {
-            name = taskName.owner_extra_info.full_name_display;
+            name = task_name.owner_extra_info.full_name_display;
         }
-        let taskStatusName = taskName.status_extra_info.name;
-        let taskStatus = taskName.status_extra_info.is_closed;
+        let task_status_name = task_name.status_extra_info.name;
+        let task_status = task_name.status_extra_info.is_closed;
         let nameKey: any;
-        if (name in dictTaskCount) {
-            nameKey = dictTaskCount[name];
-            dictTaskCount[name] = nameKey + 1;
+        if (name in dict_task_count) {
+            nameKey = dict_task_count[name];
+            dict_task_count[name] = nameKey + 1;
 
-            for (let i = 0; i < bigObj.length; i++) {
-                if (name === bigObj[i].name) {
-                    bigObj[i].totalTaskCount = bigObj[i].totalTaskCount + 1;
-                    if (taskStatus === true) {
-                        bigObj[i].closedTaskCount = bigObj[i].closedTaskCount + 1;
+            for (let i = 0; i < big_obj.length; i++) {
+                if (name === big_obj[i].name) {
+                    big_obj[i].total_task_count = big_obj[i].total_task_count + 1;
+                    if (task_status === true) {
+                        big_obj[i].closed_task_count = big_obj[i].closed_task_count + 1;
                     } else {
-                        if (taskStatusName === "Ready for test") {
-                            bigObj[i].taskReadyForTestCount = bigObj[i].taskReadyForTestCount + 1;
-                        } else if (taskStatusName === "In progress") {
-                            bigObj[i].inProgressTaskCount = bigObj[i].inProgressTaskCount + 1;
-                        } else if (taskStatusName === "New") {
-                            bigObj[i].newTaskCount = bigObj[i].newTaskCount + 1;
+                        if (task_status_name === "Ready for test") {
+                            big_obj[i].task_ready_for_test_count = big_obj[i].task_ready_for_test_count + 1;
+                        } else if (task_status_name === "In progress") {
+                            big_obj[i].inprogress_task_count = big_obj[i].inprogress_task_count + 1;
+                        } else if (task_status_name === "New") {
+                            big_obj[i].new_task_count = big_obj[i].new_task_count + 1;
                         }
                         else {
-                            bigObj[i].taskWithUnknownStatusCount = bigObj[i].taskWithUnknownStatusCount + 1;
+                            big_obj[i].task_with_unknown_status_count = big_obj[i].task_with_unknown_status_count + 1;
                         }
                     }
                  }
@@ -188,32 +188,32 @@ getTaskDetails(sprintId: number, projectId: any, sprintName: string)  : Promise<
         } else {
             // This block will execute only once for 
             // for each team member
-            dictTaskCount[name] = 1;
-            jsonObj = {};
-            jsonObj['name'] = name;
-            jsonObj['sprintName'] = sprintName;
-            jsonObj['totalTaskCount'] = 1;
-            jsonObj['taskReadyForTestCount'] = 0;
-            jsonObj['inProgressTaskCount'] = 0;
-            jsonObj['newTaskCount'] = 0;
-            jsonObj['taskWithUnknownStatusCount'] = 0;
-            jsonObj['closedTaskCount'] = 0;
+            dict_task_count[name] = 1;
+            json_obj = {};
+            json_obj['name'] = name;
+            json_obj['sprint_name'] = sprint_name;
+            json_obj['total_task_count'] = 1;
+            json_obj['task_ready_for_test_count'] = 0;
+            json_obj['inprogress_task_count'] = 0;
+            json_obj['new_task_count'] = 0;
+            json_obj['task_with_unknown_status_count'] = 0;
+            json_obj['closed_task_count'] = 0;
 
-            if (taskStatus === true) {
-                jsonObj['closedTaskCount'] = 1;
+            if (task_status === true) {
+                json_obj['closed_task_count'] = 1;
             } else {
-                if (taskStatusName === "Ready for test") {
-                    jsonObj['taskReadyForTestCount'] = 1;
-                } else if (taskStatusName === "In progress") {
-                    jsonObj['inProgressTaskCount'] = 1;
-                } else if (taskStatusName === "New") {
-                    jsonObj['newTaskCount'] = 1;
+                if (task_status_name === "Ready for test") {
+                    json_obj['task_ready_for_test_count'] = 1;
+                } else if (task_status_name === "In progress") {
+                    json_obj['inprogress_task_count'] = 1;
+                } else if (task_status_name === "New") {
+                    json_obj['new_task_count'] = 1;
                 } else {
-                    jsonObj['taskWithUnknownStatusCount'] = 1
+                    json_obj['task_with_unknown_status_count'] = 1
                 }
             }
-            bigObj.push(jsonObj);
+            big_obj.push(json_obj);
         }
     }
-    return(bigObj);
+    return(big_obj);
 }
