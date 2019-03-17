@@ -4,3 +4,4 @@ export {getCommitsInTimeWindow} from "./src/commitsInWindow";
 export {getNumPullRequests} from "./src/numPullRequests";
 export {getNumComments} from "./src/avgComments";
 export {contributorData} from "./src/contributorData";
+export {authRedirect, getAuthToken} from "./src/auth"
