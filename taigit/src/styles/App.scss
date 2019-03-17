@@ -71,11 +71,10 @@
 .chart-horizontal-primary {
   height: 100%;
   width: 100%;
-  background-color: rgb(236, 238, 228);
 }
 
 .chart-square-primary {
-  background-color: rgb(236, 238, 228);
+  background-color: $white-wash;
 }
 
 .chart-bar {
@@ -97,7 +96,7 @@
 
 .chart-title {
   font-weight: bold;
-  color: $dark-grape;
+  color: $purple-dark;
   padding-top: 0.5em;
 }
 
