@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar } from 'react-chartjs-2';
@@ -11,6 +12,12 @@ import colors from '../styles/colors';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
 let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+
+const options = [
+  { value: 'sprint1', label: 'Sprint 1 - Research' },
+  { value: 'sprint2', label: 'Sprint 2 - Development' },
+  { value: 'sprint3', label: 'Sprint 3 - Deployment' }
+]
 
 class Taiga extends Component {
   constructor(props) {
@@ -44,6 +51,17 @@ class Taiga extends Component {
     return(
       <div className="app-page">
         <h2>Taiga</h2>
+        <div className="selector">
+          <Select options={options}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+            ...theme.colors,
+              primary25: 'hotpink',
+              primary: 'black',
+            },
+          })} />
+        </div>
         <ResponsiveReactGridLayout
           className="layout"
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
