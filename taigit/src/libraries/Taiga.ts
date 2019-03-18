@@ -95,16 +95,10 @@ task_history(taskId : number) : Promise<Object> {
  * }
  */
 export async function
-get_task_status_count(projName: string): Promise<Object> {
-    let response = await axios.get('https://api.taiga.io/api/v1/projects/by_slug?slug=' + projName);
-    
-    let sprint_details_array = response.data.milestones;
-    
+get_task_status_count(project_id: number): Promise<Object> {
+    let sprint_details_array = (await axios.get(`https://api.taiga.io/api/v1/projects/${project_id}`)).data.milestones;
     let total_task_details: any = [];
-    // Project Id will be same for a project, so calculate only once with first sprint Id
-    let sprint_id = sprint_details_array[0].id;
-    let project_id = await get_project_id(sprint_id);
-
+    
     for (let sprint_detail of sprint_details_array) {
         let sprint_id = sprint_detail.id;
         let sprint_name = sprint_detail.name;
@@ -113,18 +107,6 @@ get_task_status_count(projName: string): Promise<Object> {
         total_task_details.push(task_count_details_in_a_sprint);
     }
     return (total_task_details);
-}
-
-/**
- * @summary Get the project_id
- * @param sprint_id sprint/Milestone Id
- * @returns project Id of the sprint 
- */
-
-export async function
-get_project_id(sprint_id: number) : Promise<Object> {
-    let response = (await axios.get(`https://api.taiga.io/api/v1/milestones/${sprint_id}`));
-    return (response.data.project_extra_info.id);
 }
 
 /**
