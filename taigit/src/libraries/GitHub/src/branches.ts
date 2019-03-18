@@ -1,12 +1,7 @@
 import axios from "axios"
 
 
-/**
- * Lists names of branches in repo
- * 
- * @param owner owner of repo
- * @param repository name of repo
- */
+// Takes owner and repository names and returns the names of all the branches
 export async function
 getBranches(owner : string, repository : string) : Promise<Array<string>> {
     try {

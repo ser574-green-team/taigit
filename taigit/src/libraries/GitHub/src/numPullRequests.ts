@@ -1,12 +1,5 @@
 import axios from 'axios';
 
-
-/**
- * Returns the number of pull requests in a repo
- * 
- * @param owner owner of repo
- * @param repo name of repo
- */
 export async function 
 getNumPullRequests(owner: string, repo: string){
     try{
