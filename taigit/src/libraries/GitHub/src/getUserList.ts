@@ -4,7 +4,7 @@ import axios from "axios";
  * respository.
  * @param owner  The name of the owner of the repository in String format.
  * @param repo   The name of the Github repository in String format.
- * @return       The list consisting of usernames of All Contributers
+ * @return       The list consisting of usernames of All Contributers in the repo.
  */
 export  async function
 getContributerNames(owner : string, repo: string){
