@@ -82,15 +82,15 @@ task_history(taskId : number) : Promise<Object> {
 
 /**
  * @summary Get the list of user's full name in a project
- * @param projeName slug/project name to get the data
+ * @param project_id Project id to get the data
  * @returns array of all the names in a project
  * [name1,name2,name3,...]
  */
 export async function
-get_user_list(projName: string) : Promise<Object> {
-    let response = await axios.get('https://api.taiga.io/api/v1/projects/by_slug?slug=' + projName);
-    let members_in_project = [];
-    for (let content of response.data.members) {
+get_user_list(project_id: string) : Promise<Object> {
+    let response = (await axios.get(`https://api.taiga.io/api/v1/projects/${project_id}`)).data.members;
+    let members_in_project: Array<Object> = [];
+    for (let content of response) {
         members_in_project.push(content.full_name);
     }
     return(members_in_project);
