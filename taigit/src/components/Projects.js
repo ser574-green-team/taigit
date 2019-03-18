@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import ProjectPanel from './ProjectPanel'
+import * as keys from '../keys.json';
+import { authRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
+import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+
+const storeKey = '';
+let authKey = getFromLocalStorage(storeKey, 'layout') || {};
+const redirect = authRedirect(keys.GH_CLIENT_ID);
 
 export default class Projects extends Component {
     render() {
@@ -38,6 +45,10 @@ export default class Projects extends Component {
                         />
                     </form>
                 </div>
+                <br/><br/>
+                <a href={redirect}>
+                    <button type="button" class="gh-btn">Sign in to GitHub</button>
+                </a>
             </div>
         );
     }

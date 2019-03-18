@@ -6,21 +6,34 @@
 
 .project {
   border-left-style: solid;
-  border-color: lightgreen;
+  border-color: #08708A;
   text-indent: 20px;
 }
 
-.project:link, .project:visited {
-  background-color: #f44336;
-  color: blue;
+.btn {
+  background-color: #08708A;
+  color: white;
   padding: 14px 25px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
 }
 
-.project:hover, .project:active {
-  background-color: azure;
+.btn:hover {
+  background-color: #56B1BF;
+  cursor: pointer;
+}
+
+.gh-btn {
+  background-color: #08708A;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  position: relative;
+  left: 40%;
+}
+
+.gh-btn:hover {
+  background-color: #56B1BF;
+  cursor: pointer;
 }
 
 .title {
