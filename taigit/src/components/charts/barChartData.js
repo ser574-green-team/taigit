@@ -1,16 +1,23 @@
-import colors from '../../styles/colors';
-
 export default {
     labels: ['Rodney', 'Berta', 'Steve', 'Remy', 'Hugo'],
     datasets: [{
         label: 'Number of Commits',
         data: [26, 14, 12, 17, 9],
         backgroundColor: [
-            colors.blue.base,
-            colors.blue.light,
-            colors.blue.dark,
-            colors.blue.base,
-            colors.blue.light,
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
         ],
         borderWidth: 1
     }]

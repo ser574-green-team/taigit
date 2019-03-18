@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import RadialChart from './charts/RadialChart'
 import TeamMemberCard from './TeamMemberCard'
 
 export default class NumberDisplay extends Component {

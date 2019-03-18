@@ -1,30 +1,12 @@
 // Sass variables (Colors and Font)
 $font-stack: Helvetica, sans-serif;
-
-$blue: #56B1BF;
-$blue-dark: #08708A;
-$blue-light: #84C6D0;
-
-$red: #F26968;
-$red-dark: #B14D4C;
-$red-light: #F2AD9F;
-
-$purple: #6C4F70;
-$purple-dark: #39324B;
-$purple-light: #A18FA4;
-
-$yellow: #FFE066;
-$yellow-dark: #D1B854;
-$yellow-light: #FFE88F;
-
-$orange: #EE8434;
-$orange-dark: #DD6A11;
-$orange-light: #F2A56B;
-
-$none: #DFE2D2;
+$grape: #6C4F70;
+$dark-grape: #39324B;
+$cerulean: #56B1BF;
+$teal: #08708A;
 $white-wash: #f7f7f7;
 
 // Setting app and navbar colors
 $app-background: $white-wash;
-$nav-background: $blue; 
-$nav-hover: $blue-dark;
+$nav-background: $cerulean; 
+$nav-hover: $teal;

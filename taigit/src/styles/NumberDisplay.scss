@@ -1,10 +1,13 @@
 @import 'Variables';
 
 .number-display {
-  width: 100%;
-  height: 100%;
+  width: 10em;
+  height: 10em;
   background-color: $white-wash;
   text-align: center;
+  padding-top: 1em;
+  padding-right: 1em;
+  padding-left: 1em;
   float: left;
   margin-right: 1em;
   margin-bottom: 1em;
@@ -13,7 +16,7 @@
 .number-display-number {
   font-size: 5em;
   font-weight: bold; 
-  color: $purple-dark;
+  color: $dark-grape;
 }
 
 .number-display-title {
