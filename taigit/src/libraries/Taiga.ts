@@ -253,24 +253,25 @@ task_assessment_time(taskId : number) : Promise<Object> {
     let start : number = 0;
     for(let entry of data) {
         let new_entry = {
-            date : new Date(entry.created_at).getTime(),
-            timecost_m : 0,
-            acctime_m : 0,
+            date : new Date(entry.created_at).getTime(),    
             timecost_h : 0,
             acctime_h : 0,
             status_trans : entry.values_diff.status
         }
-        if(new_entry.status_trans[0]=="New") {
+        
+        let timecost_m : number;
+        let acctime_m : number;
+        if(new_entry.status_trans[0] == "New") {
             pre = new_entry.date;
-            new_entry.acctime_m = 0;
-            new_entry.acctime_h = new_entry.acctime_m/1000/3600;
+            acctime_m = 0;
+            new_entry.acctime_h = acctime_m/1000/3600;
             start = new_entry.date;
         }
         else{
-            new_entry.timecost_m = new_entry.date - pre;
-            new_entry.acctime_m = new_entry.date -start;
-            new_entry.timecost_h = new_entry.timecost_m/1000/3600;
-            new_entry.acctime_h = new_entry.acctime_m/1000/3600;
+            timecost_m = new_entry.date - pre;
+            acctime_m = new_entry.date -start;
+            new_entry.timecost_h = timecost_m/1000/3600;
+            new_entry.acctime_h = acctime_m/1000/3600;
         }
         output.push(new_entry);
     }
