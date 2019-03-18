@@ -259,20 +259,18 @@ taiga_issues(projId : number) : Promise<Object>{
  */
 export async function
 task_assessment_state_trans(taskId : number) : Promise<Array<Object>> {
-    let data = (await task_history(taskId));
+    let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data
     //test case :https://api.taiga.io/api/v1/history/task/2577741
     let output : Array<Object> = [];
     for(let entry of data) {
-        let new_entry = {
-            state_trans_invalid: false,
-            date : entry.date,
-            user : entry.user,
-            status_trans : entry.diff_values,
-        }
+         let new_entry = {
+           state_trans_invalid: false,
+           date : new Date(entry.created_at).getTime(),
+           user : entry.user,
+           status_trans : entry.values_diff.status
+   }
 
-
-
-
+        
     //Only three status transistion is valid
     //which is  ["New", "In progress"] ["In progress", "Ready for test"]  ["Ready for test", "Closed"])
     let old_status = new_entry.status_trans[0];
