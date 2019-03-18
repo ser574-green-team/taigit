@@ -1,9 +1,9 @@
-import { GRAB_TAIGA_DATA } from '../actions/taigaActions';
+import { GRAB_TAIGA_DATA, GET_SPRINT_STATS } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
   taigaData: 'helller',
-  sprintProgress: [5, 4, 13]
+  sprintStats: {}
 }
 
 /**
@@ -24,6 +24,13 @@ export default function taigaReducer(state = initialState, action) {
         ...state,
         taigaData: action.payload
       }
+    case GET_SPRINT_STATS:
+      console.log('got sprint stats');
+      console.log('stats: ', action.payload);
+      return {
+        ...state,
+        sprintStats: action.payload
+      }
     default:
       return state;
   }
@@ -34,14 +41,16 @@ export default function taigaReducer(state = initialState, action) {
  * In chartjs pie chart format
  */
 export const selectSprintProgressChartData = (state) => {
+  const totalTasks = state.sprintStats.total_tsks;
+  const totalCompletedTasks = state.sprintStats.completed_tsks;
+  const totalInProgressTasks = totalTasks - totalCompletedTasks;
   return {
-    labels: ["Completed", "In Progress", "Not Done"],
+    labels: ["Completed", "In Progress"],
     datasets: [{
       label: 'Task Progress',
-      data: state.sprintProgress,
+      data: [totalCompletedTasks, totalInProgressTasks],
       backgroundColor: [
           colors.blue.dark,
-          colors.blue.base,
           colors.none
       ],
     }]
