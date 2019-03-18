@@ -174,7 +174,7 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
             json_obj = {};
             json_obj['name'] = name;
             json_obj['sprint_name'] = sprint_name;
-            json_obj['total_task_count'] = 1;
+            json_obj['total_task_count'] = 0;
             json_obj['task_ready_for_test_count'] = 0;
             json_obj['inprogress_task_count'] = 0;
             json_obj['new_task_count'] = 0;
@@ -183,6 +183,7 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
 
             if (task_status === true) {
                 json_obj['closed_task_count'] = 1;
+                json_obj['total_task_count'] = 1;
             } else {
                 if (task_status_name === "Ready for test") {
                     json_obj['task_ready_for_test_count'] = 1;
@@ -193,6 +194,7 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
                 } else {
                     json_obj['task_with_unknown_status_count'] = 1
                 }
+                json_obj['total_task_count'] = 1;
             }
             big_obj.push(json_obj);
         }
