@@ -1,3 +1,4 @@
+import colors from '../styles/colors';
 import { GET_BRANCH_LIST, GET_COMMITS_PER_USER } from '../actions/githubActions';
 
 const initialState = {
@@ -61,7 +62,7 @@ export const selectNumCommitsChartData = (state) => {
     datasets: [{
       label: 'Number of Commits',
       data: [state.numOfCommits],
-      backgroundColor: 'rgba(255, 99, 132, 1)',
+      backgroundColor: colors.yellow.base,
       borderWidth: 1
     }],
   }
