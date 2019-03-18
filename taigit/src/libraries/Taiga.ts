@@ -82,7 +82,7 @@ task_history(taskId : number) : Promise<Object> {
 
 /**
  * @summary Get the Task count with its status for each sprint
- * @param projName project/slug Name
+ * @param project_id Taiga project Id
  * @returns array of each members along with task count for all sprints 
  * {
  *      inprogress_task_count: number
