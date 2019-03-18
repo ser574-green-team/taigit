@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { grabTaigaData, grabSprintStats } from '../actions/taigaActions';
-import { selectSprintProgressChartData } from '../reducers';
-import stackBarChartData from './charts/stackedBarChartData';
+import { selectSprintProgressChartData, selectUserTaskDistributionChartData } from '../reducers';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
@@ -64,7 +63,7 @@ class Taiga extends Component {
           <div className='box' key="2" data-grid={{ w: 5, h: 7, x: 3, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className="chart-title">Taiga Tasks</span>
-              <Bar data={stackBarChartData} options={{maintainAspectRatio: true, responsive: true}}/>
+              <Bar data={this.props.userTaskDistribution} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <h4>{this.props.storeData}</h4>
@@ -90,7 +89,8 @@ Taiga.propTypes = {
  */
 const mapStateToProps = state => ({
   storeData: state.taiga.taigaData,
-  sprintProgress: selectSprintProgressChartData(state)
+  sprintProgress: selectSprintProgressChartData(state),
+  userTaskDistribution: selectUserTaskDistributionChartData(state)
 });
 
 /**
