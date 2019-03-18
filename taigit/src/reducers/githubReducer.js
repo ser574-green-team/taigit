@@ -1,9 +1,10 @@
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS } from '../actions/githubActions';
+import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, GET_NUM_COMMITS_WINDOW } from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
   numOfCommits: 0,
-  numPullRequests: 0
+  numPullRequests: 0,
+  numOfCommitsInWindow: 0
 }
 /**
  * Github Reducer
@@ -32,6 +33,12 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
         numPullRequests: action.payload
+      }
+    case GET_NUM_COMMITS_WINDOW:
+      console.log('payload getting commits in window: ', action.payload);
+      return {
+        ...state,
+        numOfCommitsInWindow: action.payload
       }
     default:
       return {
@@ -76,6 +83,10 @@ export const selectNumCommitsChartData = (state) => {
 
 export const selectNumPullRequestsData = (state) => {
   return state.numPullRequests;
+}
+
+export const selectNumCommitsWindowData = (state) => {
+  return state.numOfCommitsInWindow;
 }
 
 
