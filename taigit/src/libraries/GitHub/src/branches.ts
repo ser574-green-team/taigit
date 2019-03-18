@@ -1,7 +1,12 @@
 import axios from "axios"
 
 
-// Takes owner and repository names and returns the names of all the branches
+/**
+ * Returns names of branches in repo
+ * 
+ * @param owner owner of repo
+ * @param repository name of repo
+ */
 export async function
 getBranches(owner : string, repository : string) : Promise<Array<string>> {
     try {
@@ -18,8 +23,13 @@ getBranches(owner : string, repository : string) : Promise<Array<string>> {
     return []
 }
 
-// Takes the owner, repository and branch name and
-// returns the number of commits on that branch.
+/**
+ * Returns the number of commits for specified branch.
+ * 
+ * @param owner owner of repo
+ * @param repository name or repo
+ * @param branch branch to get number of commits for
+ */
 export async function
 getNumBranchCommits(owner : string, repository: string, branch : string) :
     Promise<number> {
