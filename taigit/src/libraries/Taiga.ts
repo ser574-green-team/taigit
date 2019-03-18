@@ -12,6 +12,21 @@ interface prj_info {
     name: string, 
     created_date: Date, 
 }
+    
+    
+/**
+ * @summary interface for task_history
+ * @param date : Date,                // date of history entry
+ * @param user : Object,              // object of user
+ * @param diff_types : Array<String>  // array of modification types
+ * @param diff_values : Array<Object> // modifications made.
+ */
+interface task_hist_obj {
+    date : number,
+    user : Object,
+    diff_types : Array<String>,
+    diff_values : Array<Object>
+}    
 
 /**
  * @summary interface for project stats
@@ -243,17 +258,20 @@ taiga_issues(projId : number) : Promise<Object>{
  * }
  */
 export async function
-task_assessment_state_trans(taskId : number) : Promise<Object> {
-let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
+task_assessment_state_trans(taskId : number) : Promise<Array<Object>> {
+    let data = (await task_history(taskId));
     //test case :https://api.taiga.io/api/v1/history/task/2577741
-let output : Array<Object> = [];
-for(let entry of data) {
-    let new_entry = {
-        state_trans_invalid: false,
-        date : new Date(entry.created_at).getTime(),
-        user : entry.user,
-        status_trans : entry.values_diff.status
-    }
+    let output : Array<Object> = [];
+    for(let entry of data) {
+        let new_entry = {
+            state_trans_invalid: false,
+            date : entry.date,
+            user : entry.user,
+            status_trans : entry.diff_values,
+        }
+
+
+
 
     //Only three status transistion is valid
     //which is  ["New", "In progress"] ["In progress", "Ready for test"]  ["Ready for test", "Closed"])
@@ -265,6 +283,7 @@ for(let entry of data) {
         new_entry.state_trans_invalid= true;
     output.push(new_entry);
 }
+
 
 return output;
 }
