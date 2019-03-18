@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { grabTaigaData } from '../actions/taigaActions';
+import { selectSprintProgressChartData } from '../reducers';
 import stackBarChartData from './charts/stackedBarChartData';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -55,8 +56,8 @@ class Taiga extends Component {
         >
           <div className='box' key="1" data-grid={{ w: 3, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
-              <span className="chart-title">User Story Progress</span>
-              <Doughnut data={taigaUsProgress} options={{maintainAspectRatio: true, responsive: true}}/>
+              <span className="chart-title">Task Progress</span>
+              <Doughnut data={this.props.sprintProgress} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="2" data-grid={{ w: 5, h: 7, x: 3, y: 0, minW: 0, minH: 0 }}>
@@ -72,18 +73,6 @@ class Taiga extends Component {
   }
 }
 
-let taigaUsProgress = {
-  labels: ["Completed", "In Progress", "Not Done"],
-  datasets: [{
-    label: 'User Story Progress',
-    data: [5, 4, 13],
-    backgroundColor: [
-        colors.blue.dark,
-        colors.blue.base,
-        colors.none
-    ],
-  }]
-}
 
 /**
  * Declaring the types for all props that Taiga component uses
@@ -99,7 +88,8 @@ Taiga.propTypes = {
  * to component props property (left)
  */
 const mapStateToProps = state => ({
-  storeData: state.taiga.taigaData
+  storeData: state.taiga.taigaData,
+  sprintProgress: selectSprintProgressChartData(state)
 });
 
 /**

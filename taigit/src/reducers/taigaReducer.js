@@ -1,7 +1,9 @@
 import { GRAB_TAIGA_DATA } from '../actions/taigaActions';
+import colors from '../styles/colors';
 
 const initialState = {
-  taigaData: 'helller'
+  taigaData: 'helller',
+  sprintProgress: [5, 4, 13]
 }
 
 /**
@@ -24,5 +26,24 @@ export default function taigaReducer(state = initialState, action) {
       }
     default:
       return state;
+  }
+}
+
+/**
+ * Getting current sprint task progress
+ * In chartjs pie chart format
+ */
+export const selectSprintProgressChartData = (state) => {
+  return {
+    labels: ["Completed", "In Progress", "Not Done"],
+    datasets: [{
+      label: 'Task Progress',
+      data: state.sprintProgress,
+      backgroundColor: [
+          colors.blue.dark,
+          colors.blue.base,
+          colors.none
+      ],
+    }]
   }
 }
