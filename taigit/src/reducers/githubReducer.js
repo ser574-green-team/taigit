@@ -1,9 +1,6 @@
 import colors from '../styles/colors';
 import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS } from '../actions/githubActions';
 
-import colors from '../styles/colors';
-
-
 const initialState = {
   branchesList: [],
   numOfCommits: 0,
