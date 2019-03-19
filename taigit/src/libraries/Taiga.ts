@@ -148,11 +148,25 @@ task_history(taskId : number) : Promise<Object> {
 }
 
 /**
-* @summary This call returns total points of a user story based on user story Id
-* @param userstoryId the ID for the User Story to get total points for
-    * @returns total points
-*/
+ * @summary Get the list of user's full name in a project
+ * @param project_id Project id to get the data
+ * @returns array of all the names in a project
+ * [name1,name2,name3,...]
+ */
+export async function
+get_user_list(project_id: string) : Promise<Object> {
+    let response = (await axios.get(`https://api.taiga.io/api/v1/projects/${project_id}`)).data.members;
+    let members_in_project: Array<Object> = [];
+    for (let content of response) {
+        members_in_project.push(content.full_name);
+    }
+    return(members_in_project);
 
+/**
+ * @summary This call returns total points of a user story based on user story Id
+ * @param userstoryId the ID for the User Story to get total points for
+ * @returns total points
+ */
 export async function
 userstory_total_points(userstoryId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/userstories/" + userstoryId.toString());
@@ -172,22 +186,20 @@ userstory_total_points(userstoryId : number) : Promise<Object> {
       total_num_closed_userstories: number
  * }
  */
-
-    export async function
-    user_stats(userId : number) : Promise<Object> {
-        let data = await axios.get("https://api.taiga.io/api/v1/users/"+userId.toString() + '/stats');
-        //test link: https://api.taiga.io/api/v1/users/321272/stats
-        let info : {total_num_projects: number, roles: string, total_num_contacts: number, total_num_closed_userstories: number} =
-            {total_num_projects: data.data.total_num_projects, roles: data.data.roles, total_num_contacts: data.data.total_num_contacts, total_num_closed_userstories: data.data.total_num_closed_userstories};
-        return (info);
-    }
+export async function
+user_stats(userId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/users/"+userId.toString() + '/stats');
+    //test link: https://api.taiga.io/api/v1/users/321272/stats
+    let info : {total_num_projects: number, roles: string, total_num_contacts: number, total_num_closed_userstories: number} =
+        {total_num_projects: data.data.total_num_projects, roles: data.data.roles, total_num_contacts: data.data.total_num_contacts, total_num_closed_userstories: data.data.total_num_closed_userstories};
+    return (info);
+}
 
 /**
  * @summary This call returns project wiki based on project Id
  * @param project Id the ID for the project to get Wiki for
  * @returns project wiki
  */
-
 export async function
 project_wiki(projectId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/wiki?project="+projectId.toString());
