@@ -158,8 +158,6 @@ us_history(userstoryId : number) : Promise<Object> {
     //https://api.taiga.io/api/v1/history/userstory/2657204
     return (data.data);
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
 /**
  * @summary Get the list of user's full name in a project
  * @param project_id Project id to get the data
@@ -252,7 +250,3 @@ taiga_issues(projId : number) : Promise<Object>{
     }
     return output;
 }
-=======
->>>>>>> Adding Javadoc to the API call
-=======
->>>>>>> bdaca016527c9ece6b83316dc81570325735d075
