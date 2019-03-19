@@ -147,13 +147,18 @@ task_history(taskId : number) : Promise<Object> {
     return output;
 }
 
-// This call returns user story history information
+/**
+ * @summary Get the history of an userstory 
+ * @param userstoryId the ID for the userstory to fetch the history
+ * @returns userstory history data object
+ */
 export async function
 us_history(userstoryId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/history/userstory/" + userstoryId.toString());
     //https://api.taiga.io/api/v1/history/userstory/2657204
     return (data.data);
 }
+<<<<<<< HEAD
 /**
  * @summary Get the list of user's full name in a project
  * @param project_id Project id to get the data
@@ -246,3 +251,5 @@ taiga_issues(projId : number) : Promise<Object>{
     }
     return output;
 }
+=======
+>>>>>>> Adding Javadoc to the API call
