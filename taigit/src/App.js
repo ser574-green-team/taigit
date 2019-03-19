@@ -25,7 +25,8 @@ class App extends Component {
             <Route path="/team" component={Team} exact/>
             <Route path="/team/members/:memberId" component={MemberProfile} exact/>
             <Route path="/projects" component={Projects}/>
-            <Route path="/callback?code=:tempCode" component={Callback} exact/>
+            <Route path="/callback" component={Callback} exact/>
+            <Route path="/callback?=code:tempCode" component={Callback} exact/>
           </Switch>
         </div>
       </Router>

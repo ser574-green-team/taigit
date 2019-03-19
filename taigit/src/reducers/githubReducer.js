@@ -1,8 +1,9 @@
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER } from '../actions/githubActions';
+import {GET_AUTH_KEY, GET_BRANCH_LIST, GET_COMMITS_PER_USER} from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
-  numOfCommits: 0
+  numOfCommits: 0,
+  authKey: ''
 }
 /**
  * Github Reducer
@@ -26,6 +27,13 @@ const githubReducer = (state = {}, action) => {
         ...state,
         numOfCommits: action.payload
       }
+    case GET_AUTH_KEY:
+      console.log('payload is: ', action.payload);
+      return {
+          ...state,
+          authKey: action.payload
+      }
+
     default:
       return {
         ...state,
@@ -65,6 +73,10 @@ export const selectNumCommitsChartData = (state) => {
       borderWidth: 1
     }],
   }
+}
+
+export const selectAuthKey = (state) => {
+  return state.authKey;
 }
 
 export default githubReducer
