@@ -1,25 +1,55 @@
 import axios from 'axios';
 
+/**
+ * Returns true if pom.xml in latest master commit, false otherwise
+ * 
+ * @param owner username of repo owner
+ * @param repo repo name
+ */
 export async function
 usesMaven(owner: string, repo: string) : Promise<boolean>{
     return await fileInRepo(owner, repo, "pom.xml");
 }
 
+/**
+ * Returns true if able to find build.gradle in latest master commit, false otherwise
+ * 
+ * @param owner username of repo owner
+ * @param repo repo name
+ */
 export async function
 usesGradle(owner: string, repo: string) : Promise<boolean>{
     return await fileInRepo(owner, repo, "build.gradle");
 }
 
+/**
+ * Returns true if CMakeLists.txt exists in latest  master commit, false otherwise
+ * 
+ * @param owner username of repo owner
+ * @param repo name of repo
+ */
 export async function
 usesCMake(owner: string, repo: string) : Promise<boolean>{
     return await fileInRepo(owner, repo, "CMakeLists.txt");
 }
 
+/**
+ * Returns true if build.xml exists in latest master commit, false otherwise
+ * 
+ * @param owner username of repo owner
+ * @param repo owner of repo
+ */
 export async function
 usesAnt(owner: string, repo: string) : Promise<boolean>{
     return await fileInRepo(owner, repo, "build.xml");
 }
 
+/**
+ * returns true if Makefile exists in latest master commit, false otherwise
+ * 
+ * @param owner username of repo owner
+ * @param repo name of repo
+ */
 export async function 
 usesMake(owner: string, repo: string) : Promise<boolean>{
     return await fileInRepo(owner, repo, "Makefile");
