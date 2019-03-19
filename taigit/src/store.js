@@ -9,7 +9,10 @@ const store = createStore(
   {},
   compose(
     applyMiddleware(...middleware),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    // Uncomment the following the line to use Redux Dev Tools
+    // https://github.com/zalmoxisus/redux-devtools-extension
+    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
   )
 );
 export default store;
