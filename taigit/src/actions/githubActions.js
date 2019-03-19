@@ -7,9 +7,9 @@ export const GET_NUM_PULL_REQUESTS = 'GET_NUM_PULL_REQUESTS';
 export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
  
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
-export const getBranchList = (infoForApiCall) => dispatch => {
+export const getBranchList = (owner, repo) => dispatch => {
   console.log('about to get branches list');
-  getBranches('trevorforrey', 'OttoDB')
+  getBranches(owner, repo)
     .then(branches => 
       dispatch({type: GET_BRANCH_LIST, payload: branches})
     );

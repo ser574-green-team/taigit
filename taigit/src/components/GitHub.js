@@ -7,6 +7,7 @@ import { Bar } from 'react-chartjs-2';
 import barChartData from './charts/barChartData';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
+import ScrollableList from './ScrollableList';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
@@ -36,7 +37,7 @@ class GitHub extends Component {
 
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
-    this.props.getBranchList();
+    this.props.getBranchList('ser574-green-team', 'taigit');
     this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey');
     this.props.getPullRequests('ser574-green-team', 'taigit');
     this.props.getContributorData();
@@ -70,10 +71,10 @@ class GitHub extends Component {
             <NumberDisplay number="6" statistic="Pull Requests Reviewed"/>
           </div>
           <div className='box' key="4" data-grid={{ w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
-            <h3>List of Branches</h3>
-            {this.props.branches.map((branchName) => {
-              return <p>{branchName}</p>
-            })}
+            <div className="chart">
+              <span className="chart-title">List of Branches</span>
+              <ScrollableList items={this.props.branches}/>
+            </div>
           </div>
           <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>

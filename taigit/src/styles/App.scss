@@ -104,6 +104,52 @@
   width: 15em;
   margin-bottom: 1em;
 }
+.scroll-list {
+  margin-top: 1em;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 80%;
+}
+
+.scroll-list-item {
+  margin-bottom: 0.35em;
+  margin-left: 1em;
+  margin-right: 1em;
+  text-align: left;
+  padding-right: 2em;
+  
+  .content {
+    display: inline-block;
+    background-color: $blue;
+
+    p {
+      padding: 0.5em 0;
+      padding-left: 0.5em;
+      padding-right: 2em;
+      margin: 0.25em;
+      color: white;
+      // font-weight: lighter;
+    }
+  }
+}
+
+.scroll-list::-webkit-scrollbar {
+	width: 0.5em;
+  background-color: #F5F5F5;
+  margin-right: 0.25em;
+}
+
+.scroll-list::-webkit-scrollbar-thumb {
+	border-radius: 0px;
+	// -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: $yellow;
+}
+
+.scroll-list::-webkit-scrollbar-track {
+	// -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 0px;
+	background-color: $yellow-light;
+}
 
 
 .react-grid-layout {
