@@ -1,9 +1,10 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER } from '../actions/githubActions';
+import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS } from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
-  numOfCommits: 0
+  numOfCommits: 0,
+  numPullRequests: 0
 }
 /**
  * Github Reducer
@@ -26,6 +27,12 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
         numOfCommits: action.payload
+      }
+    case GET_NUM_PULL_REQUESTS:
+      console.log('payload for pull req is: ', action.payload);
+      return {
+        ...state,
+        numPullRequests: action.payload
       }
     default:
       return {
@@ -67,5 +74,10 @@ export const selectNumCommitsChartData = (state) => {
     }],
   }
 }
+
+export const selectNumPullRequestsData = (state) => {
+  return state.numPullRequests;
+}
+
 
 export default githubReducer
