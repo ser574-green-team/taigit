@@ -17,7 +17,7 @@ export default class Overview extends Component {
       layouts: JSON.parse(JSON.stringify(originalLayouts))
     };
   }
-  
+
   static get defaultProps() {
     return {
       className: "layout",
@@ -39,11 +39,11 @@ export default class Overview extends Component {
   render() {
     return (
       <div className="app-page">
-        <h2>Team Project Name</h2>
+        <h1 align = "center">Team Project Name</h1>
         <ResponsiveReactGridLayout
           className="layout"
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-          rowHeight={30}
+          rowHeight={20}
           layouts={this.state.layouts}
           onLayoutChange={(layout, layouts) =>
             this.onLayoutChange(layout, layouts)
@@ -61,14 +61,14 @@ export default class Overview extends Component {
           <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-horizontal-primary">
               <span className="chart-title">Github Contributions</span>
-              <Line data={gitContributionsData} options={{maintainAspectRatio: true, responsive: true}}/>
+            <Line data={gitContributionsData} options={gitChartOptions}/>
             </div>
           </div>
-          <div className='box' key="4" data-grid={{ w: 2, h: 2, x: 6, y: 0, minW: 0, minH: 0 }}>
-            <span className="text">4</span>
-          </div>
-          <div className='box' key="5" data-grid={{ w: 2, h: 2, x: 8, y: 0, minW: 0, minH: 0 }}>
-            <span className="text">5</span>
+          <div className='box' key="4" data-grid={{ w: 8, h: 9, x: 7, y: 0, minW: 0, minH: 0 }}>
+            <div className="chart chart-horizontal-primary">
+              <span className="chart-title">Burndown Chart</span>
+            <Line data={burnDownData} options={burndownOptions}/>
+            </div>
           </div>
         </ResponsiveReactGridLayout>
       </div>
@@ -95,6 +95,7 @@ let gitContributionsData = {
     fill: false,
     label: 'Commits on Master',
     data: [1, 2, 5, 8, 10, 15, 17, 18, 22, 27, 30, 32],
+    lineWidth: 2,
     borderColor: [
       colors.blue.base
     ],
@@ -102,7 +103,69 @@ let gitContributionsData = {
   }]
 }
 
-let gitChartOptions = {
+let burnDownData = {
+    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    datasets: [{
+      fill: false,
+      label: 'Ideal Burndown',
+      color: 'rgba(255,0,0,0.25)',
+      lineWidth: 2,
+      data: [98, 91, 84, 77, 70, 63, 56, 49, 42, 35, 28, 21, 14, 7],
+      backgroundColor: [ colors.red.base ],
+      borderColor: [ colors.red.base ]
+      },
+    {
+      fill: false,
+      label: 'Actual Burndown',
+      color: 'rgba(0,120,200,0.75)',
+      marker: {radius: 6},
+      data: [98, 110, 102, 85, 78, 69, 60, 49, 35, 40, 29, 20, 10, 0],
+      backgroundColor: [ colors.blue.base ],
+      borderColor: [ colors.blue.base ]
+    }
+  ]
+}
+
+const burndownOptions = {
+    plotOptions: {
+      line: {
+        lineWidth: 3
+      },
+      tooltip: {
+        hideDelay: 200
+      }
+    },
+    maintainAspectRatio: true,
+    responsive: true,
+    tooltip: {
+      valueSuffix: ' hrs',
+      crosshairs: true,
+      shared: true
+    },
+    legend: {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      borderWidth: 0
+    },
+    scales: {
+      yAxes: [{
+        scaleLabel:{
+          display: true,
+          labelString: "Hours"
+        }
+      }],
+
+      xAxes: [{
+        scaleLabel:{
+          display: true,
+          labelString: "Days"
+        }
+      }]
+      }
+    }
+
+const gitChartOptions = {
   maintainAspectRatio: false,
   scales: {
     yAxes: [{
