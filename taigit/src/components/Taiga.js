@@ -102,7 +102,7 @@ Taiga.propTypes = {
 const mapStateToProps = state => ({
   storeData: state.taiga.taigaData,
   sprintProgress: selectSprintProgressChartData(state),
-  userTaskDistribution: selectUserTaskDistributionChartData(state)
+  userTaskDistribution: selectUserTaskDistributionChartData(state),
   sprintList: selectSprintList(state)
 });
 
