@@ -61,7 +61,7 @@ const githubReducer = (state = {}, action) => {
  * (An example of creating new data from the store)
  */
 export const selectBranchList = (state) => {
-  return state.branchesList.map(branch => `Branch: ${branch}`);
+  return state.branchesList;
 }
 
 /**

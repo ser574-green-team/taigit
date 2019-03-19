@@ -36,7 +36,7 @@ class GitHub extends Component {
 
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
-    this.props.getBranchList();
+    this.props.getBranchList('ser574-green-team', 'taigit');
     this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey');
     this.props.getPullRequests('ser574-green-team', 'taigit');
     this.props.getContributorData();
