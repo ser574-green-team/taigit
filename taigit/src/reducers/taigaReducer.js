@@ -2,7 +2,8 @@ import { GRAB_TAIGA_DATA, GET_SPRINT_STATS } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
-  taigaData: 'helller',
+  taigaData: 'initialData',
+  sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3'],
   sprintStats: {}
 }
 
@@ -72,4 +73,18 @@ export const selectUserTaskDistributionChartData = (state) => {
       data: [4, 3, 2, 1, 5]
     }]
   }
+}
+
+/**
+ * Getting list of sprints
+ * Returns an array of sprint names wrapped in objects
+ * that the sprint dropdown component will render
+ */
+export const selectSprintList = (state) => {
+  return state.sprintList.map(sprintName => { 
+    return {
+      value: sprintName,
+      label: sprintName
+    }
+  });
 }
