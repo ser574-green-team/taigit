@@ -5,9 +5,19 @@
 }
 
 .project {
+  text-decoration: none;
   border-left-style: solid;
   border-color: #08708A;
   text-indent: 20px;
+  font-size: 20px;
+  a {
+    text-decoration: none;
+  }
+}
+
+.team-member-info {
+  font-size: 12px;
+  text-decoration: none;
 }
 
 .btn {
