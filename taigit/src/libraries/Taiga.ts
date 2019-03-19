@@ -161,6 +161,7 @@ get_user_list(project_id: string) : Promise<Object> {
         members_in_project.push(content.full_name);
     }
     return(members_in_project);
+}
 
   /**
  * @summary This call returns total points of a user story based on user story Id
