@@ -1,0 +1,47 @@
+@import 'Variables';
+
+.body {
+  background-color: $app-background;
+}
+
+.project {
+  text-decoration: none;
+  border-left-style: solid;
+  border-color: #08708A;
+  text-indent: 20px;
+  font-size: 20px;
+  a {
+    text-decoration: none;
+  }
+}
+
+.team-member-info {
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.btn {
+  background-color: #08708A;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: #56B1BF;
+  cursor: pointer;
+}
+
+.gh-btn {
+  background-color: #08708A;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  position: relative;
+  left: 40%;
+}
+
+.gh-btn:hover {
+  background-color: #56B1BF;
+  cursor: pointer;
+}

@@ -1,5 +1,12 @@
 import axios from 'axios';
 
+/**
+ * Gets the number of commits by a specified author
+ * 
+ * @param owner username of repo owner
+ * @param repo name of repo
+ * @param author author being investigated
+ */
 export async function 
 getNumCommitsFromUser(owner: string, repo: string, author: string){
     try{
