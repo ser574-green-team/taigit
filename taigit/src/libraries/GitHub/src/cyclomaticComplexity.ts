@@ -40,6 +40,7 @@ function
                 num++;
             }else if(arr[i] === "else" && arr[i+2] === "if"){
                 num++;
+                i = i+2;
             }else if(arr[i]==="/*" || arr[i] === "/**"){
                 ignoreComment = 1;
             }
