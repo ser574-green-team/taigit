@@ -1,3 +1,10 @@
+/* The following function returns the list of all contributer imageUrls in a
+* respository.
+* @param owner  The name of the owner of the repository in String format.
+* @param repo   The name of the Github repository in String format.
+* @return       The list consisting of avatarURLs of All Contributers in the repo.
+*/
+
 import axios from "axios";
 export async function
 getImageUrls(owner : string, repo: string){
@@ -9,7 +16,6 @@ getImageUrls(owner : string, repo: string){
             console.log(imageUrl.avatar_url)
             imageUrls.push(imageUrl.avatar_url)
         });
-        console.log(imageUrls)
         return imageUrls
     }
     catch (error) {
@@ -17,4 +23,5 @@ getImageUrls(owner : string, repo: string){
         return -1
     }
 }
+
 
