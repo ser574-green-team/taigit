@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
 import { grabTaigaData, grabSprintStats } from '../actions/taigaActions';
-import { selectSprintList, selectSprintProgressChartData, selectUserTaskDistributionChartData } from '../reducers';
+import {
+  selectSprintList,
+  selectSprintProgressChartData,
+  selectUserTaskDistributionChartData,
+  selectSprintBurndownChartData
+} from '../reducers';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
@@ -81,7 +86,7 @@ class Taiga extends Component {
           <div className='box' key="3" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className="chart-title">Burndown Chart</span>
-            <Line data={burnDownData} options={burndownOptions}/>
+            <Line data={this.props.burnDownData} options={burndownOptions}/>
             </div>
           </div>
           <h4>{this.props.storeData}</h4>
@@ -90,31 +95,6 @@ class Taiga extends Component {
     );
   }
 }
-
-
-let burnDownData = {
-    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    datasets: [{
-      fill: false,
-      label: 'Ideal Burndown',
-      color: 'rgba(255,0,0,0.25)',
-      lineWidth: 2,
-      data: [98, 91, 84, 77, 70, 63, 56, 49, 42, 35, 28, 21, 14, 7],
-      backgroundColor: [ colors.red.base ],
-      borderColor: [ colors.red.base ]
-      },
-    {
-      fill: false,
-      label: 'Actual Burndown',
-      color: 'rgba(0,120,200,0.75)',
-      marker: {radius: 6},
-      data: [98, 110, 102, 85, 78, 69, 60, 49, 35, 40, 29, 20, 10, 0],
-      backgroundColor: [ colors.blue.base ],
-      borderColor: [ colors.blue.base ]
-    }
-  ]
-}
-
 
 const burndownOptions = {
     plotOptions: {
@@ -173,7 +153,8 @@ const mapStateToProps = state => ({
   storeData: state.taiga.taigaData,
   sprintProgress: selectSprintProgressChartData(state),
   userTaskDistribution: selectUserTaskDistributionChartData(state),
-  sprintList: selectSprintList(state)
+  sprintList: selectSprintList(state),
+  burnDownData: selectSprintBurndownChartData(state)
 });
 
 /**

@@ -4,7 +4,7 @@ import colors from '../styles/colors';
 const initialState = {
   taigaData: 'initialData',
   sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3'],
-  sprintStats: {}
+  sprintStats: {},
 }
 
 /**
@@ -72,6 +72,36 @@ export const selectUserTaskDistributionChartData = (state) => {
       stack: 'Stack 0',
       data: [4, 3, 2, 1, 5]
     }]
+  }
+}
+
+export const selectSprintBurndownChartData = (state) => {
+  const burndownInfo = state.sprintStats.burndown || [];
+  const days = burndownInfo.map((sprintDay) => sprintDay.day);
+  const openPoints = burndownInfo.map((sprintDay) => sprintDay.open_points);
+  const optimalPoints = burndownInfo.map((sprintDay) => sprintDay.optimal_points);
+  return{
+    labels: days,
+      datasets: [{
+          fill: false,
+          label: 'Ideal Burndown',
+          color: 'rgba(255,0,0,0.25)',
+          lineWidth: 2,
+          data: optimalPoints,
+          backgroundColor: [colors.red.base],
+          borderColor: [colors.red.base]
+        },
+        {
+          fill: false,
+          label: 'Actual Burndown',
+          color: 'rgba(0,120,200,0.75)',
+          marker: {
+            radius: 6
+          },
+          data: openPoints,
+          backgroundColor: [colors.blue.base],
+          borderColor: [colors.blue.base]
+        }]
   }
 }
 
