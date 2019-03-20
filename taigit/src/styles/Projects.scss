@@ -5,30 +5,43 @@
 }
 
 .project {
+  text-decoration: none;
   border-left-style: solid;
-  border-color: lightgreen;
+  border-color: #08708A;
   text-indent: 20px;
+  font-size: 20px;
+  a {
+    text-decoration: none;
+  }
 }
 
-.project:link, .project:visited {
-  background-color: #f44336;
-  color: blue;
+.team-member-info {
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.btn {
+  background-color: #08708A;
+  color: white;
   padding: 14px 25px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
 }
 
-.project:hover, .project:active {
-  background-color: azure;
-}
-
-.title {
+.btn:hover {
   background-color: #56B1BF;
-  margin-left: -1em;
-  font-size: 50px;
+  cursor: pointer;
+}
+
+.gh-btn {
+  background-color: #08708A;
   color: white;
+  padding: 14px 25px;
   text-align: center;
-  letter-spacing: 4px;
-  font-family: Athelas;
+  position: relative;
+  left: 40%;
+}
+
+.gh-btn:hover {
+  background-color: #56B1BF;
+  cursor: pointer;
 }

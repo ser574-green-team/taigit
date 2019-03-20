@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import ProjectPanel from './ProjectPanel'
+import * as keys from '../keys.json';
+import { authRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
+
+const redirect = authRedirect(keys.GH_CLIENT_ID);
 
 export default class Projects extends Component {
     render() {
@@ -9,8 +13,8 @@ export default class Projects extends Component {
                 <h2>Projects</h2>
                 <ProjectPanel projUrl="/"
                               projName="Team Broccoli"
-                              memberUrl={["/team/members/broutzong",""]}
-                              member={["Bailey Routzong", "Amy Koffee"]}
+                              memberUrl={["/team/members/broutzong","","",""]}
+                              member={["Bailey Routzong", "Amy Koffee","Miguel Smith","Mr Wicked"]}
                 />
                 <br/>
                 <h2>New Project</h2>
@@ -38,6 +42,10 @@ export default class Projects extends Component {
                         />
                     </form>
                 </div>
+                <br/><br/>
+                <a href={redirect}>
+                    <button type="button" className="gh-btn">Sign in to GitHub</button>
+                </a>
             </div>
         );
     }
