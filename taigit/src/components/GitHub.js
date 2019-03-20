@@ -44,9 +44,11 @@ class GitHub extends Component {
     this.props.getContributorData();
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'master');
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev');
-      originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit');
+    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
+
 
   render() {
     return(
@@ -71,7 +73,7 @@ class GitHub extends Component {
             <NumberDisplay number="13" statistic="Pull Requests Created"/>
           </div>
           <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number="6" statistic="Pull Requests Reviewed"/>
+            <NumberDisplay number={this.props.numPullRequestsClosed} statistic="Pull Requests Closed"/>
           </div>
           <div className='box' key="4" data-grid={{ w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
@@ -82,7 +84,7 @@ class GitHub extends Component {
           <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
-          <div className="box" key="6" data-grid={{ w: 5, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
+          <div className="box" key="6" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className = "chart-title">Commits Per Branch</span>
               <HorizBarChart chartData={this.props.commitPerBranchData} options={{maintainAspectRatio: true, responsive: true}}/>
@@ -91,6 +93,18 @@ class GitHub extends Component {
         </ResponsiveReactGridLayout>
       </div>
     );
+  }
+}
+
+const horizontalChartOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  scales: {
+      yAxes: [{
+          ticks: {
+              beginAtZero:true
+          }
+      }]
   }
 }
 
@@ -104,6 +118,7 @@ const mapStateToProps = state => ({
   commitChartData: selectCommitsPerContributorChartData(state),
   numPullRequests: selectNumPullRequestsData(state),
   commitPerBranchData: selectNumBranchCommits(state),
+  numPullRequestsClosed: selectNumPullRequestsClosedData(state)
 });
 
 /**

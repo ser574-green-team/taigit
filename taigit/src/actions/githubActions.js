@@ -1,4 +1,4 @@
-import { getBranches, getNumCommitsFromUser, getNumPullRequests, contributorData, getNumBranchCommits } from '../libraries/GitHub/GitHub';
+import { getBranches, getNumCommitsFromUser, getNumPullRequests, contributorData, getNumBranchCommits, getAuthToken } from '../libraries/GitHub/GitHub';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
@@ -6,6 +6,8 @@ export const GET_COMMITS_PER_USER = 'GET_COMMITS_PER_USER';
 export const GET_NUM_PULL_REQUESTS = 'GET_NUM_PULL_REQUESTS';
 export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
+export const GET_AUTH_KEY = 'GET_AUTH_KEY';
+export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
  
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo) => dispatch => {
@@ -32,6 +34,16 @@ export const getPullRequests = (infoForApiCall) => dispatch => {
     );
 }
 
+// component for pull requests closed, to be implemented in the backend
+
+// export const getPullRequestsClosed = (infoForApiCall) => dispatch => {
+//   console.log('about to get number of pull requests closed');
+//   getNumPullRequestsClosed('ser574-green-team', 'taigit')
+//     .then(numberOfPullRequestsClosed =>
+//       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequestsClosed})
+//     );
+// }
+
 export const getContributorData = (repo = 'banana', owner = 'trevorforrey') => dispatch => {
   console.log('about to grab contributor data');
   contributorData('ser574-green-team', 'taigit')
@@ -55,4 +67,11 @@ export const getBranchCommits = (owner, repo, branch) => dispatch => {
     .then(numBranchCommits =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
+}
+
+export const getAuthKey = (id, secret, storeKey) => dispatch => {
+  console.log('about to get auth key');
+  getAuthToken(id, secret, storeKey)
+      .then(authKey =>
+      dispatch({type: GET_AUTH_KEY, payload: authKey}))
 }

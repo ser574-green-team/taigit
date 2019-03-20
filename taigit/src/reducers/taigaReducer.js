@@ -1,8 +1,10 @@
-import { GRAB_TAIGA_DATA } from '../actions/taigaActions';
+import { GRAB_TAIGA_DATA, GET_SPRINT_STATS } from '../actions/taigaActions';
+import colors from '../styles/colors';
 
 const initialState = {
   taigaData: 'initialData',
-  sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3']
+  sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3'],
+  sprintStats: {},
 }
 
 /**
@@ -23,8 +25,83 @@ export default function taigaReducer(state = initialState, action) {
         ...state,
         taigaData: action.payload
       }
+    case GET_SPRINT_STATS:
+      console.log('got sprint stats');
+      console.log('stats: ', action.payload);
+      return {
+        ...state,
+        sprintStats: action.payload
+      }
     default:
       return state;
+  }
+}
+
+/**
+ * Getting current sprint task progress
+ * In chartjs pie chart format
+ */
+export const selectSprintProgressChartData = (state) => {
+  const totalTasks = state.sprintStats.total_tsks;
+  const totalCompletedTasks = state.sprintStats.completed_tsks;
+  const totalInProgressTasks = totalTasks - totalCompletedTasks;
+  return {
+    labels: ["Completed", "In Progress"],
+    datasets: [{
+      label: 'Task Progress',
+      data: [totalCompletedTasks, totalInProgressTasks],
+      backgroundColor: [
+          colors.blue.dark,
+          colors.none
+      ],
+    }]
+  }
+}
+
+export const selectUserTaskDistributionChartData = (state) => {
+  return {
+    labels: ['Rodney', 'Berta', 'Steve', 'Remy', 'Hugo'],
+    datasets: [{
+      label: 'Completed',
+      backgroundColor: 'rgb(242, 105, 104, 1)',
+      stack: 'Stack 0',
+      data: [2, 3, 1, 5, 2]
+    }, {
+      label: 'In Progress',
+      backgroundColor: 'rgb(242, 173, 159, 1)',
+      stack: 'Stack 0',
+      data: [4, 3, 2, 1, 5]
+    }]
+  }
+}
+
+export const selectSprintBurndownChartData = (state) => {
+  const burndownInfo = state.sprintStats.burndown || [];
+  const days = burndownInfo.map((sprintDay) => sprintDay.day);
+  const openPoints = burndownInfo.map((sprintDay) => sprintDay.open_points);
+  const optimalPoints = burndownInfo.map((sprintDay) => sprintDay.optimal_points);
+  return{
+    labels: days,
+      datasets: [{
+          fill: false,
+          label: 'Ideal Burndown',
+          color: 'rgba(255,0,0,0.25)',
+          lineWidth: 2,
+          data: optimalPoints,
+          backgroundColor: [colors.red.base],
+          borderColor: [colors.red.base]
+        },
+        {
+          fill: false,
+          label: 'Actual Burndown',
+          color: 'rgba(0,120,200,0.75)',
+          marker: {
+            radius: 6
+          },
+          data: openPoints,
+          backgroundColor: [colors.blue.base],
+          borderColor: [colors.blue.base]
+        }]
   }
 }
 
