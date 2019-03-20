@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
 import { getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits } from '../actions/githubActions';
-import { selectBranchList, selectNumCommitsChartData, selectNumPullRequestsData, selectCommitsPerContributorChartData, selectNumBranchCommits } from '../reducers';
+import { selectBranchList, selectNumCommitsChartData, selectNumPullRequestsData, selectCommitsPerContributorChartData, selectNumBranchCommits, selectNumPullRequestsClosedData } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';

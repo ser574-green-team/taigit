@@ -6,7 +6,7 @@ const initialState = {
   numOfCommits: 0,
   numPullRequests: 0,
   contributors: [],
-  numBranchCommits: []
+  numBranchCommits: [],
   authKey: '',
   numPullRequestsClosed: 0
 }
