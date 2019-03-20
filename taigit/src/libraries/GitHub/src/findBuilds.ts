@@ -6,7 +6,8 @@ var buildFileMap: { [key: string]: string } = {
     "build.gradle": "Gradle",
     "CMakeLists.txt": "CMake",
     "build.xml": "Ant",
-    "Makefile": "Make"
+    "Makefile": "Make",
+    "package.json": "npm"
 }
 
 /**
