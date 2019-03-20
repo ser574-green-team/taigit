@@ -95,9 +95,14 @@ taiga_login(username : string, password : string) : Promise<login_response> {
 }
 
 export async function
-get_projects_for_user(userId : number) : Promise<login_response> {
-    let data = (await axios.get(`https://api.taiga.io/api/v1/projects?member=${userId}`)).data;
-    return data;
+get_projects_for_user(userId : number) : Promise<String[]> {
+    let data : { slug: String; }[] = (await axios.get(`https://api.taiga.io/api/v1/projects?member=${userId}`)).data;
+    let ret_arr : String[] = [];
+    for(let entry of data) {
+        ret_arr.push(entry.slug)
+    }
+
+    return ret_arr;
 }
 
 /**
