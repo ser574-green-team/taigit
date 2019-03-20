@@ -7,6 +7,7 @@ import { Bar } from 'react-chartjs-2';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import ScrollableList from './ScrollableList';
+
 import HorizBarChart from './charts/HorizBarChart'
 import commitPerBranchData from './charts/commitPerBranchData'
 
