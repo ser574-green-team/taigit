@@ -59,14 +59,14 @@ class Taiga extends Component {
               <Doughnut data={taigaUsProgress} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="2" data-grid={{ w: 5, h: 15, x: 3, y: 0, minW: 0, minH: 0 }}>
+          <div className='box' key="2" data-grid={{ w: 5, h: 10, x: 3, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className="chart-title">Taiga Tasks</span>
               <Bar data={stackBarChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="3" data-grid={{ w: 12, h: 15, x: 15, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart chart-horizontal-primary">
+          <div className='box' key="3" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
+            <div className="chart">
               <span className="chart-title">Burndown Chart</span>
             <Line data={burnDownData} options={burndownOptions}/>
             </div>

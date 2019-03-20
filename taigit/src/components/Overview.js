@@ -54,14 +54,14 @@ export default class Overview extends Component {
           </div>
           <div className='box' key="2" data-grid={{ w: 3, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
-            <span className="chart-title">Technologies Used</span>
-            <Doughnut data={technologiesUsed} options={{maintainAspectRatio: true, responsive: true}}/>
+              <span className="chart-title">Technologies Used</span>
+              <Doughnut data={technologiesUsed} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-horizontal-primary">
               <span className="chart-title">Github Contributions</span>
-            <Line data={gitContributionsData} options={{maintainAspectRatio: true, responsive: true}}/>
+              <Line data={gitContributionsData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
 
