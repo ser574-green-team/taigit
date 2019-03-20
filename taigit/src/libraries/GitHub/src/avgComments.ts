@@ -1,13 +1,20 @@
 import axios from 'axios';
-
+/**
+ * The following function returns the Average Number Of Comments 
+ * on all closed Pull Requests by considering direct comments on
+ * pull requests and review comments.
+ * @param owner  The name of the owner of the repository in String format.
+ * @param repo   The name of the Github repository in String format.
+ * @return       The average number of comments per closed pull requests.
+ */
 export async function
 getNumComments(owner : string, repo: string){
     try{
         let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
-            "/" + repo + "/issues?state=closed");
+            "/" + repo + "/pulls?state=closed");
         let lengthOfClosedPullRequests = issue_comment.data.length
         let issueNumberArray = Array()
-        console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
+       // console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
         let totalComments = 0
         issue_comment.data.forEach(function(req : {url:string} ) {
             let closedIssueNumberArray = req.url.split('/');
@@ -18,11 +25,12 @@ getNumComments(owner : string, repo: string){
         for(let issue_number of issueNumberArray){
             let commentsPerIssue = await getNumberCommentsPerPullRequest(owner,repo,Number(issue_number))
             totalComments = totalComments + Number(commentsPerIssue)
-            console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))}
+            //console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))
+        }
 
-        console.log("Total Number Of Comments on PR: "+totalComments)
+       // console.log("Total Number Of Comments on PR: "+totalComments)
         let averageNoOfComments = (totalComments/lengthOfClosedPullRequests).toFixed(2)
-        console.log("Average Number Of Comments: " +averageNoOfComments)
+       // console.log("Average Number Of Comments: " +averageNoOfComments)
         return averageNoOfComments;
 
     }
@@ -33,6 +41,15 @@ getNumComments(owner : string, repo: string){
     }
 
 }
+
+/**
+ * The following function returns the  Number Of Comments 
+ * on a particular closed Pull Requests.
+ * @param owner  The name of the owner of the repository in String format.
+ * @param repo   The name of the Github repository in String format.
+ * @param number The issue id number of the closed pull request.
+ * @return       The total number of comments for a closed pull request.
+ */
 export async function
 getNumberCommentsPerPullRequest(owner : string, repo: string,  number : number){
     try {
