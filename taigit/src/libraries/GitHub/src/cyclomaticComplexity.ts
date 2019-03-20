@@ -53,11 +53,41 @@ function
 
 
 /**
- * Creates a json file that contains the average and total cyclomatic complexity 
- * in a file.
+ * Creates a json file that contains the cyclomatic complexity of a file
  * @param owner 
  * @param repo  
  */
+export async function
+getMcCabeComplexity(owner: string, repo: string, filePath : string) : Promise<string>{
+    let jsonString : string = "{";
+    let complexity : number = 0;
+    let fileArray : Array<string>;
+    try{
+        let verify: boolean = false;
+        if(filePath.includes("/")){
+            fileArray = filePath.split("/");
+        } else{
+            fileArray = [filePath];
+        }
+        let fileExt: string = fileArray[fileArray.length-1].split(".")[1];
+        verify = verifyFormat(fileExt);
+        if(verify){
+            const file = await axios.get("https://api.github.com/repos/"+ 
+            owner+"/"+repo+"/contents/"+ filePath, {auth:{username: "ansamant", password: "ventipumpkinspicechaitealatte-20OZ"}});
+            // encoded content needs to be converted to utf-8
+            let uniFileContent : string = atob(file.data.content);
+            //dictObj[fileArray[fileArray.length-1]] = getCodeComplexity(uniFileContent);
+            complexity = getCodeComplexity(uniFileContent);
+            }
+        jsonString += "\""+ fileArray[fileArray.length-1]+"\" : " + complexity + "}";
+
+    }catch(error){
+        console.log(error);
+    }
+    console.log(jsonString);
+    return jsonString;
+}
+/*
 export async function 
 getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>{
     let jsonString : string = "{";
@@ -65,10 +95,10 @@ getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>
     let count: number = 0;
     var dictObj : {[path : string]: number} = { };
     try{
-        const master = await axios.get("https://api.github.com/repos/" + owner + "/" + repo + "/branches/master",  {auth:{username: "ansamant", password: "ventiwhitemochafrappucino-20OZ"}});
+        const master = await axios.get("https://api.github.com/repos/" + owner + "/" + repo + "/branches/master",  {auth:{username: "username", password: "password"}});
         let access = (sha === undefined)? master.data.commit.sha : sha;
         var tree = await  axios.get("https://api.github.com/repos/" + 
-        owner + "/" + repo + "/git/trees/" + access, {auth:{username: "ansamant", password: "ventiwhitemochafrappucino-20OZ"}});
+        owner + "/" + repo + "/git/trees/" + access, {auth:{username: "username", password: "password"}});
 
         for (let gitObj of tree.data.tree){
             let filePath : string = "";
@@ -88,7 +118,7 @@ getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>
             if(verify){
                 count++;
                 const file = await axios.get("https://api.github.com/repos/"+ 
-                owner+"/"+repo+"/contents/"+ filePath, {auth:{username: "ansamant", password: "ventiwhitemochafrappucino-20OZ"}});
+                owner+"/"+repo+"/contents/"+ filePath, {auth:{username: "username", password: "password"}});
                 // encoded content needs to be converted to utf-8
                 let uniFileContent : string = atob(file.data.content);
                 dictObj[filePath] = getCodeComplexity(uniFileContent);
@@ -108,4 +138,4 @@ getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>
     }
     console.log("JSON: " + jsonString);
     return jsonString;
-}
+}*/
