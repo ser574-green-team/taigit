@@ -5,6 +5,7 @@ export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
 export const GET_COMMITS_PER_USER = 'GET_COMMITS_PER_USER';
 export const GET_NUM_PULL_REQUESTS = 'GET_NUM_PULL_REQUESTS';
 export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
+export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
  
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo) => dispatch => {
@@ -30,6 +31,16 @@ export const getPullRequests = (infoForApiCall) => dispatch => {
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );
 }
+
+// component for pull requests closed, to be implemented in the backend
+
+// export const getPullRequestsClosed = (infoForApiCall) => dispatch => {
+//   console.log('about to get number of pull requests closed');
+//   getNumPullRequestsClosed('ser574-green-team', 'taigit')
+//     .then(numberOfPullRequestsClosed =>
+//       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequestsClosed})
+//     );
+// }
 
 export const getContributorData = (repo = 'banana', owner = 'trevorforrey') => dispatch => {
   console.log('about to grab contributor data');

@@ -1,11 +1,12 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO } from '../actions/githubActions';
+import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO, GET_PULL_REQUESTS_CLOSED } from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
   numOfCommits: 0,
   numPullRequests: 0,
-  contributors: []
+  contributors: [],
+  numPullRequestsClosed: 0
 }
 /**
  * Github Reducer
@@ -100,5 +101,9 @@ export const selectCommitsPerContributorChartData = (state) => {
   }
 }
 
+
+export const selectNumPullRequestsClosedData = (state) => {
+  return state.numPullRequestsClosed;
+}
 
 export default githubReducer
