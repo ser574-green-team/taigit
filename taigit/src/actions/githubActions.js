@@ -1,12 +1,12 @@
-import { getBranches, getNumCommitsFromUser, getNumPullRequests, contributorData, getAuthToken } from '../libraries/GitHub/GitHub';
+import { getBranches, getNumCommitsFromUser, getNumPullRequests, contributorData, getNumBranchCommits, getAuthToken } from '../libraries/GitHub/GitHub';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
 export const GET_COMMITS_PER_USER = 'GET_COMMITS_PER_USER';
 export const GET_NUM_PULL_REQUESTS = 'GET_NUM_PULL_REQUESTS';
 export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
+export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const GET_AUTH_KEY = 'GET_AUTH_KEY';
-
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
  
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
@@ -45,20 +45,28 @@ export const getPullRequests = (infoForApiCall) => dispatch => {
 // }
 
 export const getContributorData = (repo = 'banana', owner = 'trevorforrey') => dispatch => {
-    console.log('about to grab contributor data');
-    contributorData('ser574-green-team', 'taigit')
-        .then((contributorData) => {
-            const authorList = contributorData.map((userInfo) => {
-                let authorInfo = {};
-                authorInfo.avatar_url = userInfo.author.avatar_url;
-                authorInfo.login = userInfo.author.login;
-                authorInfo.id = userInfo.author.id;
-                authorInfo.url = userInfo.author.url;
-                authorInfo.totalCommits = userInfo.total;
-                return authorInfo;
-            });
-            dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList})
-        });
+  console.log('about to grab contributor data');
+  contributorData('ser574-green-team', 'taigit')
+    .then((contributorData) => {
+      const authorList = contributorData.map((userInfo) => {
+        let authorInfo = {};
+        authorInfo.avatar_url = userInfo.author.avatar_url;
+        authorInfo.login = userInfo.author.login;
+        authorInfo.id = userInfo.author.id;
+        authorInfo.url = userInfo.author.url;
+        authorInfo.totalCommits = userInfo.total;
+        return authorInfo;
+      });
+      dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList})
+    });
+}
+
+export const getBranchCommits = (owner, repo, branch) => dispatch => {
+  console.log('about to grab number of branch commits');
+  getNumBranchCommits(owner, repo, branch)
+    .then(numBranchCommits =>
+        dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
+    );
 }
 
 export const getAuthKey = (id, secret, storeKey) => dispatch => {

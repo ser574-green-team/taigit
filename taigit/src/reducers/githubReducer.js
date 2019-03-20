@@ -1,11 +1,12 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO, GET_AUTH_KEY, GET_PULL_REQUESTS_CLOSED } from '../actions/githubActions';
+import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO, GET_NUM_BRANCH_COMMITS, GET_AUTH_KEY, GET_PULL_REQUESTS_CLOSED } from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
   numOfCommits: 0,
   numPullRequests: 0,
   contributors: [],
+  numBranchCommits: [],
   authKey: '',
   numPullRequestsClosed: 0
 }
@@ -43,13 +44,18 @@ const githubReducer = (state = {}, action) => {
         ...state,
         contributors: action.payload
       }
+    case GET_NUM_BRANCH_COMMITS:
+      console.log('payload for number of branch commits is: ', action.payload);
+      state.numBranchCommits.push(action.payload);
+      return {
+        ...state,
+      }
     case GET_AUTH_KEY:
       console.log('payload is: ', action.payload);
       return {
           ...state,
           authKey: action.payload
       }
-
     default:
       return {
         ...state,
@@ -107,6 +113,18 @@ export const selectCommitsPerContributorChartData = (state) => {
       borderWidth: 1
     }],
   }
+}
+
+export const selectNumBranchCommits = (state) => {
+  return {
+      labels: ['master', 'dev'],
+      datasets: [{
+          label: 'Number of Commits',
+          data: [state.numBranchCommits[0], state.numBranchCommits[1]],
+          backgroundColor: colors.red.base,
+          borderWidth: 1
+      }]
+  };
 }
 
 export const selectAuthKey = (state) => {
