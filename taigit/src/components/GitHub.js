@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
 import { getBranchList, getCommitsPerUser, getPullRequests, getContributorData } from '../actions/githubActions';
-import { selectBranchList, selectNumCommitsChartData, selectNumPullRequestsData, selectCommitsPerContributorChartData } from '../reducers';
+import { selectBranchList, selectNumCommitsChartData, selectNumPullRequestsData, selectCommitsPerContributorChartData, selectNumPullRequestsClosedData } from '../reducers';
 import { connect } from 'react-redux';
-import { Bar } from 'react-chartjs-2';
+import { Bar, HorizontalBar } from 'react-chartjs-2';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import ScrollableList from './ScrollableList';
-
-import HorizBarChart from './charts/HorizBarChart'
 import commitPerBranchData from './charts/commitPerBranchData'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -43,6 +41,7 @@ class GitHub extends Component {
     this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey');
     this.props.getPullRequests('ser574-green-team', 'taigit');
     this.props.getContributorData();
+    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit');
     originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -71,7 +70,7 @@ class GitHub extends Component {
             <NumberDisplay number="13" statistic="Pull Requests Created"/>
           </div>
           <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number="6" statistic="Pull Requests Reviewed"/>
+            <NumberDisplay number={this.props.numPullRequestsClosed} statistic="Pull Requests Closed"/>
           </div>
           <div className='box' key="4" data-grid={{ w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
@@ -82,14 +81,26 @@ class GitHub extends Component {
           <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
-        </ResponsiveReactGridLayout>
-
-          <div className="chart horizontal-bar">
-              <span className = "chart-title">Commits Per Branch</span>
-              <HorizBarChart chartData={commitPerBranchData}/>
+          <div className='box' key="6" data-grid={{ w: 3, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
+            <div className="chart">
+              <HorizontalBar data={commitPerBranchData} options={{maintainAspectRatio: true, responsive: true}}/>
+            </div>
           </div>
+        </ResponsiveReactGridLayout>
       </div>
     );
+  }
+}
+
+const horizontalChartOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  scales: {
+      yAxes: [{
+          ticks: {
+              beginAtZero:true
+          }
+      }]
   }
 }
 
@@ -102,10 +113,11 @@ const mapStateToProps = state => ({
   branches: selectBranchList(state),
   commitChartData: selectCommitsPerContributorChartData(state),
   numPullRequests: selectNumPullRequestsData(state),
+  numPullRequestsClosed: selectNumPullRequestsClosedData(state)
 });
 
 /**
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { getBranchList, getCommitsPerUser, getPullRequests, getContributorData })(GitHub)
+export default connect(mapStateToProps, { getBranchList, getCommitsPerUser, getPullRequests, getContributorData})(GitHub)
