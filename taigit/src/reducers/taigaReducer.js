@@ -1,9 +1,15 @@
-import { GRAB_TAIGA_DATA, GET_SPRINT_STATS } from '../actions/taigaActions';
+import { 
+  GRAB_TAIGA_DATA, 
+  GET_SPRINT_STATS,
+  ADD_PROJECT_INFO,
+  ADD_SPRINTS_LIST
+ } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
+  projectInfo: {},
+  sprintsInfo: [],
   taigaData: 'initialData',
-  sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3'],
   sprintStats: {}
 }
 
@@ -15,6 +21,16 @@ const initialState = {
  */
 export default function taigaReducer(state = initialState, action) {
   switch(action.type) {
+    case ADD_PROJECT_INFO: 
+      return {
+        ...state,
+        projectInfo: action.payload
+      }
+    case ADD_SPRINTS_LIST:
+      return {
+        ...state,
+        sprintsInfo: action.payload
+      }
     case GRAB_TAIGA_DATA: 
       console.log('in reducer of grab taiga data');
       console.log('payload is: ', action.payload);
@@ -81,10 +97,6 @@ export const selectUserTaskDistributionChartData = (state) => {
  * that the sprint dropdown component will render
  */
 export const selectSprintList = (state) => {
-  return state.sprintList.map(sprintName => { 
-    return {
-      value: sprintName,
-      label: sprintName
-    }
-  });
+  // return state.sprintsInfo.map(sprint => sprint.name);
+  return ['Sprint 1', 'Sprint 2', 'Sprint 3'];
 }

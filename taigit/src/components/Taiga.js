@@ -3,7 +3,7 @@ import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import { grabTaigaData, grabSprintStats } from '../actions/taigaActions';
+import { grabTaigaData, grabSprintStats, getTaigaProjectData } from '../actions/taigaActions';
 import { selectSprintList, selectSprintProgressChartData, selectUserTaskDistributionChartData } from '../reducers';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -38,6 +38,7 @@ class Taiga extends Component {
   componentWillMount() {
     this.props.grabTaigaData();
     this.props.grabSprintStats();
+    this.props.getTaigaProjectData();
     originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -46,6 +47,7 @@ class Taiga extends Component {
     return(
       <div className="app-page">
         <h2>Taiga</h2>
+        {this.props.sprintList}
         <div className="selector">
           <Select options={this.props.sprintList}
           theme={(theme) => ({
@@ -180,4 +182,4 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { grabTaigaData, grabSprintStats })(Taiga)
+export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, getTaigaProjectData })(Taiga)
