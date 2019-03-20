@@ -58,13 +58,20 @@ function
  * @param repo  
  */
 export async function 
-getMcCabeComplexity(owner: string, repo: string) : Promise<string>{
+getMcCabeComplexity(owner: string, repo: string, path? : string) : Promise<string>{
     let jsonString : string = "{";
     var total : number = 0;
     var dictObj : {[path : string]: number;} = { };
     try{
-        const master  = await axios.get("https://api.github.com/repos/" + 
-         owner + "/" + repo + "/branches/master");
+        var master; 
+        if(path === undefined){
+           master = await axios.get("https://api.github.com/repos/" + 
+           owner + "/" + repo + "/branches/master");
+        }
+        else{
+            master = await axios.get("https://api.github.com/repos/" + 
+           owner + "/" + repo + "/branches/master/"+path);
+        }
         //let sha = master.data.commit.sha;
         const tree = await  axios.get("https://api.github.com/repos/" + 
         owner + "/" + repo + "/git/trees/" + master.data.commit.sha);
