@@ -3,3 +3,6 @@ export {getBranches, getNumBranchCommits} from "./src/branches";
 export {getCommitsInTimeWindow} from "./src/commitsInWindow";
 export {getNumPullRequests} from "./src/numPullRequests";
 export {getMcCabeComplexity} from "./src/cyclomaticComplexity";
+export {getNumComments} from "./src/avgComments";
+export {contributorData} from "./src/contributorData";
+export {authRedirect, getAuthToken} from "./src/auth"

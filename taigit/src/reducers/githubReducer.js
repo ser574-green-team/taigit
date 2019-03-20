@@ -1,8 +1,12 @@
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER } from '../actions/githubActions';
+import colors from '../styles/colors';
+import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO, GET_AUTH_KEY } from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
-  numOfCommits: 0
+  numOfCommits: 0,
+  numPullRequests: 0,
+  contributors: [],
+  authKey: ''
 }
 /**
  * Github Reducer
@@ -26,6 +30,25 @@ const githubReducer = (state = {}, action) => {
         ...state,
         numOfCommits: action.payload
       }
+    case GET_NUM_PULL_REQUESTS:
+      console.log('payload for pull req is: ', action.payload);
+      return {
+        ...state,
+        numPullRequests: action.payload
+      }
+    case ADD_CONTRIBUTOR_INFO:
+      console.log('payload for contributor data is: ', action.payload);
+      return {
+        ...state,
+        contributors: action.payload
+      }
+    case GET_AUTH_KEY:
+      console.log('payload is: ', action.payload);
+      return {
+          ...state,
+          authKey: action.payload
+      }
+
     default:
       return {
         ...state,
@@ -46,7 +69,7 @@ const githubReducer = (state = {}, action) => {
  * (An example of creating new data from the store)
  */
 export const selectBranchList = (state) => {
-  return state.branchesList.map(branch => `Branch: ${branch}`);
+  return state.branchesList;
 }
 
 /**
@@ -61,10 +84,32 @@ export const selectNumCommitsChartData = (state) => {
     datasets: [{
       label: 'Number of Commits',
       data: [state.numOfCommits],
-      backgroundColor: 'rgba(255, 99, 132, 1)',
+      backgroundColor: colors.yellow.base,
       borderWidth: 1
     }],
   }
+}
+
+export const selectNumPullRequestsData = (state) => {
+  return state.numPullRequests;
+}
+
+export const selectCommitsPerContributorChartData = (state) => {
+  let contributorList = state.contributors.map((contributor) => contributor.login);
+  let commitsList = state.contributors.map((contributor) => contributor.totalCommits);
+  return {
+    labels: contributorList,
+    datasets: [{
+      label: 'Number of Commits',
+      data: commitsList,
+      backgroundColor: colors.yellow.base,
+      borderWidth: 1
+    }],
+  }
+}
+
+export const selectAuthKey = (state) => {
+  return state.authKey;
 }
 
 export default githubReducer
