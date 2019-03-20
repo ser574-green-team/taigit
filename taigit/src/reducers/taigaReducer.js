@@ -75,6 +75,32 @@ export const selectUserTaskDistributionChartData = (state) => {
   }
 }
 
+export const selectSprintBurndownChartData = (state) => {
+  return{
+    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+      datasets: [{
+          fill: false,
+          label: 'Ideal Burndown',
+          color: 'rgba(255,0,0,0.25)',
+          lineWidth: 2,
+          data: [98, 91, 84, 77, 70, 63, 56, 49, 42, 35, 28, 21, 14, 7],
+          backgroundColor: [colors.red.base],
+          borderColor: [colors.red.base]
+        },
+        {
+          fill: false,
+          label: 'Actual Burndown',
+          color: 'rgba(0,120,200,0.75)',
+          marker: {
+            radius: 6
+          },
+          data: [98, 110, 102, 85, 78, 69, 60, 49, 35, 40, 29, 20, 10, 0],
+          backgroundColor: [colors.blue.base],
+          borderColor: [colors.blue.base]
+        }]
+  }
+}
+
 /**
  * Getting list of sprints
  * Returns an array of sprint names wrapped in objects
