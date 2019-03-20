@@ -128,7 +128,7 @@ const burndownOptions = {
     maintainAspectRatio: true,
     responsive: true,
     tooltip: {
-      valueSuffix: "  hrs",
+      valueSuffix: "  points",
       crosshairs: true,
       shared: true
     },
@@ -142,7 +142,7 @@ const burndownOptions = {
       yAxes: [{
         scaleLabel:{
           display: true,
-          labelString: "Hours"
+          labelString: "Points"
         }
       }],
 
