@@ -73,7 +73,7 @@ getMcCabeComplexity(owner: string, repo: string, filePath : string) : Promise<st
         verify = verifyFormat(fileExt);
         if(verify){
             const file = await axios.get("https://api.github.com/repos/"+ 
-            owner+"/"+repo+"/contents/"+ filePath, {auth:{username: "ansamant", password: "ventipumpkinspicechaitealatte-20OZ"}});
+            owner+"/"+repo+"/contents/"+ filePath);
             // encoded content needs to be converted to utf-8
             let uniFileContent : string = atob(file.data.content);
             //dictObj[fileArray[fileArray.length-1]] = getCodeComplexity(uniFileContent);
