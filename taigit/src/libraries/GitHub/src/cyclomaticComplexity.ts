@@ -59,23 +59,16 @@ function
  * @param repo  
  */
 export async function 
-getMcCabeComplexity(owner: string, repo: string, path? : string) : Promise<string>{
+getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>{
     let jsonString : string = "{";
-    var total : number = 0;
-    var dictObj : {[path : string]: number;} = { };
+    var avg : number = 0;
+    let count: number = 0;
+    var dictObj : {[path : string]: number} = { };
     try{
-        var master; 
-        if(path === undefined){
-           master = await axios.get("https://api.github.com/repos/" + 
-           owner + "/" + repo + "/branches/master");
-        }
-        else{
-            master = await axios.get("https://api.github.com/repos/" + 
-           owner + "/" + repo + "/branches/master/"+path);
-        }
-        //let sha = master.data.commit.sha;
-        const tree = await  axios.get("https://api.github.com/repos/" + 
-        owner + "/" + repo + "/git/trees/" + master.data.commit.sha);
+        const master = await axios.get("https://api.github.com/repos/" + owner + "/" + repo + "/branches/master",  {auth:{username: "ansamant", password: "ventiwhitemochafrappucino-20OZ"}});
+        let access = (sha === undefined)? master.data.commit.sha : sha;
+        var tree = await  axios.get("https://api.github.com/repos/" + 
+        owner + "/" + repo + "/git/trees/" + access, {auth:{username: "ansamant", password: "ventiwhitemochafrappucino-20OZ"}});
 
         for (let gitObj of tree.data.tree){
             let filePath : string = "";
@@ -84,6 +77,8 @@ getMcCabeComplexity(owner: string, repo: string, path? : string) : Promise<strin
             if(gitObj.type === "blob"){
                 filePath = gitObj.path;
                 fileExt = gitObj.path.split(".").pop();
+            }else if(gitObj.type === "tree"){
+                getMcCabeComplexity(owner, repo, gitObj.sha);
             }
 
             if (!(fileExt === "")){
@@ -91,8 +86,9 @@ getMcCabeComplexity(owner: string, repo: string, path? : string) : Promise<strin
             }
 
             if(verify){
+                count++;
                 const file = await axios.get("https://api.github.com/repos/"+ 
-                owner+"/"+repo+"/contents/"+ filePath);
+                owner+"/"+repo+"/contents/"+ filePath, {auth:{username: "ansamant", password: "ventiwhitemochafrappucino-20OZ"}});
                 // encoded content needs to be converted to utf-8
                 let uniFileContent : string = atob(file.data.content);
                 dictObj[filePath] = getCodeComplexity(uniFileContent);
@@ -101,13 +97,15 @@ getMcCabeComplexity(owner: string, repo: string, path? : string) : Promise<strin
         }
         for (var key in dictObj){
             jsonString += "\""+key+"\"" + " : " + dictObj[key]+", ";
-            total += dictObj[key];
+            avg += dictObj[key];
         }
-        jsonString += " \"total\" : " + total + "}";
+        avg = avg/count;
+        jsonString += " \"average\" : " + avg + "}";
         
     }
     catch(error){
         console.log(error);
     }
+    console.log("JSON: " + jsonString);
     return jsonString;
 }
