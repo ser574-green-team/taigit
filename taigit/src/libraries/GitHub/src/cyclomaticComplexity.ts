@@ -64,12 +64,10 @@ getMcCabeComplexity(owner: string, repo: string) : Promise<string>{
     var dictObj : {[path : string]: number;} = { };
     try{
         const master  = await axios.get("https://api.github.com/repos/" + 
-         owner + "/" + repo + "/branches/master", 
-        {auth:{username: "ansamant", password: "trentagreentealemonade31-OZ"}});
+         owner + "/" + repo + "/branches/master");
         //let sha = master.data.commit.sha;
         const tree = await  axios.get("https://api.github.com/repos/" + 
-        owner + "/" + repo + "/git/trees/" + master.data.commit.sha, 
-        {auth:{username: "ansamant", password: "trentagreentealemonade31-OZ"}});
+        owner + "/" + repo + "/git/trees/" + master.data.commit.sha);
 
         for (let gitObj of tree.data.tree){
             let filePath : string = "";
@@ -86,8 +84,7 @@ getMcCabeComplexity(owner: string, repo: string) : Promise<string>{
 
             if(verify){
                 const file = await axios.get("https://api.github.com/repos/"+ 
-                owner+"/"+repo+"/contents/"+ filePath, 
-                {auth:{username: "ansamant", password: "trentagreentealemonade31-OZ"}});
+                owner+"/"+repo+"/contents/"+ filePath);
                 // encoded content needs to be converted to utf-8
                 let uniFileContent : string = atob(file.data.content);
                 dictObj[filePath] = getCodeComplexity(uniFileContent);
