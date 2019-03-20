@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { grabTaigaData } from '../actions/taigaActions';
+import { selectSprintList } from '../reducers';
 import stackBarChartData from './charts/stackedBarChartData';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -44,6 +46,17 @@ class Taiga extends Component {
     return(
       <div className="app-page">
         <h2>Taiga</h2>
+        <div className="selector">
+          <Select options={this.props.sprintList}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+            ...theme.colors,
+              primary25: colors.yellow.light,
+              primary: colors.blue.light,
+            },
+          })} />
+        </div>
         <ResponsiveReactGridLayout
           className="layout"
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
@@ -99,7 +112,8 @@ Taiga.propTypes = {
  * to component props property (left)
  */
 const mapStateToProps = state => ({
-  storeData: state.taiga.taigaData
+  storeData: state.taiga.taigaData,
+  sprintList: selectSprintList(state)
 });
 
 /**
