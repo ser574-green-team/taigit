@@ -76,7 +76,7 @@ export const selectUserTaskDistributionChartData = (state) => {
 }
 
 export const selectSprintBurndownChartData = (state) => {
-  const burndownInfo = state.sprintStats.days || [];
+  const burndownInfo = state.sprintStats.burndown || [];
   const days = burndownInfo.map((sprintDay) => sprintDay.day);
   const openPoints = burndownInfo.map((sprintDay) => sprintDay.open_points);
   const optimalPoints = burndownInfo.map((sprintDay) => sprintDay.optimal_points);
