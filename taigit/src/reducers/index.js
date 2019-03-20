@@ -14,3 +14,4 @@ export const selectNumCommitsChartData = (state) => fromGithub.selectNumCommitsC
 export const selectNumPullRequestsData = (state) => fromGithub.selectNumPullRequestsData(state.github);
 export const selectSprintList = (state) => fromTaiga.selectSprintList(state.taiga);
 export const selectCommitsPerContributorChartData = (state) => fromGithub.selectCommitsPerContributorChartData(state.github);
+export const selectNumBranchCommits = (state) => fromGithub.selectNumBranchCommits(state.github);

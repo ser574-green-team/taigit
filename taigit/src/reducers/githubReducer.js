@@ -1,11 +1,12 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO } from '../actions/githubActions';
+import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO, GET_NUM_BRANCH_COMMITS } from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
   numOfCommits: 0,
   numPullRequests: 0,
-  contributors: []
+  contributors: [],
+  numBranchCommits: []
 }
 /**
  * Github Reducer
@@ -40,6 +41,12 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
         contributors: action.payload
+      }
+    case GET_NUM_BRANCH_COMMITS:
+      console.log('payload for number of branch commits is: ', action.payload);
+      state.numBranchCommits.push(action.payload);
+      return {
+        ...state,
       }
     default:
       return {
@@ -100,5 +107,16 @@ export const selectCommitsPerContributorChartData = (state) => {
   }
 }
 
+export const selectNumBranchCommits = (state) => {
+  return {
+      labels: ['master', 'dev'],
+      datasets: [{
+          label: 'Number of Commits',
+          data: [state.numBranchCommits[0], state.numBranchCommits[1]],
+          backgroundColor: colors.red.base,
+          borderWidth: 1
+      }]
+  };
+}
 
 export default githubReducer
