@@ -33,14 +33,11 @@ function
     let ignoreComment = 0;
     let arr : Array<string> = code.split(" ");
     let arr1 : Array<string> = ["if", "elif", "case", "for", "while", "return", "void",
-                                "boolean", "bool", "assert", "except", "with", "iter"];
+                                 "assert", "except", "with", "iter", "foreach"];
     for(var i = 0; i < arr.length; i++){
         if(ignoreComment == 0){
             if(arr1.includes(arr[i])){
                 num++;
-            }else if(arr[i] === "else" && arr[i+2] === "if"){
-                num++;
-                i = i+2;
             }else if(arr[i]==="/*" || arr[i] === "/**"){
                 ignoreComment = 1;
             }
