@@ -8,12 +8,12 @@ export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const GET_AUTH_KEY = 'GET_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
- 
+
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo) => dispatch => {
   console.log('about to get branches list');
   getBranches(owner, repo)
-    .then(branches => 
+    .then(branches =>
       dispatch({type: GET_BRANCH_LIST, payload: branches})
     );
 }
@@ -69,9 +69,9 @@ export const getBranchCommits = (owner, repo, branch) => dispatch => {
     );
 }
 
-export const getAuthKey = (id, secret, storeKey) => dispatch => {
+export const getAuthKey = (auth_server, storeKey) => dispatch => {
   console.log('about to get auth key');
-  getAuthToken(id, secret, storeKey)
+  getAuthToken(auth_server, storeKey)
       .then(authKey =>
       dispatch({type: GET_AUTH_KEY, payload: authKey}))
 }

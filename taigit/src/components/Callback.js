@@ -4,15 +4,13 @@ import {Link} from 'react-router-dom';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import * as keys from '../keys.json';
 import queryString from 'query-string';
-import {getAuthKey } from '../actions/githubActions';
+import {getAuthKey} from '../actions/githubActions';
 import {selectAuthKey} from '../reducers/githubReducer';
 
 class Callback extends Component {
     componentWillMount() {
         const values = queryString.parse(this.props.location.search);
-
-        let key = this.props.getAuthKey(keys.GH_CLIENT_ID, keys.GH_CLIENT_SECRET, values.code);
-        console.log(key);
+        let key = this.props.getAuthKey(keys.GH_AUTH_SERVER, values.code);
         saveToLocalStorage('auth-key', 'auth-key', key);
     }
 
