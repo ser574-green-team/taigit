@@ -28,6 +28,8 @@ export async function
 getAuthToken(auth_server: string, session_code : string) : Promise<string> {
     let url : string = auth_server + session_code;
     let oauth = await axios.get(url);
-    console.log(oauth.data);
+    if("error" in oauth.data) {
+        throw new Error("Recieved bad code from authentication server using the following URL: " + url);
+    }
     return oauth.data.token;
 }
