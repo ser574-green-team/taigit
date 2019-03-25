@@ -1,4 +1,11 @@
-import { getBranches, getNumCommitsFromUser, getNumPullRequests, contributorData, getNumBranchCommits, getAuthToken } from '../libraries/GitHub/GitHub';
+import {
+  getBranches,
+  getNumCommitsFromUser,
+  getNumPullRequests,
+  contributorData,
+  getNumBranchCommits,
+  getAuthToken } from '../libraries/GitHub/GitHub';
+import { getFromLocalStorage } from '../utils/utils';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
@@ -9,10 +16,13 @@ export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const GET_AUTH_KEY = 'GET_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
 
+let auth = getFromLocalStorage('auth-key', 'auth-key');
+console.log('auth key is', auth);
+
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo) => dispatch => {
   console.log('about to get branches list');
-  getBranches(owner, repo)
+  getBranches(owner, repo, auth)
     .then(branches =>
       dispatch({type: GET_BRANCH_LIST, payload: branches})
     );
@@ -20,7 +30,7 @@ export const getBranchList = (owner, repo) => dispatch => {
 
 export const getCommitsPerUser = (infoForApiCall) => dispatch => {
   console.log('about to get commits for one user');
-  getNumCommitsFromUser('trevorforrey', 'OttoDB', 'trevorforrey')
+  getNumCommitsFromUser('trevorforrey', 'OttoDB', 'trevorforrey', auth)
     .then(numberOfCommits =>
       dispatch({type: GET_COMMITS_PER_USER, payload: numberOfCommits})
     );
@@ -28,7 +38,7 @@ export const getCommitsPerUser = (infoForApiCall) => dispatch => {
 
 export const getPullRequests = (infoForApiCall) => dispatch => {
   console.log('about to get number of pull requests');
-  getNumPullRequests('ser574-green-team', 'taigit')
+  getNumPullRequests('ser574-green-team', 'taigit', auth)
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );
@@ -44,9 +54,9 @@ export const getPullRequests = (infoForApiCall) => dispatch => {
 //     );
 // }
 
-export const getContributorData = (repo = 'banana', owner = 'trevorforrey') => dispatch => {
+export const getContributorData = (owner, repo) => dispatch => {
   console.log('about to grab contributor data');
-  contributorData('ser574-green-team', 'taigit')
+  contributorData(owner, repo, auth)
     .then((contributorData) => {
       const authorList = contributorData.map((userInfo) => {
         let authorInfo = {};
@@ -63,7 +73,7 @@ export const getContributorData = (repo = 'banana', owner = 'trevorforrey') => d
 
 export const getBranchCommits = (owner, repo, branch) => dispatch => {
   console.log('about to grab number of branch commits');
-  getNumBranchCommits(owner, repo, branch)
+  getNumBranchCommits(owner, repo, branch, auth)
     .then(numBranchCommits =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
