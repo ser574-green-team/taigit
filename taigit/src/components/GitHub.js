@@ -18,8 +18,9 @@ import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import ScrollableList from './ScrollableList';
-import HorizBarChart from './charts/HorizBarChart'
+import HorizBarChart from './charts/HorizBarChart';
 import colors from "../styles/colors";
+import { getFromLocalStorage } from "../utils/utils";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
@@ -49,13 +50,15 @@ class GitHub extends Component {
 
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
-    this.props.getBranchList('ser574-green-team', 'taigit');
-    this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey');
-    this.props.getPullRequests('ser574-green-team', 'taigit');
-    this.props.getContributorData('ser574-green-team', 'taigit');
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'master');
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev');
-    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit');
+    let auth = getFromLocalStorage('auth-key');
+    console.log('auth key is', auth);
+    this.props.getBranchList('ser574-green-team', 'taigit', auth);
+    this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey', auth);
+    this.props.getPullRequests('ser574-green-team', 'taigit', auth);
+    this.props.getContributorData('ser574-green-team', 'taigit', auth);
+    this.props.getBranchCommits('ser574-green-team', 'taigit', 'master', auth);
+    this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth);
+    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
