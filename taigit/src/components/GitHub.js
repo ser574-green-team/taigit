@@ -15,7 +15,7 @@ import {
   selectNumPullRequestsClosedData } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
-import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import ScrollableList from './ScrollableList';
 import HorizBarChart from './charts/HorizBarChart'
@@ -23,7 +23,7 @@ import colors from "../styles/colors";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
-let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
 class GitHub extends Component {
   constructor(props) {
@@ -43,7 +43,7 @@ class GitHub extends Component {
   };
 
   onLayoutChange(layout, layouts) {
-    saveToLocalStorage(layoutname, 'layouts', layouts);
+    saveLayoutToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
   }
 
@@ -56,7 +56,7 @@ class GitHub extends Component {
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'master');
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev');
     //this.props.getPullRequestsClosed('ser574-green-team', 'taigit');
-    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
