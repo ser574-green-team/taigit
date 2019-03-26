@@ -5,7 +5,7 @@ import {
   contributorData,
   getNumBranchCommits,
   getAuthToken } from '../libraries/GitHub/GitHub';
-import { getFromLocalStorage } from '../utils/utils';
+import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
@@ -13,10 +13,10 @@ export const GET_COMMITS_PER_USER = 'GET_COMMITS_PER_USER';
 export const GET_NUM_PULL_REQUESTS = 'GET_NUM_PULL_REQUESTS';
 export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
-export const GET_AUTH_KEY = 'GET_AUTH_KEY';
+export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
 
-let auth = getFromLocalStorage('auth-key', 'auth-key');
+let auth = getFromLocalStorage('auth-key');
 console.log('auth key is', auth);
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
@@ -58,16 +58,20 @@ export const getContributorData = (owner, repo) => dispatch => {
   console.log('about to grab contributor data');
   contributorData(owner, repo, auth)
     .then((contributorData) => {
-      const authorList = contributorData.map((userInfo) => {
-        let authorInfo = {};
-        authorInfo.avatar_url = userInfo.author.avatar_url;
-        authorInfo.login = userInfo.author.login;
-        authorInfo.id = userInfo.author.id;
-        authorInfo.url = userInfo.author.url;
-        authorInfo.totalCommits = userInfo.total;
-        return authorInfo;
-      });
-      dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList})
+      try {
+        const authorList = contributorData.map((userInfo) => {
+          let authorInfo = {};
+          authorInfo.avatar_url = userInfo.author.avatar_url;
+          authorInfo.login = userInfo.author.login;
+          authorInfo.id = userInfo.author.id;
+          authorInfo.url = userInfo.author.url;
+          authorInfo.totalCommits = userInfo.total;
+          return authorInfo;
+        });
+        dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList})
+      } catch (e) {
+        console.error(e);
+      }
     });
 }
 
@@ -82,6 +86,8 @@ export const getBranchCommits = (owner, repo, branch) => dispatch => {
 export const getAuthKey = (auth_server, storeKey) => dispatch => {
   console.log('about to get auth key');
   getAuthToken(auth_server, storeKey)
-      .then(authKey =>
-      dispatch({type: GET_AUTH_KEY, payload: authKey}))
+      .then((authKey) => {
+        saveToLocalStorage('auth-key', authKey);
+        dispatch({type: ADD_AUTH_KEY, payload: authKey})
+      });
 }
