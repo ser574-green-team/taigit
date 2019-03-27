@@ -1,10 +1,11 @@
-import { GRAB_TAIGA_DATA, GET_SPRINT_STATS } from '../actions/taigaActions';
+import { GRAB_TAIGA_DATA, GET_SPRINT_STATS, GET_TASK_STATS } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
   taigaData: 'initialData',
   sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3'],
   sprintStats: {},
+  taigaTaskStats: [],
 }
 
 /**
@@ -23,7 +24,7 @@ export default function taigaReducer(state = initialState, action) {
       // Return new object of current state spread and new property (taigaData)
       return {
         ...state,
-        taigaData: action.payload
+        taigaProjectData: action.payload
       }
     case GET_SPRINT_STATS:
       console.log('got sprint stats');
@@ -31,6 +32,12 @@ export default function taigaReducer(state = initialState, action) {
       return {
         ...state,
         sprintStats: action.payload
+      }
+    case GET_TASK_STATS:
+      //console.log('in Task details reducer');
+      return {
+        ...state,
+        taigaTaskStats: action.payload
       }
     default:
       return state;
@@ -59,18 +66,73 @@ export const selectSprintProgressChartData = (state) => {
 }
 
 export const selectUserTaskDistributionChartData = (state) => {
+  var backgroundColor = [
+    'rgba(255, 99, 132, 0.6)',
+    'rgba(54, 162, 235, 0.6)',
+    'rgba(255, 206, 86, 0.6)',
+    'rgba(75, 192, 192, 0.6)',
+    'rgba(153, 102, 255, 0.6)',
+    'rgba(255, 159, 64, 0.6)',
+    'rgba(255, 99, 132, 0.6)'
+  ];
+  let taigaTaskStatsArr = state.taigaTaskStats;
+  let dictToProcessData = {};
+  // Deserialzation of received data from backend
+  for (let i = 0; i < taigaTaskStatsArr.length; i++) {
+    for (let j = 0; j < taigaTaskStatsArr[i].length; j++) {
+      let name = taigaTaskStatsArr[i][j]['name'];
+      if (name in dictToProcessData) {
+        dictToProcessData[name]['inprogress_task_count'] += taigaTaskStatsArr[i][j]['inprogress_task_count'];
+        dictToProcessData[name]['closed_task_count'] += taigaTaskStatsArr[i][j]['closed_task_count'];
+        dictToProcessData[name]['task_ready_for_test_count'] += taigaTaskStatsArr[i][j]['task_ready_for_test_count'];
+        dictToProcessData[name]['new_task_count'] += taigaTaskStatsArr[i][j]['new_task_count'];
+      } else {
+        dictToProcessData[name] = {'inprogress_task_count' : 0,
+                                      'closed_task_count' : 0,
+                                      'task_ready_for_test_count' :0,
+                                      'new_task_count': 0,
+                                      };
+      }
+    }
+  }
+  
+  // create X and Y axis data
+  let xAxisNameData = [];
+  let closedTaskCount = [];
+  let readyForTestTaskCount = [];
+  let newTaskCount = [];
+  let inprogressTaskCount = [];
+
+  for (let name in dictToProcessData) {
+    xAxisNameData.push(name);
+    closedTaskCount.push(dictToProcessData[name]['closed_task_count']);
+    readyForTestTaskCount.push(dictToProcessData[name]['task_ready_for_test_count']);
+    newTaskCount.push(dictToProcessData[name]['new_task_count']);
+    inprogressTaskCount.push(dictToProcessData[name]['inprogress_task_count']);
+  } 
+  
   return {
-    labels: ['Rodney', 'Berta', 'Steve', 'Remy', 'Hugo'],
+    labels: xAxisNameData,
     datasets: [{
       label: 'Completed',
-      backgroundColor: 'rgb(242, 105, 104, 1)',
+      backgroundColor: backgroundColor[0],
       stack: 'Stack 0',
-      data: [2, 3, 1, 5, 2]
+      data: closedTaskCount
     }, {
       label: 'In Progress',
-      backgroundColor: 'rgb(242, 173, 159, 1)',
+      backgroundColor: backgroundColor[1],
       stack: 'Stack 0',
-      data: [4, 3, 2, 1, 5]
+      data: inprogressTaskCount
+    }, {
+      label: 'Unassigned',
+      backgroundColor: backgroundColor[2],
+      stack: 'Stack 0',
+      data: newTaskCount
+    }, {
+      label: 'Read for Test',
+      backgroundColor: backgroundColor[3],
+      stack: 'Stack 0',
+      data: readyForTestTaskCount
     }]
   }
 }
