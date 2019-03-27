@@ -1,8 +1,9 @@
-import { sprint_stats } from '../libraries/Taiga';
+import { project_info, sprint_stats, get_task_status_count} from '../libraries/Taiga';
 
 /** Actions types */
 export const GRAB_TAIGA_DATA = 'GRAB_TAIGA_DATA'
 export const GET_SPRINT_STATS = 'GET_SPRINT_STATS'
+export const GET_TASK_STATS = 'GET_TASK_STATS'
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const grabTaigaData = (infoForApiCall) => dispatch => {
@@ -18,7 +19,10 @@ export const grabTaigaData = (infoForApiCall) => dispatch => {
    *   );
    * 
    */
-  dispatch({type: GRAB_TAIGA_DATA, payload:'mockApiData'})
+  project_info('sanaydevi-ser-574') // give the slug name
+    .then(taigaProjectInfo =>
+      dispatch({type: GRAB_TAIGA_DATA, payload: taigaProjectInfo})
+    );
 }
 
 export const grabSprintStats = (infoForApiCall) => dispatch => {
@@ -27,4 +31,10 @@ export const grabSprintStats = (infoForApiCall) => dispatch => {
       console.log(sprintStats);
       dispatch({type: GET_SPRINT_STATS, payload: sprintStats});
     });
+}
+
+export const grabTaskStats = (infoForApiCall) => dispatch => {
+  get_task_status_count(306316).then((taskStats) => {
+    dispatch({type: GET_TASK_STATS, payload: taskStats});
+  });
 }
