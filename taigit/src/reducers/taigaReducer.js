@@ -129,7 +129,7 @@ export const selectUserTaskDistributionChartData = (state) => {
       stack: 'Stack 0',
       data: newTaskCount
     }, {
-      label: 'Read for Test',
+      label: 'Ready for Test',
       backgroundColor: backgroundColor[3],
       stack: 'Stack 0',
       data: readyForTestTaskCount
