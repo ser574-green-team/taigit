@@ -17,12 +17,12 @@ class App extends Component {
         <div>
           <NavBar/>
           <Switch>
-            <Route path="/" component={Overview} exact/>
+            <Route path="/overview" component={Overview} exact/>
             <Route path="/github" component={GitHub}/>
             <Route path="/taiga" component={Taiga}/>
             <Route path="/team" component={Team} exact/>
             <Route path="/team/members/:memberId" component={MemberProfile} exact/>
-            <Route path="/projects" component={Projects}/>
+            <Route path="/" component={Projects}/>
             <Route path="/callback" component={Callback} exact/>
             <Route path="/callback?=code:tempCode" component={Callback} exact/>
           </Switch>
