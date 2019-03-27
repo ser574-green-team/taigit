@@ -499,3 +499,13 @@ taiga_issues(projId : number) : Promise<Object>{
     }
     return output;
 }
+
+export async function
+eval_userstories() : Promise<Object>{
+    let data = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
+    let us_subjects : Array<string>  = [];
+    data.data.forEach(function (subject : string){
+        us_subjects.push(subject);
+    });
+    return us_subjects;
+}
