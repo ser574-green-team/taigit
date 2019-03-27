@@ -3,7 +3,7 @@ import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import { grabTaigaData, grabSprintStats } from '../actions/taigaActions';
+import { grabTaigaData, grabSprintStats, grabTaskStats } from '../actions/taigaActions';
 import {
   selectSprintList,
   selectSprintProgressChartData,
@@ -13,6 +13,7 @@ import {
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
+import { project_info, sprint_stats, get_task_status_count } from '../libraries/Taiga';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
@@ -43,6 +44,7 @@ class Taiga extends Component {
   componentWillMount() {
     this.props.grabTaigaData();
     this.props.grabSprintStats();
+    this.props.grabTaskStats();
     originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -80,7 +82,7 @@ class Taiga extends Component {
           <div className='box' key="2" data-grid={{ w: 5, h: 10, x: 3, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className="chart-title">Taiga Tasks</span>
-              <Bar data={this.props.userTaskDistribution} options={{maintainAspectRatio: true, responsive: true}}/>
+              <Bar data={this.props.userTaskDistribution} options={barGraphOptions}/>
             </div>
           </div>
           <div className='box' key="3" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
@@ -95,7 +97,31 @@ class Taiga extends Component {
     );
   }
 }
+const barGraphOptions = {
+    maintainAspectRatio: true,
+    responsive: true,
+    scales: {
+      yAxes: [{
+        scaleLabel:{
+          display: true,
+          labelString: "Count"
+        },
+        ticks: {
+          autoSkip: false
+        }
+      }],
 
+      xAxes: [{
+        scaleLabel:{
+          display: true,
+          labelString: "Contributors"
+        },
+        ticks: {
+          autoSkip: false
+        }
+      }]
+      }
+}
 const burndownOptions = {
     plotOptions: {
       line: {
@@ -161,4 +187,4 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { grabTaigaData, grabSprintStats })(Taiga)
+export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabTaskStats })(Taiga)
