@@ -309,7 +309,7 @@ get_task_status_count(project_id: number): Promise<Object> {
     for (let sprint_detail of sprint_details_array) {
         let sprint_id = sprint_detail.id;
         let sprint_name = sprint_detail.name;
-        let task_count_details_in_a_sprint =  get_task_details(sprint_id, project_id, sprint_name);
+        let task_count_details_in_a_sprint =  await get_task_details(sprint_id, project_id, sprint_name);
 
         total_task_details.push(task_count_details_in_a_sprint);
     }
