@@ -124,7 +124,7 @@ export const selectUserTaskDistributionChartData = (state) => {
       stack: 'Stack 0',
       data: inprogressTaskCount
     }, {
-      label: 'Unassigned',
+      label: 'Unassigned/New',
       backgroundColor: backgroundColor[2],
       stack: 'Stack 0',
       data: newTaskCount
