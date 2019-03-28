@@ -18,7 +18,7 @@ class Callback extends Component {
         return (
             <div style={{position: 'relative', left: '40%'}}>
                 <p>Authentication success!</p>
-                <Link to="/projects">Go back to Projects page</Link>
+                <Link to="/">Go back to Projects page</Link>
             </div>
         );
     }
