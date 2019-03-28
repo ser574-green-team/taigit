@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
-import { getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits } from '../actions/githubActions';
-import { selectBranchList, selectNumCommitsChartData, selectNumPullRequestsData, selectCommitsPerContributorChartData, selectNumBranchCommits, selectNumPullRequestsClosedData } from '../reducers';
+import {
+  getBranchList,
+  getCommitsPerUser,
+  getPullRequests,
+  getContributorData,
+  getBranchCommits } from '../actions/githubActions';
+import {
+  selectBranchList,
+  selectNumCommitsChartData,
+  selectNumPullRequestsData,
+  selectCommitsPerContributorChartData,
+  selectNumBranchCommits,
+  selectNumPullRequestsClosedData } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
-import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import ScrollableList from './ScrollableList';
-import HorizBarChart from './charts/HorizBarChart'
+import HorizBarChart from './charts/HorizBarChart';
 import colors from "../styles/colors";
+import { getFromLocalStorage } from "../utils/utils";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
-let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
 class GitHub extends Component {
   constructor(props) {
@@ -32,23 +44,24 @@ class GitHub extends Component {
   };
 
   onLayoutChange(layout, layouts) {
-    saveToLocalStorage(layoutname, 'layouts', layouts);
+    saveLayoutToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
   }
 
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
-    this.props.getBranchList('ser574-green-team', 'taigit');
-    this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey');
-    this.props.getPullRequests('ser574-green-team', 'taigit');
-    this.props.getContributorData();
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'master');
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev');
-    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit');
-    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    let auth = getFromLocalStorage('auth-key');
+    console.log('auth key is', auth);
+    this.props.getBranchList('ser574-green-team', 'taigit', auth);
+    this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey', auth);
+    this.props.getPullRequests('ser574-green-team', 'taigit', auth);
+    this.props.getContributorData('ser574-green-team', 'taigit', auth);
+    this.props.getBranchCommits('ser574-green-team', 'taigit', 'master', auth);
+    this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth);
+    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
+    originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
-
 
   render() {
     return(
@@ -87,7 +100,10 @@ class GitHub extends Component {
           <div className="box" key="6" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className = "chart-title">Commits Per Branch</span>
-              <HorizBarChart chartData={this.props.commitPerBranchData} options={{maintainAspectRatio: true, responsive: true}}/>
+              <HorizBarChart
+                  chartData={this.props.commitPerBranchData}
+                  options={{maintainAspectRatio: true, responsive: true}}
+              />
             </div>
           </div>
         </ResponsiveReactGridLayout>
@@ -125,4 +141,5 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits })(GitHub)
+export default connect(mapStateToProps, {
+  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits })(GitHub)

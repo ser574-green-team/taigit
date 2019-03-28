@@ -1,6 +1,6 @@
 import axios from 'axios';
 /**
- * The following function returns the Average Number Of Comments 
+ * The following function returns the Average Number Of Comments
  * on all closed Pull Requests by considering direct comments on
  * pull requests and review comments.
  * @param owner  The name of the owner of the repository in String format.
@@ -8,10 +8,13 @@ import axios from 'axios';
  * @return       The average number of comments per closed pull requests.
  */
 export async function
-getNumComments(owner : string, repo: string){
+getNumComments(owner : string, repo: string, auth : string){
     try{
+        var config = {
+            headers: {'Authorization': "Bearer " + auth}
+        }
         let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
-            "/" + repo + "/pulls?state=closed");
+            "/" + repo + "/pulls?state=closed", config);
         let lengthOfClosedPullRequests = issue_comment.data.length
         let issueNumberArray = Array()
        // console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
@@ -23,7 +26,7 @@ getNumComments(owner : string, repo: string){
 
         });
         for(let issue_number of issueNumberArray){
-            let commentsPerIssue = await getNumberCommentsPerPullRequest(owner,repo,Number(issue_number))
+            let commentsPerIssue = await getNumberCommentsPerPullRequest(owner,repo,Number(issue_number),auth)
             totalComments = totalComments + Number(commentsPerIssue)
             //console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))
         }
@@ -43,7 +46,7 @@ getNumComments(owner : string, repo: string){
 }
 
 /**
- * The following function returns the  Number Of Comments 
+ * The following function returns the  Number Of Comments
  * on a particular closed Pull Requests.
  * @param owner  The name of the owner of the repository in String format.
  * @param repo   The name of the Github repository in String format.
@@ -51,10 +54,13 @@ getNumComments(owner : string, repo: string){
  * @return       The total number of comments for a closed pull request.
  */
 export async function
-getNumberCommentsPerPullRequest(owner : string, repo: string,  number : number){
+getNumberCommentsPerPullRequest(owner : string, repo: string,  number : number, auth: string){
     try {
+        var config = {
+            headers: {'Authorization': "Bearer " + auth}
+        }
         let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
-            "/" + repo + "/pulls/" + number + "#/comments");
+            "/" + repo + "/pulls/" + number + "#/comments", config);
         let comments = issue_comment.data["comments"]
         let reviewComments = issue_comment.data["review_comments"]
         //  console.log(comments)
@@ -72,4 +78,3 @@ getNumberCommentsPerPullRequest(owner : string, repo: string,  number : number){
 
 
 //getNumCommets("ser574-green-team", "taigit");
-
