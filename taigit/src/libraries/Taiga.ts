@@ -505,7 +505,7 @@ taiga_issues(projId : number) : Promise<Object>{
  * @param sprintId the ID for the access of sprint stats
  * @returns
  * * {
- *          velocity : sprint velocity
+ *          velocity : number //sprint velocity
  * }
  */
 export async function
