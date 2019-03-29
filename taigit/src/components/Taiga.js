@@ -151,7 +151,7 @@ Taiga.propTypes = {
  * to component props property (left)
  */
 const mapStateToProps = state => ({
-  storeData: newFunction(state),
+  storeData: state.taiga.taigaData,
   sprintProgress: selectSprintProgressChartData(state),
   userTaskDistribution: selectUserTaskDistributionChartData(state),
   sprintList: selectSprintList(state),
@@ -163,7 +163,5 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabSprintName })(Taiga)
-function newFunction(state) {
-  return state.taiga.taigaData;
-}
+
 
