@@ -499,3 +499,28 @@ taiga_issues(projId : number) : Promise<Object>{
     }
     return output;
 }
+
+/**
+ * @summary This call return sprint velocity (unit points) based on sprint Id
+ * @param sprintId the ID for the access of sprint stats
+ * @returns
+ * * {
+ *          velocity : sprint velocity
+ * }
+ */
+export async function
+sprint_velocity_pts(sprintId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats');
+    //test id:  https://api.taiga.io/api/v1/milestones/205316/stats
+    //https://api.taiga.io/api/v1/milestones/219984/stats
+
+     let entry = {
+            pts : data.data.completed_points
+        }
+    let velocity : number = 0;
+    for(let each of entry.pts ){
+        velocity += each;
+    }
+
+    return velocity;
+}
