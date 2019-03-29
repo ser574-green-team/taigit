@@ -1,9 +1,9 @@
-import { GRAB_TAIGA_DATA, GET_SPRINT_STATS } from '../actions/taigaActions';
+import { GRAB_TAIGA_DATA, GET_SPRINT_STATS, GET_SPRINT_NAMES } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
   taigaData: 'initialData',
-  sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3'],
+  sprintList: [],
   sprintStats: {},
 }
 
@@ -31,6 +31,12 @@ export default function taigaReducer(state = initialState, action) {
       return {
         ...state,
         sprintStats: action.payload
+      }
+    case GET_SPRINT_NAMES:
+      console.log("Get sprint name");
+      return {
+        ...state,
+        sprintList: action.payload
       }
     default:
       return state;
@@ -111,10 +117,11 @@ export const selectSprintBurndownChartData = (state) => {
  * that the sprint dropdown component will render
  */
 export const selectSprintList = (state) => {
-  return state.sprintList.map(sprintName => { 
+  //console.log(state.taiga.taigaData);
+  return state.sprintList.map(sprintName => {
     return {
-      value: sprintName,
-      label: sprintName
+      value: sprintName.id,
+      label: sprintName.name
     }
   });
 }
