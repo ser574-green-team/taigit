@@ -10,13 +10,13 @@ import {
   selectUserTaskDistributionChartData,
   selectSprintBurndownChartData
 } from '../reducers';
-import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
-let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
 class Taiga extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class Taiga extends Component {
   };
 
   onLayoutChange(layout, layouts) {
-    saveToLocalStorage(layoutname, 'layouts', layouts);
+    saveLayoutToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
   }
 
@@ -44,7 +44,7 @@ class Taiga extends Component {
     this.props.grabTaigaData();
     this.props.grabSprintStats();
     this.props.grabSprintNames();
-    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 

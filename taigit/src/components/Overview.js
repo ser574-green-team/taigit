@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
 import {Doughnut, Line} from 'react-chartjs-2';
-import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
-let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
 export default class Overview extends Component {
   constructor(props) {
@@ -27,12 +27,12 @@ export default class Overview extends Component {
   };
 
   onLayoutChange(layout, layouts) {
-    saveToLocalStorage(layoutname, 'layouts', layouts);
+    saveLayoutToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
   }
 
   componentWillMount() {
-    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
