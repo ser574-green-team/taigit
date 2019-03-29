@@ -24,6 +24,11 @@ const colors = {
     dark: '#DD6A11',
     light: '#F2A56B',
   },
+  green: {
+    base: '#00FF00',
+    dark: '#006400',
+    light:'#98FB98',
+  },
   none: '#DFE2D2'
 };
 

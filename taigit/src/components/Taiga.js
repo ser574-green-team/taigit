@@ -3,12 +3,13 @@ import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import { grabTaigaData, grabSprintStats } from '../actions/taigaActions';
+import { grabTaigaData, grabSprintStats, grabSingleSprintData } from '../actions/taigaActions';
 import {
   selectSprintList,
   selectSprintProgressChartData,
   selectUserTaskDistributionChartData,
-  selectSprintBurndownChartData
+  selectSprintBurndownChartData,
+  selectSingleSprintData
 } from '../reducers';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -43,6 +44,7 @@ class Taiga extends Component {
   componentWillMount() {
     this.props.grabTaigaData();
     this.props.grabSprintStats();
+    this.props.grabSingleSprintData();
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -89,13 +91,43 @@ class Taiga extends Component {
             <Line data={this.props.burnDownData} options={burndownOptions}/>
             </div>
           </div>
+          <div className='box' key="4" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
+            <div className="chart">
+              <span className="chart-title">Single Sprint Taiga Task</span>
+              <Bar data={this.props.singleSprintData} options={barGraphOptions}/>
+            </div>
+          </div>
           <h4>{this.props.storeData}</h4>
         </ResponsiveReactGridLayout>
       </div>
     );
   }
 }
+const barGraphOptions = {
+  maintainAspectRatio: true,
+  responsive: true,
+  scales: {
+    yAxes: [{
+      scaleLabel:{
+        display: true,
+        labelString: "Count"
+      },
+      ticks: {
+        autoSkip: false
+      }
+    }],
 
+    xAxes: [{
+      scaleLabel:{
+        display: true,
+        labelString: "Contributors"
+      },
+      ticks: {
+        autoSkip: false
+      }
+    }]
+    }
+}
 const burndownOptions = {
     plotOptions: {
       line: {
@@ -154,11 +186,12 @@ const mapStateToProps = state => ({
   sprintProgress: selectSprintProgressChartData(state),
   userTaskDistribution: selectUserTaskDistributionChartData(state),
   sprintList: selectSprintList(state),
-  burnDownData: selectSprintBurndownChartData(state)
+  burnDownData: selectSprintBurndownChartData(state),
+  singleSprintData: selectSingleSprintData(state),
 });
 
 /**
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { grabTaigaData, grabSprintStats })(Taiga)
+export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabSingleSprintData})(Taiga)
