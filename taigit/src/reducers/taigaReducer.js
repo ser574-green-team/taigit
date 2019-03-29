@@ -66,18 +66,10 @@ export const selectSprintProgressChartData = (state) => {
 }
 
 export const selectUserTaskDistributionChartData = (state) => {
-  var backgroundColor = [
-    'rgba(255, 99, 132, 0.6)',
-    'rgba(54, 162, 235, 0.6)',
-    'rgba(255, 206, 86, 0.6)',
-    'rgba(75, 192, 192, 0.6)',
-    'rgba(153, 102, 255, 0.6)',
-    'rgba(255, 159, 64, 0.6)',
-    'rgba(255, 99, 132, 0.6)'
-  ];
   let taigaTaskStatsArr = state.taigaTaskStats;
   let dictToProcessData = {};
   // Deserialzation of received data from backend
+  let unassignedTaskCount = 0;
   for (let i = 0; i < taigaTaskStatsArr.length; i++) {
     for (let j = 0; j < taigaTaskStatsArr[i].length; j++) {
       let name = taigaTaskStatsArr[i][j]['name'];
@@ -85,12 +77,11 @@ export const selectUserTaskDistributionChartData = (state) => {
         dictToProcessData[name]['inprogress_task_count'] += taigaTaskStatsArr[i][j]['inprogress_task_count'];
         dictToProcessData[name]['closed_task_count'] += taigaTaskStatsArr[i][j]['closed_task_count'];
         dictToProcessData[name]['task_ready_for_test_count'] += taigaTaskStatsArr[i][j]['task_ready_for_test_count'];
-        dictToProcessData[name]['new_task_count'] += taigaTaskStatsArr[i][j]['new_task_count'];
+        unassignedTaskCount += taigaTaskStatsArr[i][j]['new_task_count'];
       } else {
         dictToProcessData[name] = {'inprogress_task_count' : 0,
                                       'closed_task_count' : 0,
                                       'task_ready_for_test_count' :0,
-                                      'new_task_count': 0,
                                       };
       }
     }
@@ -107,30 +98,33 @@ export const selectUserTaskDistributionChartData = (state) => {
     xAxisNameData.push(name);
     closedTaskCount.push(dictToProcessData[name]['closed_task_count']);
     readyForTestTaskCount.push(dictToProcessData[name]['task_ready_for_test_count']);
-    newTaskCount.push(dictToProcessData[name]['new_task_count']);
+    newTaskCount.push(0);
     inprogressTaskCount.push(dictToProcessData[name]['inprogress_task_count']);
   } 
+  // Keep Track of unassigned/New Task
+  xAxisNameData.push('Unassigned');
+  newTaskCount.push(unassignedTaskCount);
   
   return {
     labels: xAxisNameData,
     datasets: [{
       label: 'Completed',
-      backgroundColor: backgroundColor[0],
+      backgroundColor: colors.green.base,
       stack: 'Stack 0',
       data: closedTaskCount
     }, {
       label: 'In Progress',
-      backgroundColor: backgroundColor[1],
+      backgroundColor: colors.yellow.base,
       stack: 'Stack 0',
       data: inprogressTaskCount
     }, {
       label: 'Unassigned/New',
-      backgroundColor: backgroundColor[2],
+      backgroundColor: colors.red.base,
       stack: 'Stack 0',
       data: newTaskCount
     }, {
       label: 'Ready for Test',
-      backgroundColor: backgroundColor[3],
+      backgroundColor: colors.blue.base,
       stack: 'Stack 0',
       data: readyForTestTaskCount
     }]
