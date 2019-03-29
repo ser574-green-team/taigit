@@ -1,4 +1,4 @@
-import { GRAB_TAIGA_DATA, GET_SPRINT_STATS, GET_SPRINT_NAME } from '../actions/taigaActions';
+import { GRAB_TAIGA_DATA, GET_SPRINT_STATS, GET_SPRINT_NAMES } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
@@ -32,7 +32,7 @@ export default function taigaReducer(state = initialState, action) {
         ...state,
         sprintStats: action.payload
       }
-    case GET_SPRINT_NAME:
+    case GET_SPRINT_NAMES:
       console.log("Get sprint name");
       return {
         ...state,
