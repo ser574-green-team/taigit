@@ -517,6 +517,7 @@ sprint_velocity_pts(sprintId : number) : Promise<number> {
      let entry = {
             pts : data.data.completed_points
         }
+    //velocity calculation according to https://www.scruminc.com/velocity/ 
     let velocity : number = 0;
     for(let each of entry.pts ){
         velocity += each;
