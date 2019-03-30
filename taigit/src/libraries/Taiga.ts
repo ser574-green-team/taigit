@@ -505,23 +505,35 @@ taiga_issues(projId : number) : Promise<Object>{
  * @param sprintId the ID for the access of sprint stats
  * @returns
  * * {
+ *          sprint_end : boolen // if sprint end currently
  *          velocity : number //sprint velocity
  * }
  */
+
+
+
+
 export async function
-sprint_velocity_pts(sprintId : number) : Promise<number> {
-    let data = await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats');
+sprint_velocity_pts_date(sprintId : number) : Promise<Object> {
+    let data = (await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats')).data;
     //test id:  https://api.taiga.io/api/v1/milestones/205316/stats
     //https://api.taiga.io/api/v1/milestones/219984/stats
+    let current = new Date().getTime();
+    let estimated_finish = new Date(data.estimated_finish).getTime();
+    let sprint_end : boolean = false;
+    if (current > estimated_finish){
+        sprint_end = true;
+    }
 
-     let entry = {
-            pts : data.data.completed_points
-        }
-    //velocity calculation according to https://www.scruminc.com/velocity/ 
+    let entry = {
+            pts : data.completed_points
+    }
+    //velocity calculation according to https://www.scruminc.com/velocity/     
     let velocity : number = 0;
     for(let each of entry.pts ){
         velocity += each;
     }
-
-    return velocity;
+    let velocity_info : {sprint_end : boolean, velocity : number}
+    = {sprint_end : sprint_end , velocity : velocity};
+    return  velocity_info;
 }
