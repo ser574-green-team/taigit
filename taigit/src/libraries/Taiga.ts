@@ -514,7 +514,7 @@ taiga_issues(projId : number) : Promise<Object>{
 
 
 export async function
-sprint_velocity_pts_date(sprintId : number) : Promise<Object> {
+sprint_velocity_pts(sprintId : number) : Promise<Object> {
     let data = (await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats')).data;
     //test id:  https://api.taiga.io/api/v1/milestones/205316/stats
     //https://api.taiga.io/api/v1/milestones/219984/stats
