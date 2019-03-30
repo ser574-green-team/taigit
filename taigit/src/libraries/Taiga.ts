@@ -514,7 +514,7 @@ taiga_issues(projId : number) : Promise<Object>{
 
 
 export async function
-sprint_velocity_pts(sprintId : number) : Promise<Object> {
+sprint_velocity_pts(sprintId : number) : Promise<[boolean, number]> {
     let data = (await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats')).data;
     //test id:  https://api.taiga.io/api/v1/milestones/205316/stats
     //https://api.taiga.io/api/v1/milestones/219984/stats
@@ -533,7 +533,5 @@ sprint_velocity_pts(sprintId : number) : Promise<Object> {
     for(let each of entry.pts ){
         velocity += each;
     }
-    let velocity_info : {sprint_end : boolean, velocity : number}
-    = {sprint_end : sprint_end , velocity : velocity};
-    return  velocity_info;
+    return  [sprint_end , velocity];
 }
