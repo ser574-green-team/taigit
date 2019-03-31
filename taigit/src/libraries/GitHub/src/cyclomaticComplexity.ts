@@ -10,9 +10,9 @@ import axios from 'axios';
  * @param fileExt file extension of the specific java file
  * @return bool true if the file is a java, python or c++ file
  */
-function 
+function
 verifyFormat(fileExt: string) : boolean{
-   let bool : boolean = false; 
+   let bool : boolean = false;
    if (fileExt === "java" || fileExt === "py" || fileExt === "cpp"){
        bool = true;
    }
@@ -20,14 +20,14 @@ verifyFormat(fileExt: string) : boolean{
 }
 
 /**
- * 
- * calculates code  
- * @param file 
+ *
+ * calculates code
+ * @param file
  * @see https://radon.readthedocs.io/en/latest/intro.html#cyclomatic-complexity
  * @return num points in total
  */
 
-function 
+function
  getCodeComplexity(code: string) : number{
     let num : number = 0;
     let ignoreComment = 0;
@@ -43,7 +43,7 @@ function
             }
         }else if(arr[i] ==="*/" || arr[i] === "**/"){
             ignoreComment = 0;
-        }  
+        }
     }
     return num;
  }
@@ -51,11 +51,11 @@ function
 
 /**
  * Creates a json file that contains the cyclomatic complexity of a file
- * @param owner 
- * @param repo  
+ * @param owner
+ * @param repo
  */
 export async function
-getMcCabeComplexity(owner: string, repo: string, filePath : string) : Promise<string>{
+getMcCabeComplexity(owner: string, repo: string, filePath : string, auth: string) : Promise<string>{
     let jsonString : string = "{";
     let complexity : number = 0;
     let fileArray : Array<string>;
@@ -69,8 +69,11 @@ getMcCabeComplexity(owner: string, repo: string, filePath : string) : Promise<st
         let fileExt: string = fileArray[fileArray.length-1].split(".")[1];
         verify = verifyFormat(fileExt);
         if(verify){
-            const file = await axios.get("https://api.github.com/repos/"+ 
-            owner+"/"+repo+"/contents/"+ filePath);
+            var config = {
+                headers: {'Authorization': "Bearer " + auth}
+            }
+            const file = await axios.get("https://api.github.com/repos/"+
+            owner+"/"+repo+"/contents/"+ filePath, config);
             // encoded content needs to be converted to utf-8
             let uniFileContent : string = atob(file.data.content);
             //dictObj[fileArray[fileArray.length-1]] = getCodeComplexity(uniFileContent);
@@ -85,7 +88,7 @@ getMcCabeComplexity(owner: string, repo: string, filePath : string) : Promise<st
     return jsonString;
 }
 /*
-export async function 
+export async function
 getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>{
     let jsonString : string = "{";
     var avg : number = 0;
@@ -94,7 +97,7 @@ getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>
     try{
         const master = await axios.get("https://api.github.com/repos/" + owner + "/" + repo + "/branches/master",  {auth:{username: "username", password: "password"}});
         let access = (sha === undefined)? master.data.commit.sha : sha;
-        var tree = await  axios.get("https://api.github.com/repos/" + 
+        var tree = await  axios.get("https://api.github.com/repos/" +
         owner + "/" + repo + "/git/trees/" + access, {auth:{username: "username", password: "password"}});
 
         for (let gitObj of tree.data.tree){
@@ -114,13 +117,13 @@ getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>
 
             if(verify){
                 count++;
-                const file = await axios.get("https://api.github.com/repos/"+ 
+                const file = await axios.get("https://api.github.com/repos/"+
                 owner+"/"+repo+"/contents/"+ filePath, {auth:{username: "username", password: "password"}});
                 // encoded content needs to be converted to utf-8
                 let uniFileContent : string = atob(file.data.content);
                 dictObj[filePath] = getCodeComplexity(uniFileContent);
             }
-            
+
         }
         for (var key in dictObj){
             jsonString += "\""+key+"\"" + " : " + dictObj[key]+", ";
@@ -128,7 +131,7 @@ getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>
         }
         avg = avg/count;
         jsonString += " \"average\" : " + avg + "}";
-        
+
     }
     catch(error){
         console.log(error);

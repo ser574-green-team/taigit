@@ -1,5 +1,12 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO, GET_NUM_BRANCH_COMMITS, GET_AUTH_KEY, GET_PULL_REQUESTS_CLOSED } from '../actions/githubActions';
+import { GET_BRANCH_LIST, 
+  GET_COMMITS_PER_USER, 
+  GET_NUM_PULL_REQUESTS, 
+  ADD_CONTRIBUTOR_INFO, 
+  GET_NUM_BRANCH_COMMITS, 
+  ADD_AUTH_KEY, 
+  GET_PULL_REQUESTS_CLOSED 
+} from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
@@ -50,7 +57,7 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
       }
-    case GET_AUTH_KEY:
+    case ADD_AUTH_KEY:
       console.log('payload is: ', action.payload);
       return {
           ...state,

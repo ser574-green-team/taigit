@@ -3,20 +3,20 @@ import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import { grabTaigaData, grabSprintStats } from '../actions/taigaActions';
+import { grabTaigaData, grabSprintStats, grabSprintNames } from '../actions/taigaActions';
 import {
   selectSprintList,
   selectSprintProgressChartData,
   selectUserTaskDistributionChartData,
   selectSprintBurndownChartData
 } from '../reducers';
-import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
-let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
 class Taiga extends Component {
   constructor(props) {
@@ -36,14 +36,15 @@ class Taiga extends Component {
   };
 
   onLayoutChange(layout, layouts) {
-    saveToLocalStorage(layoutname, 'layouts', layouts);
+    saveLayoutToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
   }
 
   componentWillMount() {
     this.props.grabTaigaData();
     this.props.grabSprintStats();
-    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    this.props.grabSprintNames();
+    originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
@@ -161,4 +162,6 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { grabTaigaData, grabSprintStats })(Taiga)
+export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabSprintNames })(Taiga)
+
+

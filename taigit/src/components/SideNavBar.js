@@ -18,6 +18,11 @@ export default class SideNavBar extends Component {
       <div className="navbar">
         <Link to="/">
           <div className='navButton'>
+            <FontAwesomeIcon className="navFont" icon={faArrowAltCircleLeft} size="2x"/>
+          </div>
+        </Link>
+        <Link to="/overview">
+          <div className='navButton'>
             <FontAwesomeIcon className="navFont" icon={faChartPie} size="2x"/>
           </div>
         </Link>
@@ -34,11 +39,6 @@ export default class SideNavBar extends Component {
         <Link to="/team">
           <div className='navButton'>
             <FontAwesomeIcon className="navFont" icon={faUsers} size="2x"/>
-          </div>
-        </Link>
-        <Link to="/projects">
-          <div className='navButton'>
-              <FontAwesomeIcon className="navFont" icon={faArrowAltCircleLeft} size="2x"/>
           </div>
         </Link>
       </div>
