@@ -7,7 +7,8 @@ import {
   getContributorData,
   getBranchCommits,
   getAvgCommentsPR,
-  getMembersInfo } from '../actions/githubActions';
+  getMembersInfo,
+  getUsersRepos } from '../actions/githubActions';
 import {
   selectBranchList,
   selectNumCommitsChartData,
@@ -55,6 +56,7 @@ class GitHub extends Component {
   componentWillMount() {
     let auth = getFromLocalStorage('auth-key');
     console.log('auth key is', auth);
+    this.props.getUsersRepos('trevorforrey', auth);
     this.props.getBranchList('ser574-green-team', 'taigit', auth);
     this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey', auth);
     this.props.getPullRequests('ser574-green-team', 'taigit', auth);
@@ -152,4 +154,12 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, {
-  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits, getAvgCommentsPR , getMembersInfo })(GitHub)
+  getBranchList,
+  getCommitsPerUser,
+  getPullRequests,
+  getContributorData,
+  getBranchCommits,
+  getAvgCommentsPR,
+  getMembersInfo,
+  getUsersRepos
+})(GitHub)
