@@ -42,10 +42,10 @@ class Taiga extends Component {
   }
 
   componentWillMount() {
-    this.props.grabTaigaData();
+    this.props.grabTaigaData('sanaydevi-ser-574');
+    this.props.grabSprintNames(306316);
     this.props.grabSprintStats();
-    this.props.grabSingleSprintData();
-    this.props.grabSprintNames();
+    this.props.grabSingleSprintData(220752, 306316,'Sprint 2 - Taiga');
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -78,12 +78,6 @@ class Taiga extends Component {
             <div className="chart chart-pie">
               <span className="chart-title">Task Progress</span>
               <Doughnut data={this.props.sprintProgress} options={{maintainAspectRatio: true, responsive: true}}/>
-            </div>
-          </div>
-          <div className='box' key="2" data-grid={{ w: 5, h: 10, x: 3, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <span className="chart-title">Taiga Tasks</span>
-              <Bar data={this.props.userTaskDistribution} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="3" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>

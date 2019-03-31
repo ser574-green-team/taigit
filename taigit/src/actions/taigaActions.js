@@ -7,8 +7,8 @@ export const GET_SINGLE_SPRINT_STATS = 'GET_SINGLE_SPRINT_STATS'
 export const GET_SPRINT_NAMES = 'GET_SPRINT_NAMES'
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
-export const grabTaigaData = (infoForApiCall) => dispatch => {
-  project_info('sanaydevi-ser-574') // give the slug name
+export const grabTaigaData = (slugName) => dispatch => {
+  project_info(slugName) // give the slug name
 	    .then((taigaProjectInfo) => {
         console.log(taigaProjectInfo);
         dispatch({type: GRAB_TAIGA_DATA, payload: taigaProjectInfo});
@@ -23,17 +23,15 @@ export const grabSprintStats = (infoForApiCall) => dispatch => {
     });
 }
 
-export const grabSingleSprintData = (infoForApiCall) => dispatch => {
-  //get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Promise<Object> {
-    console.log("GRAB SPRINT DATA");
-    get_task_details(220752, 306316,'Sprint 2 - Taiga')
+export const grabSingleSprintData = (sprintId, projectId, sprintName) => dispatch => {
+  get_task_details(sprintId, projectId, sprintName)
     .then((singleSprintStats) => {
       console.log(singleSprintStats);
       dispatch({type: GET_SINGLE_SPRINT_STATS, payload: singleSprintStats});
     });
 }
-export const grabSprintNames = (infoForApiCall) => dispatch => {
-  sprint_list(306316)
+export const grabSprintNames = (projectId) => dispatch => {
+  sprint_list(projectId)
     .then((sprintData) => {
       dispatch({type: GET_SPRINT_NAMES, payload: sprintData});
     });
