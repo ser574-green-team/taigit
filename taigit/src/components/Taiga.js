@@ -3,7 +3,7 @@ import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import { grabTaigaData, grabSprintStats, grabSingleSprintData } from '../actions/taigaActions';
+import { grabTaigaData, grabSprintStats, grabSprintNames, grabSingleSprintData } from '../actions/taigaActions';
 import {
   selectSprintList,
   selectSprintProgressChartData,
@@ -45,6 +45,7 @@ class Taiga extends Component {
     this.props.grabTaigaData();
     this.props.grabSprintStats();
     this.props.grabSingleSprintData();
+    this.props.grabSprintNames();
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -194,4 +195,5 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabSingleSprintData})(Taiga)
+export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabSprintNames, grabSingleSprintData })(Taiga)
+
