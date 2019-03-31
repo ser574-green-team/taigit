@@ -4,7 +4,8 @@ import {
   getNumPullRequests,
   contributorData,
   getNumBranchCommits,
-  getAuthToken } from '../libraries/GitHub/GitHub';
+  getAuthToken,
+  getUserRepos } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
@@ -15,6 +16,7 @@ export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
+export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -23,6 +25,26 @@ export const getBranchList = (owner, repo, auth) => dispatch => {
     .then(branches =>
       dispatch({type: GET_BRANCH_LIST, payload: branches})
     );
+}
+
+export const getUsersRepos = (owner, auth) => dispatch => {
+  console.log('about to get all user owned repos');
+  getUserRepos(owner, auth)
+    .then(repos => {
+      try {
+        const userReposTrimmed = repos.map((repo) => {
+          let trimmedRepo = {};
+          trimmedRepo.id = repo.id;
+          trimmedRepo.name = repo.name;
+          trimmedRepo.full_name = repo.full_name;
+          trimmedRepo.owner = repo.owner.login;
+          return trimmedRepo;
+        })
+        dispatch({type: ADD_USER_REPOS, payload: userReposTrimmed});
+      } catch (e) {
+        console.error(e);
+      }
+    });
 }
 
 export const getCommitsPerUser = (owner, repo, author, auth) => dispatch => {

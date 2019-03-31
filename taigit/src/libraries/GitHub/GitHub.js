@@ -7,5 +7,6 @@ export {contributorData} from "./src/contributorData";
 export {authRedirect, getAuthToken} from "./src/auth"
 export {getContributerNames} from "./src/getUserList";
 export {getMcCabeComplexity} from "./src/cyclomaticComplexity";
+export {getUserRepos} from './src/reposAvailable';
 export {usesMaven, usesGradle, usesCMake, usesMake, usesAnt, getBuilds} from "./src/findBuilds"
 

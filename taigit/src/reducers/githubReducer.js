@@ -5,7 +5,8 @@ import { GET_BRANCH_LIST,
   ADD_CONTRIBUTOR_INFO, 
   GET_NUM_BRANCH_COMMITS, 
   ADD_AUTH_KEY, 
-  GET_PULL_REQUESTS_CLOSED 
+  GET_PULL_REQUESTS_CLOSED,
+  ADD_USER_REPOS
 } from '../actions/githubActions';
 
 const initialState = {
@@ -15,7 +16,8 @@ const initialState = {
   contributors: [],
   numBranchCommits: [],
   authKey: '',
-  numPullRequestsClosed: 0
+  numPullRequestsClosed: 0,
+  userRepos: []
 }
 /**
  * Github Reducer
@@ -62,6 +64,12 @@ const githubReducer = (state = {}, action) => {
       return {
           ...state,
           authKey: action.payload
+      }
+    case ADD_USER_REPOS:
+      console.log('payload for user repos is: ', action.payload);
+      return {
+        ...state,
+        userRepos: action.payload
       }
     default:
       return {
