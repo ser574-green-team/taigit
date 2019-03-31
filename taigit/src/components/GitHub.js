@@ -9,10 +9,12 @@ import { WidthProvider, Responsive } from "react-grid-layout";
 import ScrollableList from './ScrollableList';
 import HorizBarChart from './charts/HorizBarChart'
 import colors from "../styles/colors";
-
+import * as GH from '../libraries/GitHub/GitHub';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
 let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+
+
 
 class GitHub extends Component {
   constructor(props) {
@@ -53,6 +55,7 @@ class GitHub extends Component {
   render() {
     return(
       <div className="app-page">
+        {console.log(GH.getCodeAnalysis("ansamant", "scrum_mates", "nX8TI59JGtmyVz2y5Aml"))}
         <h2>GitHub</h2>
         <ResponsiveReactGridLayout
           className="layout"

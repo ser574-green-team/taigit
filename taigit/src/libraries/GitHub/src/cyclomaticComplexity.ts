@@ -50,16 +50,39 @@ function
 
 
 /**
+ *  The code uses the codacy api to retrieve complexity and maintainability metrics.
+ * @param owner 
+ * @param repo 
+ * @param token
+ */
+export async function
+getCodeAnalysis(owner: string, repo: string, token : string) : Promise<any>{
+   await axios.get("https://api.codacy.com/2.0/"+ owner +"/" + repo, {headers :{'api_token' : token, 'Accept' : 'application/json'}}).then(response =>{
+        console.log('res');
+        console.log(response.data);
+   }).catch(error=>{
+       console.log('error\n');
+       console.log(error)
+   });
+    return ""; 
+}
+/**
  * Creates a json file that contains the cyclomatic complexity of a file
  * @param owner 
  * @param repo  
+ * @param filePath
  */
+
+ /*
 export async function
 getMcCabeComplexity(owner: string, repo: string, filePath : string) : Promise<string>{
     let jsonString : string = "{";
     let complexity : number = 0;
     let fileArray : Array<string>;
     try{
+        console.log("CodeCov");
+        const codeCov = await axios.get("https://codecov.io/api/pub/gh/"+owner+"/"+repo+"/branch/master",{"headers":{'Authorization': 'token 1f856503-6b6d-48c1-a294-bd78176176cf'}});
+        console.log(codeCov);
         let verify: boolean = false;
         if(filePath.includes("/")){
             fileArray = filePath.split("/");
@@ -84,6 +107,7 @@ getMcCabeComplexity(owner: string, repo: string, filePath : string) : Promise<st
     console.log(jsonString);
     return jsonString;
 }
+*/
 /*
 export async function 
 getMcCabeComplexity(owner: string, repo: string, sha?: string) : Promise<string>{
