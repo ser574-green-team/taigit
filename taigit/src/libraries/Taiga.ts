@@ -529,7 +529,6 @@ taiga_issues(projId : number) : Promise<Object>{
  *
  * }
  */
-
 export async function
 task_assessment(taskId : number) : Promise<Object> {
     let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
@@ -550,7 +549,6 @@ task_assessment(taskId : number) : Promise<Object> {
                 date: new Date(entry.created_at).getTime(),
             }
             endstatus = new_entry.status_trans[1];
-
             let timecost: number;
             let acctime: number;
             if (new_entry.status_trans[0] == "New") {
@@ -564,7 +562,6 @@ task_assessment(taskId : number) : Promise<Object> {
                 new_entry.timecost = timecost;
                 new_entry.acctime = acctime;
             }
-
             let old_status = new_entry.status_trans[0];
             let new_status = new_entry.status_trans[1];
             if ((old_status == "New" && new_status != "In progress") ||
@@ -573,24 +570,15 @@ task_assessment(taskId : number) : Promise<Object> {
                 new_entry.state_trans_valid = false;
                 task_valid = false;
             }
-
         output.push(new_entry);
         }
     }
-
-
-
-
-
-
     let t_fin_per : number;
     let t_num_stat : number;
     let t_finished : boolean = false;
     if(endstatus == "Closed") {
         t_finished = true;
     }
-
-
     //transfer ["New", "In progress"] ["In progress", "Ready for test"]  ["Ready for test", "Closed"])
     //into number status
     switch(endstatus) {
@@ -622,6 +610,5 @@ task_assessment(taskId : number) : Promise<Object> {
     }
     let info : {task_valid : boolean,finished : boolean, end_status : string,num_stat : number,fin_per : number,detail: Array<Object>}
                 = {task_valid : task_valid, finished : t_finished, end_status : endstatus, num_stat : t_num_stat,fin_per : t_fin_per,detail:output};
-
     return info;
 }
