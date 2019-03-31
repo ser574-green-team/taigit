@@ -524,9 +524,6 @@ taiga_issues(projId : number) : Promise<Object>{
  *               status_trans: String[],//Status transition array
  *               user: object,         // Taiga User Object
  *               date: number,        //Date and time of history entry in milliseconds since epoch
- *
- *
- *
  * }
  */
 export async function
