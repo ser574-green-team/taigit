@@ -306,35 +306,6 @@ sprint_stats(sprintId : number) : Promise<Object> {
 }
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
- * @summary get list of sprints for a project
- * @param projId project id
- * @returns Object[]
- */
-export async function sprint_list(projId : number) : Promise<Array<sprint_info>> {
-    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/projects/${projId}`)).data.milestones;;
-    return data;
-}
-
-/**
- * @summary get list of userstories for a sprint
- * @param sprintId sprint id
- * @returns Object[]
- */
-export async function userstory_list(sprintId : number) : Promise<Object> {
-    let data : userstory_info[] = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
-
-    return data;
-}
-
-/**
- * @summary get list of sprints for a project
- * @param userstoryId project id
- * @returns Object[]
-=======
-=======
->>>>>>> f1e0fccfb6a258ff2a58e92fbe74a4ecf256971b
  * @summary This call returns user stats based on user Id
  * @param user Id the ID for the user to get stats for
  * @returns array of history objects
@@ -344,10 +315,6 @@ export async function userstory_list(sprintId : number) : Promise<Object> {
  *    total_num_contacts: number
  *    total_num_closed_userstories: number
  * }
-<<<<<<< HEAD
->>>>>>> Initial clean up commit
-=======
->>>>>>> f1e0fccfb6a258ff2a58e92fbe74a4ecf256971b
  */
 export async function
 user_stats(userId : number) : Promise<Object> {
