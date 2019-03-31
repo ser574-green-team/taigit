@@ -509,10 +509,6 @@ taiga_issues(projId : number) : Promise<Object>{
  *          velocity : number //sprint velocity
  * }
  */
-
-
-
-
 export async function
 sprint_velocity_pts(sprintId : number) : Promise<[boolean, number]> {
     let data = (await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats')).data;
@@ -524,7 +520,6 @@ sprint_velocity_pts(sprintId : number) : Promise<[boolean, number]> {
     if (current > estimated_finish){
         sprint_end = true;
     }
-
     let entry = {
             pts : data.completed_points
     }
