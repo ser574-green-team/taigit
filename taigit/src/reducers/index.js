@@ -19,3 +19,4 @@ export const selectCommitsPerContributorChartData = (state) => fromGithub.select
 export const selectNumBranchCommits = (state) => fromGithub.selectNumBranchCommits(state.github);
 export const selectSprintBurndownChartData = (state) => fromTaiga.selectSprintBurndownChartData(state.taiga);
 export const selectNumPullRequestsClosedData = (state) => fromGithub.selectNumPullRequestsClosedData(state.github);
+export const selectSingleSprintData = (state) => fromTaiga.selectSingleSprintData(state.taiga);
