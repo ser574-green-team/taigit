@@ -560,9 +560,9 @@ export async function
 eval_userstories(sprintId : number) : Promise<Object>{
     let data = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
     let us_subjects : Array<Object> = [];
-    data.forEach(function (subject : string){
-        let notes : Object = process_us(subject);
-        us_subjects.push({'userstory': subject, 'notes': notes});
+    data.forEach(function (us : {subject: string}){
+        let notes : Object = process_us(us.subject);
+        us_subjects.push({'userstory': us.subject, 'notes': notes});
     });
     return us_subjects;
 }
