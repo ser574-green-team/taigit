@@ -500,12 +500,38 @@ taiga_issues(projId : number) : Promise<Object>{
     return output;
 }
 
+/**
+ * @summary Check for user story attributes in user story title
+ * @param subject the user story title as a string
+ * @returns notes information about the components of a user story
+ */
+function process_us(subject : string) : Array<string>{
+    let notes : Array<string> = ['','',''];
+    if (!/^as a /.test(subject.toLowerCase()))
+        notes[0] = '"As a" not found.';
+    if (!/ i want /.test(subject.toLowerCase()))
+        notes[1] = '"i want" not found.'
+    if (!/ so that /.test(subject.toLowerCase()))
+        notes[2] = '"so that" not found.'
+    return notes;
+}
+
+/**
+ * @summary Check user stories in a sprint
+ * @param sprintId the sprint id
+ * @returns 
+ * {
+ *      subject : user story title    // User story title
+ *      notes : Array<string>         // Information about the components of a user story
+ * }
+ */
 export async function
-eval_userstories() : Promise<Object>{
+eval_userstories(sprintId : number) : Promise<Object>{
     let data = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
-    let us_subjects : Array<string>  = [];
+    let us_subjects : Array<Object> = [];
     data.data.forEach(function (subject : string){
-        us_subjects.push(subject);
+        let notes : Object = process_us(subject);
+        us_subjects.push({'userstory': subject, 'notes': notes});
     });
     return us_subjects;
 }
