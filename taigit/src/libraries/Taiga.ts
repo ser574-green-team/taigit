@@ -2,6 +2,20 @@ import axios from "axios"
 
 // Interfaces
 /**
+ * @summary interface for login response
+ * @param success : boolean, // successful login
+ * @param username : string, // username
+ * @param id : number        // user id
+ * @param token : string     // login token
+ */
+interface login_response {
+    success : boolean,
+    username : string,
+    id : number,
+    token : string,
+}
+
+/**
  * @summary interface for project info
  * @param id : number,          // Project id
  * @param name : string,        // Project name
@@ -174,14 +188,31 @@ interface spr_stats {
  * @returns boolean dictating success of login
  */
 export async function
-taiga_login(username : string, password : string) : Promise<boolean> {
+taiga_login(username : string, password : string) : Promise<login_response> {
     let response = await axios.post("https://api.taiga.io/api/v1/auth", {
         "password": password,
         "type": "normal",
         "username": username
-    })
+    });
 
-    return (response.status == 200);
+    let data = response.data;
+    return {
+        success : (response.status == 200),
+        username : data.username,
+        id : data.id,
+        token : data.auth_token,
+    };
+}
+
+export async function
+get_projects_for_user(userId : number) : Promise<String[]> {
+    let data : { slug: String; }[] = (await axios.get(`https://api.taiga.io/api/v1/projects?member=${userId}`)).data;
+    let ret_arr : String[] = [];
+    for(let entry of data) {
+        ret_arr.push(entry.slug)
+    }
+
+    return ret_arr;
 }
 
 /**
@@ -234,7 +265,7 @@ sprint_stats(sprintId : number) : Promise<Object> {
  * @returns Object[]
  */
 export async function sprint_list(projId : number) : Promise<Array<sprint_info>> {
-    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/milestones?project=${projId}`)).data;
+    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/projects/${projId}`)).data.milestones;;
     return data;
 }
 

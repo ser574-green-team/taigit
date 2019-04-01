@@ -1,11 +1,16 @@
-import { GRAB_TAIGA_DATA, GET_SPRINT_STATS, GET_TASK_STATS } from '../actions/taigaActions';
+import { 
+  GRAB_TAIGA_DATA, GET_SPRINT_STATS, 
+  GET_TASK_STATS, GET_SPRINT_NAMES, 
+  GET_SINGLE_SPRINT_STATS 
+}from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
   taigaData: 'initialData',
-  sprintList: ['Sprint 1', 'Sprint 2', 'Sprint 3'],
+  sprintList: [],
   sprintStats: {},
   taigaTaskStats: [],
+  singleSprintStats: [],
 }
 
 /**
@@ -38,6 +43,19 @@ export default function taigaReducer(state = initialState, action) {
       return {
         ...state,
         taigaTaskStats: action.payload
+      }
+    case GET_SINGLE_SPRINT_STATS:
+      console.log('got sprint stats');
+      console.log('singleSprintStats: ', action.payload);
+      return {
+        ...state,
+        singleSprintStats: action.payload
+      }
+    case GET_SPRINT_NAMES:
+      console.log("Get sprint name");
+      return {
+        ...state,
+        sprintList: action.payload
       }
     default:
       return state;
@@ -167,10 +185,73 @@ export const selectSprintBurndownChartData = (state) => {
  * that the sprint dropdown component will render
  */
 export const selectSprintList = (state) => {
-  return state.sprintList.map(sprintName => { 
+  //console.log(state.taiga.taigaData);
+  return state.sprintList.map(sprintName => {
     return {
-      value: sprintName,
-      label: sprintName
+      value: sprintName.id,
+      label: sprintName.name
     }
   });
+}
+
+
+export const selectSingleSprintData = (state) => {
+  let taigaSingleSprinttask = state.singleSprintStats;
+  let dictToProcessData = {};
+  // Deserialzation of received data from backend
+  let unassignedTaskCount = 0;
+  for (let i = 0; i < taigaSingleSprinttask.length; i++) {
+    let name = taigaSingleSprinttask[i]['name'];
+    dictToProcessData[name] = {
+      'inprogress_task_count': 0,
+      'closed_task_count': 0,
+      'task_ready_for_test_count': 0,
+    };
+    dictToProcessData[name]['inprogress_task_count'] = taigaSingleSprinttask[i]['inprogress_task_count'];
+    dictToProcessData[name]['closed_task_count'] = taigaSingleSprinttask[i]['closed_task_count'];
+    dictToProcessData[name]['task_ready_for_test_count'] = taigaSingleSprinttask[i]['task_ready_for_test_count'];
+    unassignedTaskCount += taigaSingleSprinttask[i]['new_task_count'];
+  }
+  // create X and Y axis data
+  let xAxisNameData = [];
+  let closedTaskCount = [];
+  let readyForTestTaskCount = [];
+  let newTaskCount = [];
+  let inprogressTaskCount = [];
+
+  for (let name in dictToProcessData) {
+    xAxisNameData.push(name);
+    closedTaskCount.push(dictToProcessData[name]['closed_task_count']);
+    readyForTestTaskCount.push(dictToProcessData[name]['task_ready_for_test_count']);
+    newTaskCount.push(0);
+    inprogressTaskCount.push(dictToProcessData[name]['inprogress_task_count']);
+  }
+  // Keep Track of unassigned/New Task
+  xAxisNameData.push('Unassigned');
+  newTaskCount.push(unassignedTaskCount);
+  return {
+    labels: xAxisNameData,
+    datasets: [{
+      label: 'Completed',
+      backgroundColor: colors.green.light,
+      stack: 'Stack 0',
+      data: closedTaskCount
+    }, {
+      label: 'In Progress',
+      backgroundColor: colors.yellow.base,
+      stack: 'Stack 0',
+      data: inprogressTaskCount
+    }, {
+      label: 'Unassigned/New',
+      backgroundColor: colors.red.base,
+      stack: 'Stack 0',
+      data: newTaskCount
+    }, {
+      label: 'Ready for Test',
+      backgroundColor: colors.blue.base,
+      stack: 'Stack 0',
+      data: readyForTestTaskCount
+    }]
+  }
+
 }

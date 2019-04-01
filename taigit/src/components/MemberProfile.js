@@ -4,11 +4,11 @@ import TeamMemberCard from './TeamMemberCard'
 import NumberDisplay from './NumberDisplay'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { Radar } from 'react-chartjs-2';
-import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'member-layout';
-let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
 class MemberProfile extends Component {
   constructor(props) {
@@ -28,12 +28,12 @@ class MemberProfile extends Component {
   };
 
   onLayoutChange(layout, layouts) {
-    saveToLocalStorage(layoutname, 'layouts', layouts);
+    saveLayoutToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
   }
 
   componentWillMount() {
-    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
