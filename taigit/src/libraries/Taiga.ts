@@ -223,7 +223,8 @@ project_info(slug : string) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/by_slug?slug=" + slug)
     let info : prj_info = {id: data.data.id, name: data.data.name,
                            created_date: data.data.created_date};
-    return (info);
+  
+    return info;
 }
 
 // Lists
@@ -232,8 +233,10 @@ project_info(slug : string) : Promise<Object> {
  * @param projId project id
  * @returns Object[]
  */
-export async function sprint_list(projId : number) : Promise<Array<sprint_info>> {
+export async function 
+sprint_list(projId : number) : Promise<Array<sprint_info>> {
     let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/milestones?project=${projId}`)).data;
+  
     return data;
 }
 
@@ -242,7 +245,8 @@ export async function sprint_list(projId : number) : Promise<Array<sprint_info>>
  * @param sprintId sprint id
  * @returns Object[]
  */
-export async function userstory_list(sprintId : number) : Promise<Object> {
+export async function 
+userstory_list(sprintId : number) : Promise<Object> {
     let data : userstory_info[] = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
 
     return data;
@@ -253,7 +257,8 @@ export async function userstory_list(sprintId : number) : Promise<Object> {
  * @param userstoryId project id
  * @returns Object[]
  */
-export async function task_list(userstoryId : number) : Promise<Object> {
+export async function 
+task_list(userstoryId : number) : Promise<Object> {
     return (await axios.get(`https://api.taiga.io/api/v1/tasks?user_story=${userstoryId}`)).data;
 }
 
@@ -270,6 +275,7 @@ get_user_list(project_id: string) : Promise<Object> {
     for (let content of response) {
         members_in_project.push(content.full_name);
     }
+  
     return(members_in_project);
 }
 
@@ -286,7 +292,8 @@ project_stats(projId : number) : Promise<Object> {
                             assigned_pts_per_role: data.data.assigned_points_per_role,
                             closed_pts: data.data.closed_points, closed_pts_per_role: data.data.closed_points_per_role,
                             num_sprints: data.data.total_milestones, total_pts: data.data.total_points};
-    return (info);
+  
+    return info;
 }
 
 /**
@@ -302,7 +309,8 @@ sprint_stats(sprintId : number) : Promise<Object> {
                             completed_us: data.data.completed_userstories, total_us: data.data.total_userstories,
                             sprint_start: data.data.estimated_start, sprint_end: data.data.estimated_finish,
                             burndown: data.data.days};
-    return (info);
+  
+    return info;
 }
 
 /**
@@ -324,7 +332,8 @@ user_stats(userId : number) : Promise<Object> {
             {total_num_projects: data.data.total_num_projects, roles: data.data.roles, 
             total_num_contacts: data.data.total_num_contacts, 
             total_num_closed_userstories: data.data.total_num_closed_userstories};
-    return (info);
+  
+    return info;
 }
 
 // Information gathering
@@ -365,6 +374,7 @@ task_history(taskId : number) : Promise<Object> {
 export async function
 project_wiki(projectId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/wiki?project="+projectId.toString());
+  
     return (data.data);
 }
 
@@ -396,6 +406,7 @@ taiga_issues(projId : number) : Promise<Object>{
         }
         output.push(new_entry);
     }
+  
     return output;
 }
 
@@ -409,7 +420,8 @@ export async function
 userstory_total_points(userstoryId : number) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/userstories/" + userstoryId.toString());
     let info : {total_points: number} = {total_points: data.data.total_points};
-    return (info);
+  
+    return info;
 }
 
 /**
@@ -438,7 +450,8 @@ get_task_status_count(project_id: number): Promise<Object> {
 
         total_task_details.push(task_count_details_in_a_sprint);
     }
-    return (total_task_details);
+  
+    return total_task_details;
 }
 
 /**
@@ -529,5 +542,53 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
             big_obj.push(json_obj);
         }
     }
-    return(big_obj);
+  
+    return big_obj;
+}
+
+/**
+ * @summary This call return a task used time based on task Id
+ * @param taskId the ID for the task to assess task
+ * @returns  whether the task is abnormal,task status transition, date based on task Id
+ * {
+ *          date : number,                //Date and time of history entry in milliseconds since epoch
+ *          timecost_m: number,           // time of history entry cost in milliseconds
+ *          acctime_m:number,             // time of task accumulated of this history entry cost in milliseconds
+ *          timecost_h: number,           // time of history entry cost in hours
+ *          acctime_h:number,             // time of task accumulated of this history entry cost in hours
+ *          status_trans:entry.String[],  // Status transition array for [new, in progress, ready for test, closed]
+ *
+ * }
+ */
+export async function
+task_assessment_time(taskId : number) : Promise<Object> {
+    let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
+    let output : Array<Object> = [];
+    let pre : number = 0;
+    let start : number = 0;
+    for(let entry of data) {
+        let new_entry = {
+            date : new Date(entry.created_at).getTime(),    
+            timecost : 0,
+            acctime : 0,
+            status_trans : entry.values_diff.status
+        }
+        
+            let timecost: number;
+            let acctime: number;
+            if (new_entry.status_trans[0] == "New") {
+                pre = new_entry.date;
+                acctime = 0;
+                new_entry.acctime = acctime;
+                start = new_entry.date;
+            } else {
+                timecost= new_entry.date - pre;
+                acctime = new_entry.date - start;
+                new_entry.timecost = timecost;
+                new_entry.acctime = acctime;
+            }
+        output.push(new_entry);
+    }
+
+    return output;
 }
