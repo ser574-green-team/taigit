@@ -537,15 +537,22 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
  * @param subject the user story title as a string
  * @returns notes information about the components of a user story
  */
-function process_us(subject : string) : Array<string>{
+function process_us(subject : string) : {flag: boolean, notes: Array<string>}{
     let notes : Array<string> = ['','',''];
+    let flag : boolean = false;
     if (!/^as a /.test(subject.toLowerCase()))
         notes[0] = '"As a" not found.';
+        if (!flag)
+            flag = true;
     if (!/ i want /.test(subject.toLowerCase()))
         notes[1] = '"i want" not found.'
+        if (!flag)
+            flag = true;
     if (!/ so that /.test(subject.toLowerCase()))
         notes[2] = '"so that" not found.'
-    return notes;
+        if (!flag)
+            flag = true;
+    return {flag: flag, notes: notes};
 }
 
 /**
@@ -562,8 +569,8 @@ eval_userstories(sprintId : number) : Promise<Object>{
     let data = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
     let us_subjects : Array<Object> = [];
     data.forEach(function (us : {subject: string}){
-        let notes : Object = process_us(us.subject);
-        us_subjects.push({'userstory': us.subject, 'notes': notes});
+        let returned : {flag: boolean, notes: Array<string>} = process_us(us.subject);
+        us_subjects.push({'userstory': us.subject, 'flag': returned.flag, 'notes': returned.notes});
     });
     return us_subjects;
 }
