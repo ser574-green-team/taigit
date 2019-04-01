@@ -28,8 +28,8 @@ export const grabSprintStats = (infoForApiCall) => dispatch => {
     });
 }
 
-export const grabTaskStats = (infoForApiCall) => dispatch => {
-  get_task_status_count(306316).then((taskStats) => {
+export const grabTaskStats = (projectId) => dispatch => {
+  get_task_status_count(projectId).then((taskStats) => {
     dispatch({type: GET_TASK_STATS, payload: taskStats});
   });
 }

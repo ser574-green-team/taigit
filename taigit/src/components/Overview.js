@@ -7,7 +7,7 @@ import colors from '../styles/colors';
 import { Bar } from 'react-chartjs-2';
 import { selectUserTaskDistributionChartData } from '../reducers';
 import { connect } from 'react-redux';
-import { grabTaigaData, grabSprintStats, grabTaskStats } from '../actions/taigaActions';
+import { grabTaskStats } from '../actions/taigaActions';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
@@ -37,7 +37,7 @@ class Overview extends Component {
   }
 
   componentWillMount() {
-    this.props.grabTaskStats();
+    this.props.grabTaskStats(306316);
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }

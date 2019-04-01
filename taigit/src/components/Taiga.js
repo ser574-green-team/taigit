@@ -10,14 +10,12 @@ import {
 import {
   selectSprintList,
   selectSprintProgressChartData,
-  selectUserTaskDistributionChartData,
   selectSprintBurndownChartData,
   selectSingleSprintData
 } from '../reducers';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
-import { project_info, sprint_stats } from '../libraries/Taiga';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
