@@ -530,3 +530,54 @@ taiga_issues(projId : number) : Promise<Object>{
     }
     return output;
 }
+
+
+
+/**
+ * @summary This call return a task used time based on task Id
+ * @param taskId the ID for the task to assess task
+ * @returns  whether the task is abnormal,task status transition, date based on task Id
+ * * {
+ *          date : number,,  //Date and time of history entry in milliseconds since epoch
+ *          timecost_m: number // time of history entry cost in milliseconds
+ *          acctime_m:number // time of task accumulated of this history entry cost in milliseconds
+ *          timecost_h: number //time of history entry cost in hours
+ *          acctime_h:number //time of task accumulated of this history entry cost in hours
+ *          status_trans:entry.String[] //   /Status transition array// Will convert into  number[0 1 2 3]
+ *      for [new, in progress, ready for test, closed]
+ *
+ * }
+ */
+export async function
+task_assessment_time(taskId : number) : Promise<Object> {
+    let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
+    //test case :https://api.taiga.io/api/v1/history/task/2577741
+    let output : Array<Object> = [];
+    let pre : number = 0;
+    let start : number = 0;
+    for(let entry of data) {
+        let new_entry = {
+            date : new Date(entry.created_at).getTime(),    
+            timecost : 0,
+            acctime : 0,
+            status_trans : entry.values_diff.status
+        }
+        
+            let timecost: number;
+            let acctime: number;
+            if (new_entry.status_trans[0] == "New") {
+                pre = new_entry.date;
+                acctime = 0;
+                new_entry.acctime = acctime;
+                start = new_entry.date;
+            } else {
+                timecost= new_entry.date - pre;
+                acctime = new_entry.date - start;
+                new_entry.timecost = timecost;
+                new_entry.acctime = acctime;
+            }
+        output.push(new_entry);
+    }
+
+    return output;
+}
