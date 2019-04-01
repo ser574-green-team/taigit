@@ -233,7 +233,7 @@ export const selectSingleSprintData = (state) => {
     labels: xAxisNameData,
     datasets: [{
       label: 'Completed',
-      backgroundColor: colors.green.light,
+      backgroundColor: colors.green.base,
       stack: 'Stack 0',
       data: closedTaskCount
     }, {
