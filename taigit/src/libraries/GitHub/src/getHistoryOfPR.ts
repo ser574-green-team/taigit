@@ -7,7 +7,7 @@
  * @param repo        The name of the Github repository in String format.
  * @param auth        The auth key in string format
  * @param pullNumber  The pull request number whose history is required.
- * @return            An Array of four values.
+ * @return            An Array of four values viz. PR Number, timestamp of creation, close and merge.
  */
 import axios from 'axios';
 
