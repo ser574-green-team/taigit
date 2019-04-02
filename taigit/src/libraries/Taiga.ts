@@ -540,18 +540,21 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
 function process_us(subject : string) : {flag: boolean, notes: Array<string>}{
     let notes : Array<string> = ['','',''];
     let flag : boolean = false;
-    if (!/^as a /.test(subject.toLowerCase()))
+    if (!/^as a /.test(subject.toLowerCase())){
         notes[0] = '"As a" not found.';
         if (!flag)
             flag = true;
-    if (!/ i want /.test(subject.toLowerCase()))
+    }
+    if (!/ i want /.test(subject.toLowerCase())){
         notes[1] = '"i want" not found.'
         if (!flag)
             flag = true;
-    if (!/ so that /.test(subject.toLowerCase()))
+    }
+    if (!/ so that /.test(subject.toLowerCase())){
         notes[2] = '"so that" not found.'
         if (!flag)
             flag = true;
+    }
     return {flag: flag, notes: notes};
 }
 
