@@ -556,7 +556,7 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
  *          acctime_m:number,             // time of task accumulated of this history entry cost in milliseconds
  *          timecost_h: number,           // time of history entry cost in hours
  *          acctime_h:number,             // time of task accumulated of this history entry cost in hours
- *          status_trans:entry.String[],  // Status transition array for [new, in progress, ready for test, closed]
+ *          status_trans:entry.String[]  // Status transition array for [new, in progress, ready for test, closed]
  *
  * }
  */
@@ -597,9 +597,9 @@ task_assessment_time(taskId : number) : Promise<Object> {
  * @summary This call return sprint velocity (unit points) based on sprint Id
  * @param sprintId the ID for the access of sprint stats
  * @returns
- * * {
- *          sprint_end : boolen // if sprint end currently
- *          velocity : number //sprint velocity
+ * {
+ *      sprint_end : boolean, // if sprint end currently
+ *        velocity : number   //sprint velocity
  * }
  */
 export async function
@@ -613,13 +613,47 @@ sprint_velocity_pts(sprintId : number) : Promise<[boolean, number]> {
     if (current > estimated_finish){
         sprint_end = true;
     }
-    let entry = {
-            pts : data.completed_points
-    }
+    let entry = {pts : data.completed_points}
     //velocity calculation according to https://www.scruminc.com/velocity/     
     let velocity : number = 0;
     for(let each of entry.pts ){
         velocity += each;
     }
     return  [sprint_end , velocity];
+}
+
+/**
+ * @summary Check for user story attributes in user story title
+ * @param subject the user story title as a string
+ * @returns notes information about the components of a user story
+ */
+function process_us(subject : string) : Array<string>{
+    let notes : Array<string> = ['','',''];
+    if (!/^as a /.test(subject.toLowerCase()))
+        notes[0] = '"As a" not found.';
+    if (!/ i want /.test(subject.toLowerCase()))
+        notes[1] = '"i want" not found.'
+    if (!/ so that /.test(subject.toLowerCase()))
+        notes[2] = '"so that" not found.'
+    return notes;
+}
+
+/**
+ * @summary Check user stories in a sprint
+ * @param sprintId the sprint id
+ * @returns 
+ * {
+ *      subject : user story title    // User story title
+ *      notes : Array<string>         // Information about the components of a user story
+ * }
+ */
+export async function
+eval_userstories(sprintId : number) : Promise<Object>{
+    let data = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
+    let us_subjects : Array<Object> = [];
+    data.forEach(function (us : {subject: string}){
+        let notes : Object = process_us(us.subject);
+        us_subjects.push({'userstory': us.subject, 'notes': notes});
+    });
+    return us_subjects;
 }
