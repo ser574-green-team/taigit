@@ -65,8 +65,8 @@ const githubReducer = (state = {}, action) => {
       }
     default:
       return {
-        ...state,
-        ...initialState
+        ...initialState,
+        ...state
       }
   }
 }
