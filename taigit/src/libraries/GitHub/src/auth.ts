@@ -13,7 +13,7 @@ authRedirect(client_id : string) : string {
         "keys are set.");
     }
     return "https://github.com/login/oauth/" +
-    "authorize?scope=user:email&client_id=" + client_id;
+    "authorize?scope=user:email%20read:org&client_id=" + client_id;
 }
 
 /**
