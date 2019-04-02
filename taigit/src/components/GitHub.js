@@ -58,7 +58,11 @@ class GitHub extends Component {
     this.props.getContributorData('ser574-green-team', 'taigit', auth);
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'master', auth);
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth);
+    (this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth))
+    //this.props.getMemberInfo('ser574-green-team',auth)
+
     //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
+
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
