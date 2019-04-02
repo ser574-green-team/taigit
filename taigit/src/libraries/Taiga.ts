@@ -40,7 +40,6 @@ interface prj_info {
  * @param slug: String           //
  * @param total_points: number   //
  */
-
 interface sprint_info {
     closed: boolean,
     closed_points: number,
@@ -116,7 +115,6 @@ interface userstory_info {
  * @param user_story: number     //
  * @param version: number        //
  */
-
 interface task_info {
     assigned_to: number,
     blocked_note: String,
@@ -225,9 +223,63 @@ project_info(slug : string) : Promise<Object> {
     let data = await axios.get("https://api.taiga.io/api/v1/projects/by_slug?slug=" + slug)
     let info : prj_info = {id: data.data.id, name: data.data.name,
                            created_date: data.data.created_date};
-    return (info);
+  
+    return info;
 }
 
+// Lists
+/**
+ * @summary get list of sprints for a project
+ * @param projId project id
+ * @returns Object[]
+ */
+export async function 
+sprint_list(projId : number) : Promise<Array<sprint_info>> {
+    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/milestones?project=${projId}`)).data;
+  
+    return data;
+}
+
+/**
+ * @summary get list of userstories for a sprint
+ * @param sprintId sprint id
+ * @returns Object[]
+ */
+export async function 
+userstory_list(sprintId : number) : Promise<Object> {
+    let data : userstory_info[] = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
+
+    return data;
+}
+
+/**
+ * @summary get list of sprints for a project
+ * @param userstoryId project id
+ * @returns Object[]
+ */
+export async function 
+task_list(userstoryId : number) : Promise<Object> {
+    return (await axios.get(`https://api.taiga.io/api/v1/tasks?user_story=${userstoryId}`)).data;
+}
+
+/**
+ * @summary Get the list of user's full name in a project
+ * @param project_id Project id to get the data
+ * @returns array of all the names in a project
+ * [name1,name2,name3,...]
+ */
+export async function
+get_user_list(project_id: string) : Promise<Object> {
+    let response = (await axios.get(`https://api.taiga.io/api/v1/projects/${project_id}`)).data.members;
+    let members_in_project: Array<Object> = [];
+    for (let content of response) {
+        members_in_project.push(content.full_name);
+    }
+  
+    return(members_in_project);
+}
+
+// Stats
 /**
  * @summary Get the stats of a project
  * @param projId the ID for project to get stats of
@@ -240,7 +292,8 @@ project_stats(projId : number) : Promise<Object> {
                             assigned_pts_per_role: data.data.assigned_points_per_role,
                             closed_pts: data.data.closed_points, closed_pts_per_role: data.data.closed_points_per_role,
                             num_sprints: data.data.total_milestones, total_pts: data.data.total_points};
-    return (info);
+  
+    return info;
 }
 
 /**
@@ -256,39 +309,34 @@ sprint_stats(sprintId : number) : Promise<Object> {
                             completed_us: data.data.completed_userstories, total_us: data.data.total_userstories,
                             sprint_start: data.data.estimated_start, sprint_end: data.data.estimated_finish,
                             burndown: data.data.days};
-    return (info);
+  
+    return info;
 }
 
 /**
- * @summary get list of sprints for a project
- * @param projId project id
- * @returns Object[]
+ * @summary This call returns user stats based on user Id
+ * @param user Id the ID for the user to get stats for
+ * @returns array of history objects
+ * {
+ *    total_num_projects: number
+ *    roles: string
+ *    total_num_contacts: number
+ *    total_num_closed_userstories: number
+ * }
  */
-export async function sprint_list(projId : number) : Promise<Array<sprint_info>> {
-    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/projects/${projId}`)).data.milestones;;
-    return data;
+export async function
+user_stats(userId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/users/"+userId.toString() + '/stats');
+    let info : {total_num_projects: number, roles: string, total_num_contacts: number, 
+        total_num_closed_userstories: number} =
+            {total_num_projects: data.data.total_num_projects, roles: data.data.roles, 
+            total_num_contacts: data.data.total_num_contacts, 
+            total_num_closed_userstories: data.data.total_num_closed_userstories};
+  
+    return info;
 }
 
-/**
- * @summary get list of userstories for a sprint
- * @param sprintId sprint id
- * @returns Object[]
- */
-export async function userstory_list(sprintId : number) : Promise<Object> {
-    let data : userstory_info[] = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
-
-    return data;
-}
-
-/**
- * @summary get list of sprints for a project
- * @param userstoryId project id
- * @returns Object[]
- */
-export async function task_list(userstoryId : number) : Promise<Object> {
-    return (await axios.get(`https://api.taiga.io/api/v1/tasks?user_story=${userstoryId}`)).data;
-}
-
+// Information gathering
 /**
  * @summary Get the History for a task
  * @param taskId the ID for the task to get history for
@@ -319,6 +367,64 @@ task_history(taskId : number) : Promise<Object> {
 }
 
 /**
+ * @summary This call returns project wiki based on project Id
+ * @param project Id the ID for the project to get Wiki for
+ * @returns project wiki
+ */
+export async function
+project_wiki(projectId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/wiki?project="+projectId.toString());
+  
+    return (data.data);
+}
+
+/**
+ * @summary Get a list of issues for a project
+ * @param projId the ID for the project to get list of issues from
+ * @returns array of issue objects
+ * {
+ *      date : number,         // Date and time of history entry in milliseconds since epoch
+ *      note : String,         // Taiga User Object
+ *      blocked : boolean,     // Is issue blocked
+ *      closed : boolean,      // Is issue closed
+ *      sprint : number,       // Sprint the issue is in
+ *      priority : number      // Issue priority
+ * }
+ */
+export async function
+taiga_issues(projId : number) : Promise<Object>{
+    let data = (await axios.get(`https://api.taiga.io/api/v1/issues?project=${projId}`)).data;
+    let output : Array<Object> = [];
+    for(let entry of data) {
+        let new_entry = {
+            date : new Date(entry.created_date).getTime(),
+            note : entry.blocked_note,
+            blocked : entry.is_blocked,
+            closed : entry.is_closed,
+            sprint : entry.milestone,
+            priority : entry.priority
+        }
+        output.push(new_entry);
+    }
+  
+    return output;
+}
+
+// Breakdowns
+/**
+ * @summary This call returns total points of a user story based on user story Id
+ * @param userstoryId the ID for the User Story to get total points for
+ * @returns total points
+ */
+export async function
+userstory_total_points(userstoryId : number) : Promise<Object> {
+    let data = await axios.get("https://api.taiga.io/api/v1/userstories/" + userstoryId.toString());
+    let info : {total_points: number} = {total_points: data.data.total_points};
+  
+    return info;
+}
+
+/**
  * @summary Get the Task count with its status for each sprint
  * @param project_id Taiga project Id
  * @returns array of each members along with task count for all sprints
@@ -344,7 +450,8 @@ get_task_status_count(project_id: number): Promise<Object> {
 
         total_task_details.push(task_count_details_in_a_sprint);
     }
-    return (total_task_details);
+  
+    return total_task_details;
 }
 
 /**
@@ -435,123 +542,27 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
             big_obj.push(json_obj);
         }
     }
-    return(big_obj);
+  
+    return big_obj;
 }
-
-/**
- * @summary Get the list of user's full name in a project
- * @param project_id Project id to get the data
- * @returns array of all the names in a project
- * [name1,name2,name3,...]
- */
-export async function
-get_user_list(project_id: string) : Promise<Object> {
-    let response = (await axios.get(`https://api.taiga.io/api/v1/projects/${project_id}`)).data.members;
-    let members_in_project: Array<Object> = [];
-    for (let content of response) {
-        members_in_project.push(content.full_name);
-    }
-    return(members_in_project);
-}
-
-/**
- * @summary This call returns total points of a user story based on user story Id
- * @param userstoryId the ID for the User Story to get total points for
- * @returns total points
- */
-export async function
-userstory_total_points(userstoryId : number) : Promise<Object> {
-    let data = await axios.get("https://api.taiga.io/api/v1/userstories/" + userstoryId.toString());
-    //test link:  https://api.taiga.io/api/v1/userstories/2698838
-    let info : {total_points: number} = {total_points: data.data.total_points};
-    return (info);
-}
-
-/**
- * @summary This call returns user stats based on user Id
- * @param user Id the ID for the user to get stats for
- * @returns array of history objects
- * {
- *    total_num_projects: number
- *    roles: string
- *    total_num_contacts: number
- *    total_num_closed_userstories: number
- * }
- */
-export async function
-user_stats(userId : number) : Promise<Object> {
-    let data = await axios.get("https://api.taiga.io/api/v1/users/"+userId.toString() + '/stats');
-    //test link: https://api.taiga.io/api/v1/users/321272/stats
-    let info : {total_num_projects: number, roles: string, total_num_contacts: number, total_num_closed_userstories: number} =
-        {total_num_projects: data.data.total_num_projects, roles: data.data.roles, total_num_contacts: data.data.total_num_contacts, total_num_closed_userstories: data.data.total_num_closed_userstories};
-    return (info);
-}
-
-/**
- * @summary This call returns project wiki based on project Id
- * @param project Id the ID for the project to get Wiki for
- * @returns project wiki
- */
-export async function
-project_wiki(projectId : number) : Promise<Object> {
-    let data = await axios.get("https://api.taiga.io/api/v1/wiki?project="+projectId.toString());
-    //test link: //https://api.taiga.io/api/v1/wiki?project=309976
-    //test2: 286226
-    return (data.data);
-}
-
-/**
- * @summary Get a list of issues for a project
- * @param projId the ID for the project to get list of issues from
- * @returns array of issue objects
- * {
- *      date : number,         // Date and time of history entry in milliseconds since epoch
- *      note : String,         // Taiga User Object
- *      blocked : boolean,     // Is issue blocked
- *      closed : boolean,      // Is issue closed
- *      sprint : number,       // Sprint the issue is in
- *      priority : number      // Issue priority
- * }
- */
-export async function
-taiga_issues(projId : number) : Promise<Object>{
-    let data = (await axios.get(`https://api.taiga.io/api/v1/issues?project=${projId}`)).data;
-    let output : Array<Object> = [];
-    for(let entry of data) {
-        let new_entry = {
-            date : new Date(entry.created_date).getTime(),
-            note : entry.blocked_note,
-            blocked : entry.is_blocked,
-            closed : entry.is_closed,
-            sprint : entry.milestone,
-            priority : entry.priority
-        }
-        output.push(new_entry);
-    }
-    return output;
-}
-
-
 
 /**
  * @summary This call return a task used time based on task Id
  * @param taskId the ID for the task to assess task
  * @returns  whether the task is abnormal,task status transition, date based on task Id
- * * {
- *          date : number,,  //Date and time of history entry in milliseconds since epoch
- *          timecost_m: number // time of history entry cost in milliseconds
- *          acctime_m:number // time of task accumulated of this history entry cost in milliseconds
- *          timecost_h: number //time of history entry cost in hours
- *          acctime_h:number //time of task accumulated of this history entry cost in hours
- *          status_trans:entry.String[] //   /Status transition array// Will convert into  number[0 1 2 3]
- *      for [new, in progress, ready for test, closed]
+ * {
+ *          date : number,                //Date and time of history entry in milliseconds since epoch
+ *          timecost_m: number,           // time of history entry cost in milliseconds
+ *          acctime_m:number,             // time of task accumulated of this history entry cost in milliseconds
+ *          timecost_h: number,           // time of history entry cost in hours
+ *          acctime_h:number,             // time of task accumulated of this history entry cost in hours
+ *          status_trans:entry.String[],  // Status transition array for [new, in progress, ready for test, closed]
  *
  * }
  */
 export async function
 task_assessment_time(taskId : number) : Promise<Object> {
     let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
-    //test case :https://api.taiga.io/api/v1/history/task/2577741
     let output : Array<Object> = [];
     let pre : number = 0;
     let start : number = 0;
