@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TeamMemberCard from './TeamMemberCard'
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { faConnectdevelop } from '@fortawesome/free-brands-svg-icons';
 import { getFromLocalStorage } from "../utils/utils";
 import {
@@ -25,7 +25,7 @@ class Team extends Component {
           <div className="team-members">
           {this.props.teamMembers.map((memberObj) => {
             return <div className="team-member-page-card"> 
-                    <Link to={`/team/members/${memberObj.login}`} replace={true}>
+                    <Link to={`/team/members/${memberObj.login}`}>
                       <TeamMemberCard taigaId={memberObj.taigaId} githubId={memberObj.login} name={memberObj.login} pictureUrl={memberObj.avatar_url}/>
                     </Link>
                   </div>

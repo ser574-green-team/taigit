@@ -54,8 +54,8 @@ const teamReducer = (state = {}, action) => {
         }
     default:
       return {
-        ...state,
-        ...initialState
+        ...initialState,
+        ...state
       }
   }
 }
