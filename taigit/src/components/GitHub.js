@@ -5,7 +5,8 @@ import {
   getCommitsPerUser,
   getPullRequests,
   getContributorData,
-  getBranchCommits } from '../actions/githubActions';
+  getBranchCommits,
+  getMembersInfo } from '../actions/githubActions';
 import {
   selectBranchList,
   selectNumCommitsChartData,
@@ -58,8 +59,7 @@ class GitHub extends Component {
     this.props.getContributorData('ser574-green-team', 'taigit', auth);
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'master', auth);
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth);
-    (this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth))
-    //this.props.getMemberInfo('ser574-green-team',auth)
+    this.props.getMembersInfo('ser574-green-team', auth);
 
     //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
 
@@ -146,4 +146,4 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, {
-  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits })(GitHub)
+  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits, getMembersInfo })(GitHub)

@@ -9,13 +9,14 @@ import axios from 'axios';
  * @return       An Array Of Arrays consisting of username and avatar urls.
  */
 export async function
-getMemberInfo(owner : string, repo:string, auth : string){
+getMemberInfo(organization : string, auth : string){
     try {
         let arrayOfUser  = Array()
         var config = {
             headers: {'Authorization': "Bearer " + auth}
         }
-        let memberInfo = await axios.get("https://api.github.com/orgs/"+owner+"/members", config);
+        let memberInfo = await axios.get("https://api.github.com/orgs/"+organization+"/members", config);
+        console.log('memberInfo from call: ', memberInfo);
         memberInfo.data.forEach(function (req: { login: string, avatar_url: string }) {
             arrayOfUser.push([req.login,req.avatar_url])
         })
