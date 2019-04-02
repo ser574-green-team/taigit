@@ -6,8 +6,7 @@ getUserRepos(owner: string, auth: string){
         var config = {
             headers: {'Authorization': "Bearer " + auth}
         }
-        const userRepos = await axios.get("https://api.github.com/user/repos", config);
-            "/repos", config);
+        const userRepos = await axios.get("https://api.github.com/user/repos?per_page=1000", config);
         return userRepos.data;
     } catch (error) {
         console.log(error);
