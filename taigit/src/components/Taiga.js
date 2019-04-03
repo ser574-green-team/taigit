@@ -16,6 +16,7 @@ import {
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
+import { TaigaTaskChart } from './charts/TaigaTaskChart';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
@@ -93,6 +94,9 @@ class Taiga extends Component {
               <span className="chart-title">Single Sprint Taiga Task</span>
               <Bar data={this.props.singleSprintData} options={barGraphOptions}/>
             </div>
+          </div>
+          <div className='box' key="5" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
+            <TaigaTaskChart/>
           </div>
           <h4>{this.props.storeData}</h4>
         </ResponsiveReactGridLayout>
