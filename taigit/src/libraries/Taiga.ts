@@ -514,7 +514,6 @@ taiga_issues(projId : number) : Promise<Object>{
  *          finished : boolean,   //is task finished
  *          end_status : string,  //task's end status
  *          num_stat : number,    //task's end status in number
- *          fin_per : number,     //estimated task finished percentage
  *          detail: Array<Object>  //detailed log of task status change
  *             The Object in the Array has the following data type:
  *             <Object>：
@@ -570,7 +569,6 @@ task_assessment(taskId : number) : Promise<Object> {
         output.push(new_entry);
         }
     }
-    let t_fin_per : number;
     let t_num_stat : number;
     let t_finished : boolean = false;
     if(endstatus == "Closed") {
@@ -580,32 +578,27 @@ task_assessment(taskId : number) : Promise<Object> {
     //into number status
     switch(endstatus) {
         case "Closed": {
-            t_fin_per = 100;
             t_num_stat = 3;
             break;
         }
         case "Ready for test": {
-            t_fin_per = 60;
             t_num_stat = 2;
             break;
         }
         case "In progress": {
-            t_fin_per = 10;
             t_num_stat = 1;
             break;
         }
         case "New": {
-            t_fin_per = 0;
             t_num_stat = 0;
             break;
         }
         default: {
-            t_fin_per = 0;
             t_num_stat = 0
             break;
         }
     }
-    let info : {task_valid : boolean,finished : boolean, end_status : string,num_stat : number,fin_per : number,detail: Array<Object>}
-                = {task_valid : task_valid, finished : t_finished, end_status : endstatus, num_stat : t_num_stat,fin_per : t_fin_per,detail:output};
+    let info : {task_valid : boolean,finished : boolean, end_status : string,num_stat : number,detail: Array<Object>}
+                = {task_valid : task_valid, finished : t_finished, end_status : endstatus, num_stat : t_num_stat,detail:output};
     return info;
 }
