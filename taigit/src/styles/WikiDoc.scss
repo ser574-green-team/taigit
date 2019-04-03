@@ -1,0 +1,22 @@
+@import 'Variables';
+
+.wiki-doc {
+  float: left;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  position: relative;
+  background-color: $white-wash;
+  height: 100%;
+  width: 100%;
+}
+
+.wiki-doc-title {
+  margin-left: 1em;
+  margin-right: 1em;
+  color: grey;
+}
+
+.wiki-contents {
+  margin-left: 1em;
+  margin-right: 1em;
+}
