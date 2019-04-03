@@ -5,14 +5,16 @@ import {
   getCommitsPerUser,
   getPullRequests,
   getContributorData,
-  getBranchCommits } from '../actions/githubActions';
+  getBranchCommits,
+  getAvgCommentsPR } from '../actions/githubActions';
 import {
   selectBranchList,
   selectNumCommitsChartData,
   selectNumPullRequestsData,
   selectCommitsPerContributorChartData,
   selectNumBranchCommits,
-  selectNumPullRequestsClosedData } from '../reducers';
+  selectNumPullRequestsClosedData,
+  selectAvgCommentsPRData } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
@@ -59,6 +61,7 @@ class GitHub extends Component {
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'master', auth);
     this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth);
     //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
+    this.props.getAvgCommentsPR('ser574-green-team', 'taigit', auth);
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -97,6 +100,9 @@ class GitHub extends Component {
           <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
+          <div className='box' key="7" data-grid={{ w: 2, h: 5, x: 4, y: 0, minW: 0, minH: 0 }}>
+            <NumberDisplay number={this.props.avgCommentsOnPR} statistic="Average Comments on PR"/>
+          </div>
           <div className="box" key="6" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className = "chart-title">Commits Per Branch</span>
@@ -134,7 +140,8 @@ const mapStateToProps = state => ({
   commitChartData: selectCommitsPerContributorChartData(state),
   numPullRequests: selectNumPullRequestsData(state),
   commitPerBranchData: selectNumBranchCommits(state),
-  numPullRequestsClosed: selectNumPullRequestsClosedData(state)
+  numPullRequestsClosed: selectNumPullRequestsClosedData(state),
+  avgCommentsOnPR: selectAvgCommentsPRData(state)
 });
 
 /**
@@ -142,4 +149,4 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, {
-  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits })(GitHub)
+  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits, getAvgCommentsPR })(GitHub)
