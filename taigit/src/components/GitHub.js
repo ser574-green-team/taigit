@@ -55,7 +55,7 @@ class GitHub extends Component {
   render() {
     return(
       <div className="app-page">
-        {console.log(GH.getCodeAnalysis("owner", "repo", "nX8TI59JGtmyVz2y5Aml"))}
+        
         <h2>GitHub</h2>
         <ResponsiveReactGridLayout
           className="layout"

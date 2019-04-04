@@ -10,7 +10,7 @@ import axios from 'axios';
  * @param fileExt file extension of the specific java file
  * @return bool true if the file is a java, python or c++ file
  */
-
+/*
 function 
 verifyFormat(fileExt: string) : boolean{
    let bool : boolean = false; 
@@ -19,48 +19,17 @@ verifyFormat(fileExt: string) : boolean{
    }
    return bool;
 }
+*/
 
 /**
  * 
- * calculates code  
- * @param file 
- * @see https://radon.readthedocs.io/en/latest/intro.html#cyclomatic-complexity
- * @return num points in total
+ * @param owner your user name on codacy
+ * @param project your project name on codacy
+ * @param token  your codacy token
  */
 
-function 
- getCodeComplexity(code: string) : number{
-    let num : number = 0;
-    let ignoreComment = 0;
-    let arr : Array<string> = code.split(" ");
-    let arr1 : Array<string> = ["if", "elif", "case", "for", "while", "return", "void",
-                                 "assert", "except", "with", "iter", "foreach"];
-    for(var i = 0; i < arr.length; i++){
-        if(ignoreComment == 0){
-            if(arr1.includes(arr[i])){
-                num++;
-            }else if(arr[i]==="/*" || arr[i] === "/**"){
-                ignoreComment = 1;
-            }
-        }else if(arr[i] ==="*/" || arr[i] === "**/"){
-            ignoreComment = 0;
-        }  
-    }
-    return num;
- }
-
-
-/**
- *  The code uses the codacy api to retrieve complexity and maintainability metrics 
- * and total number of files
- * TO BE TESTED
- * @param owner  Not github owner but rather your codacy account name.
-
- * @param project Title of project you placed in codacy site
- * @param token
- */
 export async function
-getCodeAnalysis(jString : string) : Promise<any>{
+getCodeAnalysis(owner: string, project:string, token: string) : Promise<any>{
     /** 
    await axios.get("https://api.codacy.com/2.0/"+ owner +"/" + project, {headers :{'api_token' : token, 'Accept' : 'application/json'}}).then(response =>{
         console.log('res\n');
@@ -71,9 +40,10 @@ getCodeAnalysis(jString : string) : Promise<any>{
    });*/
    
    try{
-       const response = await axios.get('https://api.codacy.com/2.0/'+owner+"/"+project,{headers:{'api_token': token, 'Accept': 'applicationCache.json'}});
-       let jsonString : string = response.data.commit; // returns the jsonString
-
+    const response = await axios.get('https://taigit-auth.herokuapp.com/codacy/'+owner+"/"+project +"/"+ token);
+    let jsonString : string = response.data.commit; // returns the jsonString
+    console.log(jsonString);  
+    return jsonString;
    }catch(error){
        console.log("Error\n", error);
    }
