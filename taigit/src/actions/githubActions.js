@@ -6,7 +6,8 @@ import {
   getNumBranchCommits,
   getNumComments,
   getAuthToken,
-  getMemberInfo} from '../libraries/GitHub/GitHub';
+  getMemberInfo,
+  getBuilds } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
@@ -18,6 +19,7 @@ export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
 export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
+export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -104,5 +106,13 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
   getNumComments(owner, repo, auth)
     .then(avgNumberofComments =>
       dispatch({type: GET_AVG_COMMENTS_PR, payload: avgNumberofComments})
+    );
+}
+
+export const getBuildsList = (owner, repo, auth) => dispatch => {
+  console.log('about to perform acquisition of build candidates');
+  getBuilds(owner, repo, auth)
+    .then(buildsList => 
+      dispatch({type: GET_BUILDS_LIST, payload: buildsList})
     );
 }
