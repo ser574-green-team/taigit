@@ -5,7 +5,8 @@ import {
   contributorData,
   getNumBranchCommits,
   getNumComments,
-  getAuthToken } from '../libraries/GitHub/GitHub';
+  getAuthToken,
+  getMemberInfo} from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
@@ -41,6 +42,13 @@ export const getPullRequests = (owner, repo, auth) => dispatch => {
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );
+}
+
+export const getMembersInfo = (organization, auth) => dispatch => {
+  getMemberInfo(organization, auth)
+    .then(memberInfo => {
+      console.log('Member Info Data: ', memberInfo);
+    });
 }
 
 // component for pull requests closed, to be implemented in the backend

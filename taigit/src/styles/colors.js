@@ -25,9 +25,9 @@ const colors = {
     light: '#F2A56B',
   },
   green: {
-    base: '#00FF00',
-    dark: '#006400',
-    light:'#98FB98',
+    base: '#80CFA9',
+    dark: '#52846C',
+    light:'#006400',
   },
   none: '#DFE2D2'
 };
