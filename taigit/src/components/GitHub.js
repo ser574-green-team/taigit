@@ -8,7 +8,6 @@ import {
   getBranchCommits } from '../actions/githubActions';
 import {
   selectBranchList,
-  selectNumCommitsChartData,
   selectNumPullRequestsData,
   selectCommitsPerContributorChartData,
   selectNumBranchCommits,
@@ -34,7 +33,7 @@ class GitHub extends Component {
       layouts: JSON.parse(JSON.stringify(originalLayouts))
     };
   }
-  
+
   static get defaultProps() {
     return {
       className: "layout",
@@ -106,11 +105,50 @@ class GitHub extends Component {
               />
             </div>
           </div>
+          <div className='box' key="7" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
+            <div className="chart">
+              <span className="chart-title">Code Quality Metrics</span>
+            <Bar
+               data={codeComplexityData}
+               options={{maintainAspectRatio: true, responsive: true}}
+             />
+            </div>
+          </div>
         </ResponsiveReactGridLayout>
       </div>
     );
   }
 }
+
+let codeComplexityData = {
+  labels: ["Code Complexity of a Project"],
+  datasets: [{
+    fill: false,
+    label: 'Total Complexity',
+    data: [200],
+    lineWidth: 2,
+    backgroundColor: [colors.blue.base],
+    borderWidth: 2
+  },
+  {
+    fill: false,
+    label: 'Number of Files',
+    data: [20],
+    lineWidth: 2,
+    backgroundColor: [colors.red.base],
+    borderWidth: 2
+  },
+  {
+    fill: false,
+    label: 'Average Complexity',
+    data: [10],
+    lineWidth: 2,
+    backgroundColor: [colors.yellow.base],
+    borderWidth: 2
+  }
+  ]
+}
+
 
 const horizontalChartOptions = {
   responsive: true,
