@@ -10,6 +10,7 @@ import axios from 'axios';
  * @param fileExt file extension of the specific java file
  * @return bool true if the file is a java, python or c++ file
  */
+
 function 
 verifyFormat(fileExt: string) : boolean{
    let bool : boolean = false; 
@@ -50,20 +51,32 @@ function
 
 
 /**
- *  The code uses the codacy api to retrieve complexity and maintainability metrics.
- * @param owner 
- * @param repo 
+ *  The code uses the codacy api to retrieve complexity and maintainability metrics 
+ * and total number of files
+ * TO BE TESTED
+ * @param owner  Not github owner but rather your codacy account name.
+
+ * @param project Title of project you placed in codacy site
  * @param token
  */
 export async function
-getCodeAnalysis(owner: string, repo: string, token : string) : Promise<any>{
-   await axios.get("https://api.codacy.com/2.0/"+ owner +"/" + repo, {headers :{'api_token' : token, 'Accept' : 'application/json'}}).then(response =>{
-        console.log('res');
+getCodeAnalysis(jString : string) : Promise<any>{
+    /** 
+   await axios.get("https://api.codacy.com/2.0/"+ owner +"/" + project, {headers :{'api_token' : token, 'Accept' : 'application/json'}}).then(response =>{
+        console.log('res\n');
         console.log(response.data);
    }).catch(error=>{
        console.log('error\n');
        console.log(error)
-   });
+   });*/
+   
+   try{
+       const response = await axios.get('https://api.codacy.com/2.0/'+owner+"/"+project,{headers:{'api_token': token, 'Accept': 'applicationCache.json'}});
+       let jsonString : string = response.data.commit; // returns the jsonString
+
+   }catch(error){
+       console.log("Error\n", error);
+   }
     return ""; 
 }
 /**
