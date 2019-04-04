@@ -55,32 +55,6 @@ interface spr_stats {
     burndown: Object[]
 }
 
-/**
- * @summary interface for user story history
- * @param user_id : string,                   // Unique ID for the user
- * @param user_name : string,                 // Username for the user
- * @param actual_name : string,               // Name of the user
- * @param user_status : string,               // Current status of the user
- * @param timestamp : string,                 // Timestamp for the user story creation
- * @param us_key : string,                    // User story identifier
- * @param us_diff : Object[],                 // User story state changes
- * @param us_values : Object[],               // User story current state
- * @param us_values_diff : Object[],          // User story state changes such as sprint, milestone etc.
- * @param comment : string,                   // Any comment related to the user story
- */
-interface user_story_history {
-    user_id: string,
-    user_name: string,
-    actual_name: string,
-    user_status: string,
-    timestamp: string,
-    us_key: Object[],
-    us_diff: Object[],
-    us_values: Object[],
-    us_values_diff: Object[],
-    comment: string
-}
-
 
 // API Calls
 /**
@@ -180,13 +154,27 @@ task_history(taskId : number) : Promise<Object> {
  */
 export async function
 us_history(userstoryId : number) : Promise<Object> {
-    let data = await axios.get("https://api.taiga.io/api/v1/history/userstory/" + userstoryId.toString());
+    let data = (await axios.get("https://api.taiga.io/api/v1/history/userstory/" + userstoryId.toString())).data;
     //https://api.taiga.io/api/v1/history/userstory/2698838
-    let info : user_story_history = {user_id: data.data.id, user_name: data.data.username, actual_name: data.data.name,
-                                     user_status: data.data.is_active, timestamp: data.data.created_at, us_key: data.data.key,
-                                     us_diff: data.data.diff, us_values: data.data.values, us_values_diff: data.data.values_diff,
-                                     comment: data.data.comment};
-    return (info);
+
+    let output : Array<Object> = [];
+    for(let entry of data) {
+        let new_entry = {
+            user_id : entry.user.pk,
+            user_name : entry.user.username,
+            name : entry.user.name,
+            user_status : entry.user.is_active,
+            timestamp : new Date(entry.created_at),
+            us_key : entry.key,
+            us_diff : Object.keys(entry.diff),
+            us_values : Object.keys(entry.values),
+            us_diff_values : Object.keys(entry.values_diff),
+            comment : entry.comment   
+        }
+        output.push(new_entry);
+    }
+
+    return output;
 }
 
 /**
