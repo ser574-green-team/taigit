@@ -542,7 +542,6 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
             big_obj.push(json_obj);
         }
     }
-  
     return big_obj;
 }
 
@@ -620,22 +619,6 @@ sprint_velocity_pts(sprintId : number) : Promise<[boolean, number]> {
         velocity += each;
     }
     return  [sprint_end , velocity];
-}
-
-/**
- * @summary Check for user story attributes in user story title
- * @param subject the user story title as a string
- * @returns notes information about the components of a user story
- */
-function process_us(subject : string) : Array<string>{
-    let notes : Array<string> = ['','',''];
-    if (!/^as a /.test(subject.toLowerCase()))
-        notes[0] = '"As a" not found.';
-    if (!/ i want /.test(subject.toLowerCase()))
-        notes[1] = '"i want" not found.'
-    if (!/ so that /.test(subject.toLowerCase()))
-        notes[2] = '"so that" not found.'
-    return notes;
 }
 
 /**
@@ -737,12 +720,49 @@ task_assessment(taskId : number) : Promise<Object> {
     return info;
 }
 
+/**
+ * @summary Check for user story attributes in user story title
+ * @param subject the user story title as a string
+ * @returns notes information about the components of a user story
+ */
+function process_us(subject : string) : {flag: boolean, notes: Array<string>}{
+    let notes : Array<string> = ['','',''];
+    let flag : boolean = false;
+    if (!/^as a /.test(subject.toLowerCase())){
+        notes[0] = '"As a" not found.';
+        if (!flag)
+            flag = true;
+    }
+    if (!/ i want /.test(subject.toLowerCase())){
+        notes[1] = '"i want" not found.'
+        if (!flag)
+            flag = true;
+    }
+    if (!/ so that /.test(subject.toLowerCase())){
+        notes[2] = '"so that" not found.'
+        if (!flag)
+            flag = true;
+    }
+    return {flag: flag, notes: notes};
+}
+
+/**
+ * @summary Check user stories in a sprint
+ * @param sprintId the sprint id
+ * @returns 
+ * {
+ *      subject : user story title    // User story title
+ *      flag : boolean                // Flag for correct or incorrect user story
+ *      notes : Array<string>         // Information about the components of a user story
+ * }
+ */
+export async function
 eval_userstories(sprintId : number) : Promise<Object>{
     let data = (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
     let us_subjects : Array<Object> = [];
     data.forEach(function (us : {subject: string}){
-        let notes : Object = process_us(us.subject);
-        us_subjects.push({'userstory': us.subject, 'notes': notes});
+        let returned : {flag: boolean, notes: Array<string>} = process_us(us.subject);
+        us_subjects.push({'userstory': us.subject, 'flag': returned.flag, 'notes': returned.notes});
     });
     return us_subjects;
 }
