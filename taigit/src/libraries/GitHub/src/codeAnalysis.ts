@@ -4,7 +4,7 @@ get cyclomatic complexity of python code
 */
 
 import axios from 'axios';
-import { counter } from '@fortawesome/fontawesome-svg-core';
+import { counter } from '@fortawesome/fontawesome-svg-core'; 
 
 /**
  *  check if the file is in the list of approved formats
@@ -33,7 +33,6 @@ getNumFiles(owner : string, repo : string, auth : string, path? : string) : Prom
             content = await axios.get('https://api.github.com/repos/'+owner+'/'+repo+'/contents', header);
         }
         //console.log("Content:\n", content);
-        
         for (let obj of content.data){
             if(obj.type == "file"){
                 fileCount ++;
@@ -55,7 +54,7 @@ getNumFiles(owner : string, repo : string, auth : string, path? : string) : Prom
  * @param token  your codacy token
  * @param ownerGit the github owner name--> in case owner of github repo is different from codacy owner
  * @param gitRepo the github repo name --> in case different from project name
- * @param auth Github auth key
+ * @param auth Github auth key  
  */
 
 export async function
@@ -75,6 +74,8 @@ getCodeAnalysis(owner: string, project:string, token: string, ownerGit : string,
     console.log(jsonString); 
     let jsonObj = JSON.parse(jsonString); 
     let fileCount : number = await getNumFiles(ownerGit, gitRepo, auth);
+    jsonObj.fileCount = fileCount;
+    console.log(jsonObj);
    }catch(error){
        console.log("Error1:\n", error);
    }
