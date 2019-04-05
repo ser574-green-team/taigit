@@ -4,7 +4,9 @@ import {
   getNumPullRequests,
   contributorData,
   getNumBranchCommits,
-  getAuthToken } from '../libraries/GitHub/GitHub';
+  getNumComments,
+  getAuthToken,
+  getMemberInfo} from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
@@ -15,6 +17,7 @@ export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
+export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -39,6 +42,13 @@ export const getPullRequests = (owner, repo, auth) => dispatch => {
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );
+}
+
+export const getMembersInfo = (organization, auth) => dispatch => {
+  getMemberInfo(organization, auth)
+    .then(memberInfo => {
+      console.log('Member Info Data: ', memberInfo);
+    });
 }
 
 // component for pull requests closed, to be implemented in the backend
@@ -87,4 +97,12 @@ export const getAuthKey = (auth_server, storeKey) => dispatch => {
         saveToLocalStorage('auth-key', authKey);
         dispatch({type: ADD_AUTH_KEY, payload: authKey})
       });
+}
+
+export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
+  console.log('about to get Avg comments on the PR');
+  getNumComments(owner, repo, auth)
+    .then(avgNumberofComments =>
+      dispatch({type: GET_AVG_COMMENTS_PR, payload: avgNumberofComments})
+    );
 }

@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
-import teamReducer from './teamReducer';
 import githubReducer, * as fromGithub from './githubReducer';
-import taigaReducer, * as fromTaiga from './taigaReducer'
+import taigaReducer, * as fromTaiga from './taigaReducer';
+import teamReducer, * as fromTeam from './teamReducer';
 
 export default combineReducers({
   github: githubReducer,
@@ -20,3 +20,5 @@ export const selectNumBranchCommits = (state) => fromGithub.selectNumBranchCommi
 export const selectSprintBurndownChartData = (state) => fromTaiga.selectSprintBurndownChartData(state.taiga);
 export const selectNumPullRequestsClosedData = (state) => fromGithub.selectNumPullRequestsClosedData(state.github);
 export const selectSingleSprintData = (state) => fromTaiga.selectSingleSprintData(state.taiga);
+export const selectAvgCommentsPRData  = (state) => fromGithub.selectAvgCommentsPRData (state.github);
+export const selectBasicContributorData = (state) => fromTeam.selectBasicContributorData(state.team);
