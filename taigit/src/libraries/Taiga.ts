@@ -555,7 +555,7 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
  *          acctime_m:number,             // time of task accumulated of this history entry cost in milliseconds
  *          timecost_h: number,           // time of history entry cost in hours
  *          acctime_h:number,             // time of task accumulated of this history entry cost in hours
- *          status_trans:entry.String[],  // Status transition array for [new, in progress, ready for test, closed]
+ *          status_trans:entry.String[]  // Status transition array for [new, in progress, ready for test, closed]
  *
  * }
  */
@@ -590,6 +590,134 @@ task_assessment_time(taskId : number) : Promise<Object> {
     }
 
     return output;
+}
+
+/**
+ * @summary This call return sprint velocity (unit points) based on sprint Id
+ * @param sprintId the ID for the access of sprint stats
+ * @returns
+ * {
+ *      sprint_end : boolean, // if sprint end currently
+ *        velocity : number   //sprint velocity
+ * }
+ */
+export async function
+sprint_velocity_pts(sprintId : number) : Promise<[boolean, number]> {
+    let data = (await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats')).data;
+    //test id:  https://api.taiga.io/api/v1/milestones/205316/stats
+    //https://api.taiga.io/api/v1/milestones/219984/stats
+    let current = new Date().getTime();
+    let estimated_finish = new Date(data.estimated_finish).getTime();
+    let sprint_end : boolean = false;
+    if (current > estimated_finish){
+        sprint_end = true;
+    }
+    let entry = {pts : data.completed_points}
+    //velocity calculation according to https://www.scruminc.com/velocity/     
+    let velocity : number = 0;
+    for(let each of entry.pts ){
+        velocity += each;
+    }
+    return  [sprint_end , velocity];
+}
+
+/**
+ * @summary This call return a task assessment  based on task Id
+ * @param taskId the ID for the task to assess task
+ * @returns  whether the task is abnormal,task status transition, date based on task Id
+ * * {
+ *
+ *          task_valid : boolean,  //is task performed valid
+ *          finished : boolean,   //is task finished
+ *          end_status : string,  //task's end status
+ *          num_stat : number,    //task's end status in number
+ *          detail: Array<Object>  //detailed log of task status change
+ *             The Object in the Array has the following data type:
+ *             <Object>：
+ *               state_trans_valid: true,
+ *               timecost: number,  //time of history entry cost in milliseconds
+ *               acctime: number,   //time of task accumulated of this history entry cost in milliseconds
+ *               status_trans: String[],//Status transition array
+ *               user: object,         // Taiga User Object
+ *               date: number,        //Date and time of history entry in milliseconds since epoch
+ * }
+ */
+export async function
+task_assessment(taskId : number) : Promise<Object> {
+    let data = (await axios.get(`https://api.taiga.io/api/v1/history/task/${taskId}`)).data;
+    //test case :https://api.taiga.io/api/v1/history/task/2577741
+    let output : Array<Object> = [];
+    let pre : number = 0;
+    let start : number = 0;
+    let endstatus : string = "New";
+    let task_valid : boolean = true;
+    for(let entry of data) {
+        if(entry.values_diff.status) {//use this to ignore no-status change diff
+            let new_entry = {
+                state_trans_valid: true,
+                timecost: 0,
+                acctime: 0,
+                status_trans: entry.values_diff.status,
+                user: entry.user,
+                date: new Date(entry.created_at).getTime(),
+            }
+            endstatus = new_entry.status_trans[1];
+            let timecost: number;
+            let acctime: number;
+            if (new_entry.status_trans[0] == "New") {
+                pre = new_entry.date;
+                acctime = 0;
+                new_entry.acctime = acctime;
+                start = new_entry.date;
+            } else {
+                timecost= new_entry.date - pre;
+                acctime = new_entry.date - start;
+                new_entry.timecost = timecost;
+                new_entry.acctime = acctime;
+            }
+            let old_status = new_entry.status_trans[0];
+            let new_status = new_entry.status_trans[1];
+            if ((old_status == "New" && new_status != "In progress") ||
+                (old_status == "In progress" && new_status != "Ready for test") ||
+                (old_status == "Ready for test" && new_status != "Closed")) {
+                new_entry.state_trans_valid = false;
+                task_valid = false;
+            }
+        output.push(new_entry);
+        }
+    }
+    let t_num_stat : number;
+    let t_finished : boolean = false;
+    if(endstatus == "Closed") {
+        t_finished = true;
+    }
+    //transfer ["New", "In progress"] ["In progress", "Ready for test"]  ["Ready for test", "Closed"])
+    //into number status
+    switch(endstatus) {
+        case "Closed": {
+            t_num_stat = 3;
+            break;
+        }
+        case "Ready for test": {
+            t_num_stat = 2;
+            break;
+        }
+        case "In progress": {
+            t_num_stat = 1;
+            break;
+        }
+        case "New": {
+            t_num_stat = 0;
+            break;
+        }
+        default: {
+            t_num_stat = 0
+            break;
+        }
+    }
+    let info : {task_valid : boolean,finished : boolean, end_status : string,num_stat : number,detail: Array<Object>}
+                = {task_valid : task_valid, finished : t_finished, end_status : endstatus, num_stat : t_num_stat,detail:output};
+    return info;
 }
 
 /**
@@ -637,3 +765,4 @@ eval_userstories(sprintId : number) : Promise<Object>{
         us_subjects.push({'userstory': us.subject, 'flag': returned.flag, 'notes': returned.notes});
     });
     return us_subjects;
+}
