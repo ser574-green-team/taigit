@@ -22,23 +22,26 @@ verifyFormat(fileExt: string) : boolean{
 }
 */
 export async function
-getNumFiles(owner : string, repo : string, path? : string, auth? : string) : Promise<number>{
+getNumFiles(owner : string, repo : string, auth : string, path? : string) : Promise<number>{
     let fileCount : number = 0;
     var content;
+    var header = {headers:{'Authorization': "Bearer " + auth}};
     try{
         if(path){
-            content = await axios.get('https://api.github.com/repos/'+owner+'/'+repo+'/contents/'+path);
+            content = await axios.get('https://api.github.com/repos/'+owner+'/'+repo+'/contents/'+path,header);
         }else{
-            content = await axios.get('https://api.github.com/repos/'+owner+'/'+repo+'/contents');
+            content = await axios.get('https://api.github.com/repos/'+owner+'/'+repo+'/contents', header);
         }
-        console.log("Content:\n", content);
+        //console.log("Content:\n", content);
+        
         for (let obj of content.data){
             if(obj.type == "file"){
                 fileCount ++;
             }else if (obj.type == 'dir'){
-                fileCount += await getNumFiles(owner, repo, obj.path);
+                fileCount += await getNumFiles(owner, repo, auth,obj.path);
             }
         }
+        //console.log(fileCount);
     }catch(error){
         console.log("Error2:\n", error);
     }
@@ -71,6 +74,7 @@ getCodeAnalysis(owner: string, project:string, token: string, ownerGit : string,
     let jsonString : string = response.data.commit;
     console.log(jsonString); 
     let jsonObj = JSON.parse(jsonString); 
+    let fileCount : number = await getNumFiles(ownerGit, gitRepo, auth);
    }catch(error){
        console.log("Error1:\n", error);
    }

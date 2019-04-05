@@ -55,7 +55,6 @@ class GitHub extends Component {
   render() {
     return(
       <div className="app-page">
-        
         <h2>GitHub</h2>
         <ResponsiveReactGridLayout
           className="layout"
