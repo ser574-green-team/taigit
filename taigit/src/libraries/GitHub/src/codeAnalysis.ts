@@ -4,6 +4,7 @@ get cyclomatic complexity of python code
 */
 
 import axios from 'axios';
+import { counter } from '@fortawesome/fontawesome-svg-core';
 
 /**
  *  check if the file is in the list of approved formats
@@ -26,10 +27,13 @@ verifyFormat(fileExt: string) : boolean{
  * @param owner your user name on codacy
  * @param project your project name on codacy
  * @param token  your codacy token
+ * @param ownerGit the github owner name--> in case owner of github repo is different from codacy owner
+ * @param gitRepo the github repo name --> in case different from project name
+ * @param auth Github auth key
  */
 
 export async function
-getCodeAnalysis(owner: string, project:string, token: string) : Promise<any>{
+getCodeAnalysis(owner: string, project:string, token: string, ownerGit : string, gitRepo : string, auth : string) : Promise<any>{
     /** 
    await axios.get("https://api.codacy.com/2.0/"+ owner +"/" + project, {headers :{'api_token' : token, 'Accept' : 'application/json'}}).then(response =>{
         console.log('res\n');
@@ -38,16 +42,16 @@ getCodeAnalysis(owner: string, project:string, token: string) : Promise<any>{
        console.log('error\n');
        console.log(error)
    });*/
-   
+   var jsonObj;
    try{
     const response = await axios.get('https://taigit-auth.herokuapp.com/codacy/'+owner+"/"+project +"/"+ token);
-    let jsonString : string = response.data.commit; // returns the jsonString
-    console.log(jsonString);  
-    return jsonString;
+    let jsonString : string = response.data.commit;
+    console.log(jsonString); 
+    let jsonObj = JSON.parse(jsonString); 
    }catch(error){
        console.log("Error\n", error);
    }
-    return ""; 
+    return jsonObj;
 }
 /**
  * Creates a json file that contains the cyclomatic complexity of a file
