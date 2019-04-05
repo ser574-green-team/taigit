@@ -21,7 +21,30 @@ verifyFormat(fileExt: string) : boolean{
    return bool;
 }
 */
+export async function
+getNumFiles(owner : string, repo : string, path? : string, auth? : string) : Promise<number>{
+    let fileCount : number = 0;
+    var content;
+    try{
+        if(path){
+            content = await axios.get('https://api.github.com/repos/'+owner+'/'+repo+'/contents/'+path);
+        }else{
+            content = await axios.get('https://api.github.com/repos/'+owner+'/'+repo+'/contents');
+        }
+        console.log("Content:\n", content);
+        for (let obj of content.data){
+            if(obj.type == "file"){
+                fileCount ++;
+            }else if (obj.type == 'dir'){
+                fileCount += await getNumFiles(owner, repo, obj.path);
+            }
+        }
+    }catch(error){
+        console.log("Error2:\n", error);
+    }
 
+    return fileCount;
+}
 /**
  * 
  * @param owner your user name on codacy
@@ -49,7 +72,7 @@ getCodeAnalysis(owner: string, project:string, token: string, ownerGit : string,
     console.log(jsonString); 
     let jsonObj = JSON.parse(jsonString); 
    }catch(error){
-       console.log("Error\n", error);
+       console.log("Error1:\n", error);
    }
     return jsonObj;
 }
