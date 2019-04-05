@@ -768,6 +768,22 @@ eval_userstories(sprintId : number) : Promise<Object>{
 }
 
 /**
+ * @summary This call returns task assessment list based on sprint Id
+ * @param sprint Id the ID for the sprint to get associated task for
+ * @returns Array of Array of task assessment Object
+ */
+export async function
+task_of_sprint(sprintId : number) : Promise <Object[]>  {
+    let output : Array<Object> = [];
+    let us_list= (await axios.get(`https://api.taiga.io/api/v1/userstories?milestone=${sprintId}`)).data;
+     for(let us of us_list ) {
+         let task_assess = task_of_us(us.id);
+         output.push(task_assess);
+     }
+    return output;
+}
+
+/**
  * @summary This call returns task assessment list based on us Id
  * @param us Id the ID for the user story to get associated task for
  * @returns Array of task assessment Object
@@ -781,4 +797,4 @@ task_of_us(usId : number) : Promise <Object[]>  {
             output.push(data);
         }
         return output;
-    }
+}
