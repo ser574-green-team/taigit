@@ -4,12 +4,17 @@ import {Doughnut, Line} from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
+import { Bar } from 'react-chartjs-2';
+import { selectUserTaskDistributionChartData } from '../reducers';
+import { connect } from 'react-redux';
+import { grabTaskStats } from '../actions/taigaActions';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
-export default class Overview extends Component {
+//export default 
+class Overview extends Component {
   constructor(props) {
     super(props);
 
@@ -32,6 +37,7 @@ export default class Overview extends Component {
   }
 
   componentWillMount() {
+    this.props.grabTaskStats(306316);
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -62,6 +68,12 @@ export default class Overview extends Component {
             <div className="chart chart-horizontal-primary">
               <span className="chart-title">Github Contributions</span>
               <Line data={gitContributionsData} options={{maintainAspectRatio: true, responsive: true}}/>
+            </div>
+          </div>
+          <div className='box' key="4" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
+            <div className="chart chart-horizontal-primary">
+              <span className="chart-title">Taiga Task Distributions</span>
+              <Bar data={this.props.taigaTaskDistribution} options={barGraphOptions}/>
             </div>
           </div>
 
@@ -97,3 +109,34 @@ let gitContributionsData = {
     borderWidth: 3
   }]
 }
+
+
+const barGraphOptions = {
+  maintainAspectRatio: true,
+  responsive: true,
+  scales: {
+    yAxes: [{
+      scaleLabel:{
+        display: true,
+        labelString: "Count"
+      },
+      ticks: {
+        autoSkip: false
+      }
+    }],
+
+    xAxes: [{
+      scaleLabel:{
+        display: true,
+        labelString: "Contributors"
+      },
+      ticks: {
+        autoSkip: false
+      }
+    }]
+    }
+}
+const mapStateToProps = state => ({
+  taigaTaskDistribution: selectUserTaskDistributionChartData(state),
+});
+export default connect(mapStateToProps, { grabTaskStats })(Overview)
