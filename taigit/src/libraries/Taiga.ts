@@ -177,7 +177,6 @@ interface spr_stats {
     burndown: Object[]
 }
 
-
 // API Calls
 /**
  * @summary Return the response for a login
@@ -797,4 +796,19 @@ task_of_us(usId : number) : Promise <Object[]>  {
             output.push(data);
         }
         return output;
+}
+
+/**
+ * @summary Converts role ids to role names
+ * @param projID
+ * @returns dictionary pairs
+ */
+export async function
+id_to_roles(projID : number) : Promise <Object[]> {
+    let roles : Object[] = [];
+    let roles_data = (await axios.get(`https://api.taiga.io/api/v1/projects/${projID}`)).data.roles;
+    roles_data.forEach(function  (r : {id : number, name: string}){
+        roles.push({'role_id': r.id, 'role_name': r.name});
+    });
+    return roles;
 }
