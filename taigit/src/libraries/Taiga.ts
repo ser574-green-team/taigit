@@ -893,3 +893,19 @@ id_to_roles(projID : number) : Promise <Object[]> {
     });
     return roles;
 }
+
+/**
+ * @summary converts points to numbers for distributions
+ * @param projID
+ * @returns dictionary pairs
+ */
+export async function
+id_to_points(projID : number) : Promise <Object[]> {
+    let points : Object[] = [];
+    let points_data = (await axios.get(`https://api.taiga.io/api/v1/projects/${projID}`)).data.points;
+    points_data.forEach(function  (r : {id : number, value: number}){
+        //let value : number = (r.value == null) ? -1 : r.value; // if the null case should be 0, uncomment and replace r.value below with value
+        points.push({'point_id': r.id, 'point_num': r.value});
+    });
+    return points;
+}
