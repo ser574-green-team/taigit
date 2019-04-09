@@ -165,7 +165,7 @@ export const selectAvgCommentsPRData = (state) => {
 export const selectRepoList = (state) => {
   return state.userRepos.map(repo => {
     return {
-      value: repo.owner,
+      value: repo.full_name,
       label: repo.name
     }
   });

@@ -35,7 +35,7 @@
 .gh-btn {
   background-color: #08708A;
   color: white;
-  padding: 14px 25px;
+  padding: 1.2em 2.2em;
   text-align: center;
   position: relative;
   left: 40%;
@@ -44,4 +44,31 @@
 .gh-btn:hover {
   background-color: #56B1BF;
   cursor: pointer;
+}
+
+.small-icon {
+  margin-right: 0.25em;
+}
+
+.project-button {
+  background-color: #08708A;
+  color: white;
+  padding: 1.2em 2.2em;
+  text-align: center;
+}
+
+.project-selector-container {
+  display: inline-block;
+}
+
+.project-selector-title {
+  display: inline-block;
+  margin: 0px auto;
+  margin-right: 0.5em;
+  color: grey;
+}
+
+.project-selector {
+  display: inline-block;
+  margin-right: 1em;
 }

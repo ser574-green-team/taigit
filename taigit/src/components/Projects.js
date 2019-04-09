@@ -1,125 +1,140 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ProjectPanel from './ProjectPanel'
 import * as keys from '../keys.json';
 import { authRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
 import Select from 'react-select';
 import colors from "../styles/colors";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { grabSprintStats } from "../actions/taigaActions";
 import { getUsersRepos } from "../actions/githubActions";
 import { saveToLocalStorage, getFromLocalStorage } from "../utils/utils";
 import { selectRepoList } from "../reducers";
-import GitHub from "./GitHub";
+import {
+  faGithub
+} from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const redirect = authRedirect(keys.GH_CLIENT_ID);
 let storedProjects = getFromLocalStorage('project-list') || {};
 let auth = getFromLocalStorage('auth-key');
 
 class Projects extends Component {
-    state = {
-        githubID: '',
-        taigaID: '',
+  constructor(props) {
+    super(props);
+    this.state = {
+      githubID: '',
+      taigaID: '',
+      gitHubRepo: '',
+      taigaProject: ''
     }
 
-    onSubmit = (e) => {
-        e.preventDefault();
-        saveToLocalStorage('github-id', this.state.githubID);
-        saveToLocalStorage('taiga-id', this.state.taigaID);
-        this.props.getUsersRepos(this.state.githubID, auth);
-        e.target.reset();
+    this.handleTaigaChange = this.handleTaigaChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit = (e) => {
+    e.preventDefault();
+    saveToLocalStorage('taiga-id', this.state.taigaID);
+    // call action to get list of all taiga projects
+    e.target.reset();
+  }
+
+  onGitHubSelectChange = (gitHubRepo) => {
+    this.setState({ gitHubRepo });
+  }
+
+  onTaigaSelectChange = (taigaProject) => {
+    this.setState({ taigaProject });
+  }
+
+  handleTaigaChange(event) {
+    this.setState({taigaID: event.target.value});
+  }
+
+  showProject = (proj) => (
+    storedProjects.map((proj) => (<ProjectPanel project={proj} />))
+  )
+
+  componentWillMount() {
+    if (this.props.repoList && this.props.repoList.length == 0) {
+      this.props.getUsersRepos(this.state.githubID, auth);
     }
+  }
 
-    onTextChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
-    }
-
-    onSelectChange = (e) => {
-        this.setState({ githubOwner: e.target.value });
-        //this.setState({ githubRepo: e.target.label });
-        var str = this.state.githubID + ' || ' + this.state.taigaID;
-        console.log(storedProjects);
-        storedProjects.push(str);
-        saveToLocalStorage('project-list', storedProjects);
-        this.showProject(str);
-    }
-
-    onChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
-        console.log(e.target.name);
-    }
-
-    showProject = (proj) => (
-        storedProjects.map((proj) => (<ProjectPanel project = {proj}/>))
-    )
-
-    componentWillMount() {
-        this.props.getUsersRepos(this.state.githubID, auth);
-    }
-
-    render() {
-        return(
-            <div className="app-page">
-                <h2>Projects</h2>
-                <h2>New Project</h2>
-                <div className="selector">
-                    <Select options={this.props.repoList}
-                            placeholder="Select GitHub Repository"
-                            onChange={this.onSelectChange}
-                            value={this.state.value}
-                            theme={(theme) => ({
-                                ...theme,
-                                colors: {
-                                    ...theme.colors,
-                                    primary25: colors.yellow.light,
-                                    primary: colors.blue.light,
-                                },
-                            })} />
-                </div>
-                <div className = "selector">
-                    <Select options={this.props.repoList}
-                            placeholder="Select Taiga Project"
-                            theme={(theme) => ({
-                                ...theme,
-                                colors: {
-                                    ...theme.colors,
-                                    primary25: colors.yellow.light,
-                                    primary: colors.blue.light,
-                                },
-                            })} />
-                </div>
-                <div className="form">
-                    <form onSubmit={this.onSubmit} style={{display: 'absolute'}}>
-                        <input type="text"
-                               name="githubID"
-                               style={{flex: '10', padding: '12px 20px', width: '20%', margin: '0 8px'}}
-                               placeholder="Your GitHub ID"
-                               value={this.state.title}
-                               onChange={this.onTextChange}
-                               id="text-form"
-                        />
-                        <input type="text"
-                               name="taigaID"
-                               style={{flex: '10', padding: '12px 20px', width: '20%', margin: '0 8px'}}
-                               placeholder="Your Taiga ID"
-                               value={this.state.title}
-                               onChange={this.onTextChange}
-                               id="text-form"
-                        />
-                        <input type="submit"
-                               value="Register Accounts"
-                               className="btn"
-                               style={{flex: '1', margin: '8px 4px', border: 'none'}}
-                        />
-                    </form>
-                </div>
-                <br/>
-                <a href={redirect}>
-                    <button type="button" className="gh-btn">Authenticate with GitHub</button>
-                </a>
+  render() {
+    return (
+      <div className="app-page">
+        <h2>Projects</h2>
+        {/* Render already paired projects here */}
+        <div className="project-picker">
+        <h3>New Project</h3>
+          <div className="project-selector-container">
+            <h4 className="project-selector-title">Select A Repo</h4>
+            <div className="selector project-selector">
+              <Select options={this.props.repoList}
+                placeholder="Select GitHub Repository"
+                onChange={this.onGitHubSelectChange}
+                value={this.state.githubRepo}
+                theme={(theme) => ({
+                    ...theme,
+                    colors: {
+                        ...theme.colors,
+                        primary25: colors.yellow.light,
+                        primary: colors.blue.light,
+                    },
+                })} 
+              />
             </div>
-        );
-    }
+          </div>
+          <div className="project-selector-container">
+            <h4 className="project-selector-title">Select A Project</h4>
+            <div className="selector project-selector">
+              <Select options={this.props.repoList}
+                placeholder="Select Taiga Project"
+                onChange={this.onTaigaSelectChange}
+                value={this.state.taigaProject}
+                theme={(theme) => ({
+                    ...theme,
+                    colors: {
+                        ...theme.colors,
+                        primary25: colors.yellow.light,
+                        primary: colors.blue.light,
+                    },
+                })} 
+              />
+            </div>
+          </div>
+          <button type="button" className="project-button">Analyze Project</button>
+        </div>
+        <h3>Connect Accounts</h3>
+        <div className="form">
+          <form onSubmit={this.onSubmit} style={{ display: 'absolute' }}>
+            <input type="text"
+              name="taigaID"
+              style={{ flex: '10', padding: '12px 20px', width: '20%', margin: '0 8px' }}
+              placeholder="Your Taiga ID"
+              value={this.state.taigaID}
+              onChange={this.handleTaigaChange}
+              id="text-form"
+            />
+            <input type="submit"
+              value="Connect Taiga Account"
+              className="btn"
+              style={{ flex: '1', margin: '8px 4px', border: 'none' }}
+            />
+          </form>
+        </div>
+        <br/>
+        <a href={redirect}>
+          <button type="button" className="gh-btn">
+            <FontAwesomeIcon className="navFont small-icon" icon={faGithub} size="2x"/>
+            Authenticate with GitHub
+          </button>
+        </a>
+      </div>
+    );
+  }
 }
 
 /**
@@ -128,7 +143,7 @@ class Projects extends Component {
  * to component props property (left)
  */
 const mapStateToProps = state => ({
-    repoList: selectRepoList(state)
+  repoList: selectRepoList(state)
 });
 
 export default connect(mapStateToProps, { grabSprintStats, getUsersRepos })(Projects)
