@@ -1,5 +1,7 @@
 import axios from 'axios';
-
+/**
+ Returns ALL Pull Requests.
+ */
 export async function
 getNumPullRequests(owner: string, repo: string, auth: string){
     try{
