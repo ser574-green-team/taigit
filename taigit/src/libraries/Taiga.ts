@@ -885,11 +885,11 @@ check_for_retrospective(project_id : number, sprint_id : number) : Promise<wiki_
  * @returns dictionary pairs
  */
 export async function
-id_to_roles(projID : number) : Promise <Object[]> {
-    let roles : Object[] = [];
+id_to_roles(projID : number) : Promise <{ [key: string] : string }> {
+    let roles : { [key: string] : string } = {};
     let roles_data = (await axios.get(`https://api.taiga.io/api/v1/projects/${projID}`)).data.roles;
     roles_data.forEach(function  (r : {id : number, name: string}){
-        roles.push({'role_id': r.id, 'role_name': r.name});
+        roles[r.id.toString()] = r.name;
     });
     return roles;
 }
