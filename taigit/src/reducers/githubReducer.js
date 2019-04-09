@@ -72,7 +72,7 @@ const githubReducer = (state = {}, action) => {
       return {
           ...state,
           avgCommentsOnPR: action.payload
-      } 
+      }
     case ADD_USER_REPOS:
       console.log('payload for user repos is: ', action.payload);
       return {

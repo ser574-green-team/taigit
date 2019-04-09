@@ -20,9 +20,7 @@ class Projects extends Component {
     state = {
         githubID: '',
         taigaID: '',
-        githubOwner: '',
-        githubRepo: ''
-    };
+    }
 
     onSubmit = (e) => {
         e.preventDefault();
@@ -39,6 +37,16 @@ class Projects extends Component {
     onSelectChange = (e) => {
         this.setState({ githubOwner: e.target.value });
         //this.setState({ githubRepo: e.target.label });
+        var str = this.state.githubID + ' || ' + this.state.taigaID;
+        console.log(storedProjects);
+        storedProjects.push(str);
+        saveToLocalStorage('project-list', storedProjects);
+        this.showProject(str);
+    }
+
+    onChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+        console.log(e.target.name);
     }
 
     showProject = (proj) => (
