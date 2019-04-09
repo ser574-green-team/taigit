@@ -4,8 +4,7 @@ import axios from 'axios';
  * fields viz. the username of the member and the avatar_url of the member.
  * This method returns both Private and Public members if the user is authenticated and
  * a member of that particular organization.
- * @param owner  The name of the owner of the repository in String format.
- * @param repo   The name of the Github repository in String format.
+ * @param owner  The name of the organization in String format.
  * @return       An Array Of Arrays consisting of username and avatar urls.
  */
 export async function
@@ -16,7 +15,6 @@ getMemberInfo(organization : string, auth : string){
             headers: {'Authorization': "Bearer " + auth}
         }
         let memberInfo = await axios.get("https://api.github.com/orgs/"+organization+"/members", config);
-        console.log('memberInfo from call: ', memberInfo);
         if(memberInfo.headers.hasOwnProperty("link")){
             let last = memberInfo.headers["link"].split(',');
             let total_pages_str = last[1]
