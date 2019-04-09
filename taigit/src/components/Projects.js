@@ -23,44 +23,53 @@ class Projects extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      githubID: '',
       taigaID: '',
+      taigaPassword: '',
       gitHubRepo: '',
       taigaProject: ''
     }
 
-    this.handleTaigaChange = this.handleTaigaChange.bind(this);
+    this.handleTaigaIDChange = this.handleTaigaIDChange.bind(this);
+    this.handleTaigaPasswordChange = this.handleTaigaPasswordChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
-
-  onSubmit = (e) => {
-    e.preventDefault();
-    saveToLocalStorage('taiga-id', this.state.taigaID);
-    // call action to get list of all taiga projects
-    e.target.reset();
-  }
-
-  onGitHubSelectChange = (gitHubRepo) => {
-    this.setState({ gitHubRepo });
-  }
-
-  onTaigaSelectChange = (taigaProject) => {
-    this.setState({ taigaProject });
-  }
-
-  handleTaigaChange(event) {
-    this.setState({taigaID: event.target.value});
-  }
-
-  showProject = (proj) => (
-    storedProjects.map((proj) => (<ProjectPanel project={proj} />))
-  )
 
   componentWillMount() {
     if (this.props.repoList && this.props.repoList.length == 0) {
       this.props.getUsersRepos(this.state.githubID, auth);
     }
   }
+
+  onSubmit = (e) => {
+    e.preventDefault();
+    saveToLocalStorage('taiga-id', this.state.taigaID);
+    /*** 
+     * call action which does the following:
+     * - login to taiga (store user id in redux)
+     * - get list of all projects (store in redux as well)
+    */
+    e.target.reset();
+  }
+
+  // Dropdown change listeners
+  onGitHubSelectChange = (gitHubRepo) => {
+    this.setState({ gitHubRepo });
+  }
+  onTaigaSelectChange = (taigaProject) => {
+    this.setState({ taigaProject });
+  }
+
+  // Form change listeners
+  handleTaigaIDChange(event) {
+    this.setState({taigaID: event.target.value});
+  }
+  handleTaigaPasswordChange(event) {
+    this.setState({taigaPassword: event.target.value});
+  }
+
+  showProject = (proj) => (
+    storedProjects.map((proj) => (<ProjectPanel project={proj} />))
+  )
 
   render() {
     return (
@@ -113,9 +122,17 @@ class Projects extends Component {
             <input type="text"
               name="taigaID"
               style={{ flex: '10', padding: '12px 20px', width: '20%', margin: '0 8px' }}
-              placeholder="Your Taiga ID"
+              placeholder="Your Taiga Username"
               value={this.state.taigaID}
-              onChange={this.handleTaigaChange}
+              onChange={this.handleTaigaIDChange}
+              id="text-form"
+            />
+            <input type="text"
+              name="taigaPassword"
+              style={{ flex: '10', padding: '12px 20px', width: '20%', margin: '0 8px' }}
+              placeholder="Your Taiga Password"
+              value={this.state.taigaPassword}
+              onChange={this.handleTaigaPasswordChange}
               id="text-form"
             />
             <input type="submit"

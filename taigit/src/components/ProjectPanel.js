@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import { getFromLocalStorage } from "../utils/utils";
 
-let projectList = getFromLocalStorage('project-list');
-//button onClick={this.props.delTodo.bind(this, id)}
+/**
+ * This component should only take in data from props
+ * It should also have an action
+ */
 export default class ProjectPanel extends Component {
     render() {
         return(
