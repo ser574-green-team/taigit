@@ -59,10 +59,10 @@ getNumFiles(owner : string, repo : string, auth : string, path? : string) : Prom
 
 export async function
 getCodeAnalysis(owner: string, project:string, token: string, ownerGit : string, gitRepo : string, auth : string) : Promise<any>{
-   var jsonObj;
+   let jsonObj;
    try{
     const response = await axios.get('https://taigit-auth.herokuapp.com/codacy/'+owner+"/"+project +"/"+ token);
-    let jsonObj= response.data;
+    jsonObj= response.data;
     console.log("JSON data:\n",jsonObj); 
     let fileCount : number = await getNumFiles(ownerGit, gitRepo, auth);
     jsonObj.fileCount = fileCount;
