@@ -27,13 +27,30 @@ getBuilds(owner: string, repo: string, auth: string): Promise<Array<string>>{
         }
         const branchInfo = await axios.get("https://api.github.com/repos/" + owner +
         "/" + repo + "/branches/master", config);
-        let rootSha = branchInfo.data.commit.sha;
-        ret = await (filesInTree(owner, repo, rootSha, Object.keys(buildFileMap), auth));
-        ret = removeDuplicates(ret);
+        if(branchInfo.headers.hasOwnProperty("link")) {
+            let last = branchInfo.headers["link"].split(',');
+            let total_pages_str = last[1]
+            let total_pages = total_pages_str.substring(total_pages_str.lastIndexOf("page") + 5, total_pages_str.lastIndexOf(">"))
+            total_pages = Number(total_pages)
+            for (var j = 1; j <= total_pages; j++) {
+                let innerpulls = await axios.get("https://api.github.com/repos/" + owner +
+                    "/" + repo + "/branches/master?page=" + j, config)
+                let rootSha = innerpulls.data.commit.sha;
+                ret = await (filesInTree(owner, repo, rootSha, Object.keys(buildFileMap), auth));
+                ret = removeDuplicates(ret);
+            }
+        }
+        else {
+            let rootSha = branchInfo.data.commit.sha;
+            ret = await (filesInTree(owner, repo, rootSha, Object.keys(buildFileMap), auth));
+            ret = removeDuplicates(ret);
+
+        }
     } catch (error){
         console.log(error);
     }
-    return ret;
+    return ret
+
 }
 
 /**

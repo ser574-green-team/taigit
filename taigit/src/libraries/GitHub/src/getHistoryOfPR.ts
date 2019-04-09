@@ -20,24 +20,38 @@ gethistoryPR(owner : string, repo: string, auth:string, pullNumber: number){
         }
         let initialPull = await axios.get("https://api.github.com/repos/" + owner +
             "/" + repo + "/pulls?state=all&direction=asc", config);
-        let last = initialPull.headers["link"].split(',');
-        let total_pages_str = last[1]
-        let total_pages = total_pages_str.substring(total_pages_str.lastIndexOf("page") + 5,total_pages_str.lastIndexOf(">"))
-        total_pages = Number(total_pages)
-        for(var j =1 ; j <= total_pages;j++){
-            let pullReq = await axios.get("https://api.github.com/repos/" + owner +
-                "/" + repo + "/pulls?state=all&direction=asc&page="+j, config);
-            await pullReq.data.forEach(function (req :{number:string, created_at:string, closed_at:string,merged_at : string}) {
-                if(Number(req.number) == pullNumber){
-                    let created : string = req.created_at;
-                    let closed : string = req.closed_at;
-                    let merged : string = req.merged_at;
-                    arrayOfHistory.push(req.number,created,closed,merged)
+        if(initialPull.headers.hasOwnProperty("link")) {
+            let last = initialPull.headers["link"].split(',');
+            let total_pages_str = last[1]
+            let total_pages = total_pages_str.substring(total_pages_str.lastIndexOf("page") + 5, total_pages_str.lastIndexOf(">"))
+            total_pages = Number(total_pages)
+            for (var j = 1; j <= total_pages; j++) {
+                let pullReq = await axios.get("https://api.github.com/repos/" + owner +
+                    "/" + repo + "/pulls?state=all&direction=asc&page=" + j, config);
+                await pullReq.data.forEach(function (req: { number: string, created_at: string, closed_at: string, merged_at: string }) {
+                    if (Number(req.number) == pullNumber) {
+                        let created: string = req.created_at;
+                        let closed: string = req.closed_at;
+                        let merged: string = req.merged_at;
+                        arrayOfHistory.push(req.number, created, closed, merged)
+                        return arrayOfHistory
+                    }
+                })
+            }
+            return arrayOfHistory
+        }
+        else{
+            await initialPull.data.forEach(function (req: { number: string, created_at: string, closed_at: string, merged_at: string }) {
+                if (Number(req.number) == pullNumber) {
+                    let created: string = req.created_at;
+                    let closed: string = req.closed_at;
+                    let merged: string = req.merged_at;
+                    arrayOfHistory.push(req.number, created, closed, merged)
                     return arrayOfHistory
                 }
-            })
+         })
         }
-        return arrayOfHistory
+
     }
     catch (error) {
         console.log(error);
