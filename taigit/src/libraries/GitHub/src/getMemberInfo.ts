@@ -29,6 +29,7 @@ getMemberInfo(organization : string, auth : string){
             return(arrayOfUser)
         }
         else{
+        let memberInfo = await axios.get("https://api.github.com/orgs/"+organization+"/members", config);
         memberInfo.data.forEach(function (req: { login: string, avatar_url: string }) {
             arrayOfUser.push([req.login,req.avatar_url])
         })

@@ -3,11 +3,13 @@ import Select from 'react-select'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import { grabTaigaData, grabSprintStats, grabSprintNames, grabSingleSprintData } from '../actions/taigaActions';
+import { 
+  grabTaigaData, grabSprintStats, 
+  grabSprintNames, grabSingleSprintData 
+} from '../actions/taigaActions';
 import {
   selectSprintList,
   selectSprintProgressChartData,
-  selectUserTaskDistributionChartData,
   selectSprintBurndownChartData,
   selectSingleSprintData
 } from '../reducers';
@@ -179,7 +181,6 @@ Taiga.propTypes = {
 const mapStateToProps = state => ({
   storeData: state.taiga.taigaData,
   sprintProgress: selectSprintProgressChartData(state),
-  userTaskDistribution: selectUserTaskDistributionChartData(state),
   sprintList: selectSprintList(state),
   burnDownData: selectSprintBurndownChartData(state),
   singleSprintData: selectSingleSprintData(state),
