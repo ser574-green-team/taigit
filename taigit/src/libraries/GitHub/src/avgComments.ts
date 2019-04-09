@@ -1,80 +1,89 @@
-import axios from 'axios';
+import axios from "axios"
+
+
+// @ts-ignore
 /**
- * The following function returns the Average Number Of Comments
- * on all closed Pull Requests by considering direct comments on
- * pull requests and review comments.
- * @param owner  The name of the owner of the repository in String format.
- * @param repo   The name of the Github repository in String format.
- * @return       The average number of comments per closed pull requests.
+ * Gives a list of names of branches in repo.
+ *
+ * @param owner owner username
+ * @param repository repo name
  */
 export async function
-getNumComments(owner : string, repo: string, auth : string){
-    try{
-        var config = {
-            headers: {'Authorization': "Bearer " + auth}
-        }
-        let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
-            "/" + repo + "/pulls?state=closed", config);
-        let lengthOfClosedPullRequests = issue_comment.data.length
-        let issueNumberArray = Array()
-       // console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
-        let totalComments = 0
-        issue_comment.data.forEach(function(req : {url:string} ) {
-            let closedIssueNumberArray = req.url.split('/');
-            let issue_number: string = closedIssueNumberArray[closedIssueNumberArray.length - 1];
-            issueNumberArray.push(issue_number)
-
-        });
-        for(let issue_number of issueNumberArray){
-            let commentsPerIssue = await getNumberCommentsPerPullRequest(owner,repo,Number(issue_number),auth)
-            totalComments = totalComments + Number(commentsPerIssue)
-            //console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))
-        }
-
-       // console.log("Total Number Of Comments on PR: "+totalComments)
-        let averageNoOfComments = (totalComments/lengthOfClosedPullRequests).toFixed(2)
-       // console.log("Average Number Of Comments: " +averageNoOfComments)
-        return averageNoOfComments;
-
-    }
-    catch (error) {
-        console.log(error);
-        return -1;
-
-    }
-
-}
-
-/**
- * The following function returns the  Number Of Comments
- * on a particular closed Pull Requests.
- * @param owner  The name of the owner of the repository in String format.
- * @param repo   The name of the Github repository in String format.
- * @param number The issue id number of the closed pull request.
- * @return       The total number of comments for a closed pull request.
- */
-export async function
-getNumberCommentsPerPullRequest(owner : string, repo: string,  number : number, auth: string){
+getBranches(owner : string, repository : string, auth: string) {
     try {
+        let branches: Array<string> = [];
         var config = {
             headers: {'Authorization': "Bearer " + auth}
         }
-        let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
-            "/" + repo + "/pulls/" + number + "#/comments", config);
-        let comments = issue_comment.data["comments"]
-        let reviewComments = issue_comment.data["review_comments"]
-        //  console.log(comments)
-        //  console.log(reviewComments)
-        let totalNumberOfComments = Number(comments) + Number(reviewComments)
-        return Number(totalNumberOfComments)
-    }
-    catch (error) {
-        console.log(error)
-        return -1
+        let response = await axios.get("https://api.github.com/repos/" +
+            owner + "/" + repository + "/branches", config);
+        console.log(response.headers["link"])
+        if(response.headers.hasOwnProperty("link")){
+            let last = response.headers["link"].split(',');
+            let total_pages_str = last[1]
+            let total_pages = total_pages_str.substring(total_pages_str.lastIndexOf("page") + 5, total_pages_str.lastIndexOf(">"))
+            total_pages = Number(total_pages)
+            for (var j = 1; j <= total_pages; j++) {
+                let innerPull = await axios.get("https://api.github.com/repos/" +
+                    owner + "/" + repository + "/branches?page=" + j, config);
+                innerPull.data.forEach(function (branch: { name: string }) {
+                    branches.push(branch.name);
+                })
+                return branches;
 
-    }
+            }
 
+        }
+        else {
+            response.data.forEach(function (branch: { name: string }) {
+                branches.push(branch.name);
+            })
+            return branches;
+        }
+    } catch (e) {
+        console.log(e)
+    }
+    return []
 }
+
+/**
+ * gives the number of commits to a branch
+ *
+ * @param owner repo owner username
+ * @param repository repo name
+ * @param branch branch name
+ */
+export async function
+getNumBranchCommits(owner : string, repository: string, branch : string, auth : string)
+{
+    try {
+        let len = 0
+        var config = {
+            headers: {'Authorization': "Bearer " + auth}
+        }
+        let response = await axios.get("https://api.github.com/repos/" +
+            owner + "/" + repository + "/commits?sha=" + branch, config);
+        if(response.headers.hasOwnProperty("link")){
+            let last = response.headers["link"].split(',');
+            let total_pages_str = last[1]
+            let total_pages = total_pages_str.substring(total_pages_str.lastIndexOf("page") + 5, total_pages_str.lastIndexOf(">"))
+            total_pages = Number(total_pages)
+            for (var j = 1; j <= total_pages; j++) {
+                let innerPull = await axios.get("https://api.github.com/repos/" +
+                    owner + "/" + repository + "/commits?sha=" + branch + "&page=" + j, config);
+                len = len + innerPull.data.length
+            }
+            return len
+        }
+        else {
+            return response.data.length;
+        }
+    } catch(e) {
+        console.log(e);
+    }
+    return -1;
+}
+
 
 
 //getNumCommets("ser574-green-team", "taigit");

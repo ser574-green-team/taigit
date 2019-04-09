@@ -17,10 +17,25 @@ getMemberInfo(organization : string, auth : string){
         }
         let memberInfo = await axios.get("https://api.github.com/orgs/"+organization+"/members", config);
         console.log('memberInfo from call: ', memberInfo);
+        if(memberInfo.headers.hasOwnProperty("link")){
+            let last = memberInfo.headers["link"].split(',');
+            let total_pages_str = last[1]
+            let total_pages = total_pages_str.substring(total_pages_str.lastIndexOf("page") + 5, total_pages_str.lastIndexOf(">"))
+            total_pages = Number(total_pages)
+            for (var j = 1; j <= total_pages; j++) {
+                let innerpulls = await axios.get("https://api.github.com/orgs/"+organization+"/members?page="+j, config);
+                innerpulls.data.forEach(function (req: { login: string, avatar_url: string }) {
+                    arrayOfUser.push([req.login,req.avatar_url])
+                })
+            }
+            return(arrayOfUser)
+        }
+        else{
         memberInfo.data.forEach(function (req: { login: string, avatar_url: string }) {
             arrayOfUser.push([req.login,req.avatar_url])
         })
         return(arrayOfUser)
+        }
     }
     catch (error) {
         console.log(error)
