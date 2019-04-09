@@ -162,4 +162,13 @@ export const selectAvgCommentsPRData = (state) => {
   return state.avgCommentsOnPR;
 }
 
+export const selectRepoList = (state) => {
+  return state.userRepos.map(repo => {
+    return {
+      value: repo.owner,
+      label: repo.name
+    }
+  });
+}
+
 export default githubReducer
