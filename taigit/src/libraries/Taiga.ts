@@ -914,14 +914,8 @@ proj_spplan_res(projId : number) : Promise<Array<[number,number]>> {
 
     }
     v_avg=v_sum/n_s;
-    //let output : Array<number> = [v_min,v_avg, v_max];
     //estimate future sprint planning
-    // test case: //https://api.taiga.io/api/v1/projects/306316/stats
     let project = (await axios.get("https://api.taiga.io/api/v1/projects/" + projId.toString() + '/stats')).data;
-    // project.defined_points;//total pts in PB
-    // project.closed_points;//closed pts in PB
     let rest_points = project.defined_points-project.closed_points;
-    //three suggestion sprint planning, if the sprint planning is within the range it is reasonable.
-    //round the result if it is not integer
     return [[rest_points/v_min,v_min],[rest_points/v_avg,v_avg],[rest_points/v_max,v_max]];
 }
