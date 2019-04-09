@@ -1,5 +1,13 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER, GET_NUM_PULL_REQUESTS, ADD_CONTRIBUTOR_INFO, GET_NUM_BRANCH_COMMITS, GET_AUTH_KEY, GET_PULL_REQUESTS_CLOSED } from '../actions/githubActions';
+import { GET_BRANCH_LIST, 
+  GET_COMMITS_PER_USER, 
+  GET_NUM_PULL_REQUESTS, 
+  ADD_CONTRIBUTOR_INFO, 
+  GET_NUM_BRANCH_COMMITS, 
+  ADD_AUTH_KEY, 
+  GET_PULL_REQUESTS_CLOSED,
+  GET_AVG_COMMENTS_PR 
+} from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
@@ -8,7 +16,8 @@ const initialState = {
   contributors: [],
   numBranchCommits: [],
   authKey: '',
-  numPullRequestsClosed: 0
+  numPullRequestsClosed: 0,
+  avgCommentsOnPR : 0
 }
 /**
  * Github Reducer
@@ -50,16 +59,22 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
       }
-    case GET_AUTH_KEY:
+    case ADD_AUTH_KEY:
       console.log('payload is: ', action.payload);
       return {
           ...state,
           authKey: action.payload
       }
+    case GET_AVG_COMMENTS_PR:
+      console.log('payload for average comments on pr is: ', action.payload);
+      return {
+          ...state,
+          avgCommentsOnPR: action.payload
+      } 
     default:
       return {
-        ...state,
-        ...initialState
+        ...initialState,
+        ...state
       }
   }
 }
@@ -133,6 +148,10 @@ export const selectAuthKey = (state) => {
 
 export const selectNumPullRequestsClosedData = (state) => {
   return state.numPullRequestsClosed;
+}
+
+export const selectAvgCommentsPRData = (state) => {
+  return state.avgCommentsOnPR;
 }
 
 export default githubReducer

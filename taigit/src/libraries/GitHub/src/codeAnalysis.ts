@@ -62,12 +62,11 @@ getCodeAnalysis(owner: string, project:string, token: string, ownerGit : string,
    var jsonObj;
    try{
     const response = await axios.get('https://taigit-auth.herokuapp.com/codacy/'+owner+"/"+project +"/"+ token);
-    let jsonString : string = response.data.commit;
-    console.log("JSONstring:\n",jsonString); 
-    let jsonObj = JSON.parse(jsonString); 
+    let jsonObj= response.data;
+    console.log("JSON data:\n",jsonObj); 
     let fileCount : number = await getNumFiles(ownerGit, gitRepo, auth);
     jsonObj.fileCount = fileCount;
-    console.log(jsonObj);
+    console.log("JSONObj with fileCount\n:",jsonObj);
    }catch(error){
        console.log("Error1:\n", error);
    }

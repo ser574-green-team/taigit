@@ -7,10 +7,13 @@ import axios from "axios";
  * @return       The list consisting of usernames of All Contributers in the repo.
  */
 export  async function
-getContributerNames(owner : string, repo: string){
+getContributerNames(owner : string, repo: string, auth: string){
     try{
+        var config = {
+            headers: {'Authorization': "Bearer " + auth}
+        }
         let listOfContributers = await axios.get("https://api.github.com/repos/" + owner +
-            "/" + repo + "/contributors");
+            "/" + repo + "/contributors", config);
         let contriNames : Array<string>  = [];
         listOfContributers.data.forEach(function (username :{login: string}){
             contriNames.push(username.login)

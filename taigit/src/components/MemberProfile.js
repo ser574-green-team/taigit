@@ -4,11 +4,12 @@ import TeamMemberCard from './TeamMemberCard'
 import NumberDisplay from './NumberDisplay'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { Radar } from 'react-chartjs-2';
-import { saveToLocalStorage, getFromLocalStorage } from '../utils/utils';
+import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
+import { selectBasicContributorData } from '../reducers';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'member-layout';
-let originalLayouts = getFromLocalStorage(layoutname, 'layouts') || {};
+let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
 class MemberProfile extends Component {
   constructor(props) {
@@ -28,17 +29,17 @@ class MemberProfile extends Component {
   };
 
   onLayoutChange(layout, layouts) {
-    saveToLocalStorage(layoutname, 'layouts', layouts);
+    saveLayoutToLocalStorage(layoutname, 'layouts', layouts);
     this.setState({ layouts: layouts });
   }
 
   componentWillMount() {
-    originalLayouts = getFromLocalStorage(layoutname, 'layouts') || [];
+    originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
   render() {
-    let member = this.props.teamMembers.filter(member => member.githubId == this.props.match.params.memberId)[0];
+    let member = this.props.teamMembers.filter(member => member.login == this.props.match.params.memberId)[0];
     return(
       <div className="app-page">
         <h2>TeamMemberId: {this.props.match.params.memberId}</h2>
@@ -53,7 +54,7 @@ class MemberProfile extends Component {
         >          
           <div className='box' key="1" data-grid={{ w: 3, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
-              <TeamMemberCard taigaId={member.taigaId} githubId={member.githubId} name={member.name} pictureUrl={member.pictureUrl}/>
+              <TeamMemberCard taigaId={member.taigaId} githubId={member.login} name={member.login} pictureUrl={member.avatar_url}/>
             </div>
           </div>
           <div className='box' key="2" data-grid={{ w: 4, h: 7, x: 3, y: 0, minW: 0, minH: 0 }}>
@@ -83,7 +84,7 @@ class MemberProfile extends Component {
  */
 const mapStateToProps = state => {
   return {
-    teamMembers: state.team.teamMembers
+    teamMembers: selectBasicContributorData(state)
   }
 }
 

@@ -1,4 +1,13 @@
-import { getBranches, getNumCommitsFromUser, getNumPullRequests, contributorData, getNumBranchCommits, getAuthToken } from '../libraries/GitHub/GitHub';
+import {
+  getBranches,
+  getNumCommitsFromUser,
+  getNumPullRequests,
+  contributorData,
+  getNumBranchCommits,
+  getNumComments,
+  getAuthToken,
+  getMemberInfo} from '../libraries/GitHub/GitHub';
+import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
@@ -6,72 +15,94 @@ export const GET_COMMITS_PER_USER = 'GET_COMMITS_PER_USER';
 export const GET_NUM_PULL_REQUESTS = 'GET_NUM_PULL_REQUESTS';
 export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
-export const GET_AUTH_KEY = 'GET_AUTH_KEY';
+export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
- 
+export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
+
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
-export const getBranchList = (owner, repo) => dispatch => {
+export const getBranchList = (owner, repo, auth) => dispatch => {
   console.log('about to get branches list');
-  getBranches(owner, repo)
-    .then(branches => 
+  getBranches(owner, repo, auth)
+    .then(branches =>
       dispatch({type: GET_BRANCH_LIST, payload: branches})
     );
 }
 
-export const getCommitsPerUser = (infoForApiCall) => dispatch => {
+export const getCommitsPerUser = (owner, repo, author, auth) => dispatch => {
   console.log('about to get commits for one user');
-  getNumCommitsFromUser('trevorforrey', 'OttoDB', 'trevorforrey')
+  getNumCommitsFromUser(owner, repo, author, auth)
     .then(numberOfCommits =>
       dispatch({type: GET_COMMITS_PER_USER, payload: numberOfCommits})
     );
 }
 
-export const getPullRequests = (infoForApiCall) => dispatch => {
+export const getPullRequests = (owner, repo, auth) => dispatch => {
   console.log('about to get number of pull requests');
-  getNumPullRequests('ser574-green-team', 'taigit')
+  getNumPullRequests(owner, repo, auth)
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );
 }
 
+export const getMembersInfo = (organization, auth) => dispatch => {
+  getMemberInfo(organization, auth)
+    .then(memberInfo => {
+      console.log('Member Info Data: ', memberInfo);
+    });
+}
+
 // component for pull requests closed, to be implemented in the backend
 
-// export const getPullRequestsClosed = (infoForApiCall) => dispatch => {
+// export const getPullRequestsClosed = (owner, repo, auth) => dispatch => {
 //   console.log('about to get number of pull requests closed');
-//   getNumPullRequestsClosed('ser574-green-team', 'taigit')
+//   getNumPullRequestsClosed(owner, repo, auth)
 //     .then(numberOfPullRequestsClosed =>
 //       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequestsClosed})
 //     );
 // }
 
-export const getContributorData = (repo = 'banana', owner = 'trevorforrey') => dispatch => {
+export const getContributorData = (owner, repo, auth) => dispatch => {
   console.log('about to grab contributor data');
-  contributorData('ser574-green-team', 'taigit')
+  contributorData(owner, repo, auth)
     .then((contributorData) => {
-      const authorList = contributorData.map((userInfo) => {
-        let authorInfo = {};
-        authorInfo.avatar_url = userInfo.author.avatar_url;
-        authorInfo.login = userInfo.author.login;
-        authorInfo.id = userInfo.author.id;
-        authorInfo.url = userInfo.author.url;
-        authorInfo.totalCommits = userInfo.total;
-        return authorInfo;
-      });
-      dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList})
+      try {
+        const authorList = contributorData.map((userInfo) => {
+          let authorInfo = {};
+          authorInfo.avatar_url = userInfo.author.avatar_url;
+          authorInfo.login = userInfo.author.login;
+          authorInfo.id = userInfo.author.id;
+          authorInfo.url = userInfo.author.url;
+          authorInfo.totalCommits = userInfo.total;
+          return authorInfo;
+        });
+        dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList})
+      } catch (e) {
+        console.error(e);
+      }
     });
 }
 
-export const getBranchCommits = (owner, repo, branch) => dispatch => {
+export const getBranchCommits = (owner, repo, branch, auth) => dispatch => {
   console.log('about to grab number of branch commits');
-  getNumBranchCommits(owner, repo, branch)
+  getNumBranchCommits(owner, repo, branch, auth)
     .then(numBranchCommits =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
 }
 
-export const getAuthKey = (id, secret, storeKey) => dispatch => {
+export const getAuthKey = (auth_server, storeKey) => dispatch => {
   console.log('about to get auth key');
-  getAuthToken(id, secret, storeKey)
-      .then(authKey =>
-      dispatch({type: GET_AUTH_KEY, payload: authKey}))
+  getAuthToken(auth_server, storeKey)
+      .then((authKey) => {
+        saveToLocalStorage('auth-key', authKey);
+        dispatch({type: ADD_AUTH_KEY, payload: authKey})
+      });
+}
+
+export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
+  console.log('about to get Avg comments on the PR');
+  getNumComments(owner, repo, auth)
+    .then(avgNumberofComments =>
+      dispatch({type: GET_AVG_COMMENTS_PR, payload: avgNumberofComments})
+    );
 }
