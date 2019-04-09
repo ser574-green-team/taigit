@@ -7,7 +7,9 @@ import {
   getNumComments,
   getAuthToken,
   getMemberInfo,
-  getUserRepos} from '../libraries/GitHub/GitHub';
+  getUserRepos,
+  getUserInfo
+} from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
@@ -20,6 +22,7 @@ export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
 export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
+export const ADD_USER_INFO = 'ADD_USER_INFO';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -126,5 +129,13 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
   getNumComments(owner, repo, auth)
     .then(avgNumberofComments =>
       dispatch({type: GET_AVG_COMMENTS_PR, payload: avgNumberofComments})
+    );
+}
+
+export const addUserInfo = (auth) => dispatch => {
+  console.log('about to get user object');
+  getUserInfo(auth)
+    .then(userInfo => 
+      dispatch({type: ADD_USER_INFO, payload: userInfo})
     );
 }

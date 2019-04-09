@@ -7,7 +7,8 @@ import { GET_BRANCH_LIST,
   ADD_AUTH_KEY, 
   GET_PULL_REQUESTS_CLOSED,
   GET_AVG_COMMENTS_PR,
-  ADD_USER_REPOS
+  ADD_USER_REPOS,
+  ADD_USER_INFO
 } from '../actions/githubActions';
 
 const initialState = {
@@ -19,7 +20,8 @@ const initialState = {
   authKey: '',
   numPullRequestsClosed: 0,
   avgCommentsOnPR : 0,
-  userRepos: []
+  userRepos: [],
+  user: {}
 }
 /**
  * Github Reducer
@@ -78,6 +80,12 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
         userRepos: action.payload
+      }
+    case ADD_USER_INFO:
+      console.log('user info: ', action.payload);
+      return {
+        ...state,
+        user: action.payload
       }
     default:
       return {
@@ -169,6 +177,10 @@ export const selectRepoList = (state) => {
       label: repo.name
     }
   });
+}
+
+export const selectUserLogin = (state) => {
+  return state.user && state.user.login;
 }
 
 export default githubReducer

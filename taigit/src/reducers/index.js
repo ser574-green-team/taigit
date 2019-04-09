@@ -23,3 +23,4 @@ export const selectSingleSprintData = (state) => fromTaiga.selectSingleSprintDat
 export const selectAvgCommentsPRData  = (state) => fromGithub.selectAvgCommentsPRData (state.github);
 export const selectBasicContributorData = (state) => fromTeam.selectBasicContributorData(state.team);
 export const selectRepoList = (state) => fromGithub.selectRepoList(state.github);
+export const selectUserLogin = (state) => fromGithub.selectUserLogin(state.github);

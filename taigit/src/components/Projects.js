@@ -7,13 +7,14 @@ import Select from 'react-select';
 import colors from "../styles/colors";
 import { connect } from "react-redux";
 import { grabSprintStats } from "../actions/taigaActions";
-import { getUsersRepos } from "../actions/githubActions";
+import { getUsersRepos, addUserInfo } from "../actions/githubActions";
 import { saveToLocalStorage, getFromLocalStorage } from "../utils/utils";
 import { selectRepoList } from "../reducers";
 import {
   faGithub
 } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { selectUserLogin } from '../reducers';
 
 const redirect = authRedirect(keys.GH_CLIENT_ID);
 let storedProjects = getFromLocalStorage('project-list') || {};
@@ -35,9 +36,10 @@ class Projects extends Component {
   }
 
   componentWillMount() {
-    if (this.props.repoList && this.props.repoList.length == 0) {
+    if (this.props.repoList || this.props.repoList.length == 0) {
       this.props.getUsersRepos(this.state.githubID, auth);
     }
+    this.props.addUserInfo(auth);
   }
 
   onSubmit = (e) => {
@@ -160,7 +162,8 @@ class Projects extends Component {
  * to component props property (left)
  */
 const mapStateToProps = state => ({
-  repoList: selectRepoList(state)
+  repoList: selectRepoList(state),
+  userLogin: selectUserLogin(state)
 });
 
-export default connect(mapStateToProps, { grabSprintStats, getUsersRepos })(Projects)
+export default connect(mapStateToProps, { grabSprintStats, getUsersRepos, addUserInfo })(Projects)
