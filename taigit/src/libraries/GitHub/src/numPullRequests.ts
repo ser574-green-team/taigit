@@ -64,7 +64,6 @@ getNumOpenPullRequests(owner: string, repo: string, auth: string){
         }
         return numOfPR
         //console.log(numOfPR)
-        return numOfPR
     } catch (error) {
         console.log(error);
     }
