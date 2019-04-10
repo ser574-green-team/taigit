@@ -24,3 +24,5 @@ export const selectAvgCommentsPRData  = (state) => fromGithub.selectAvgCommentsP
 export const selectBasicContributorData = (state) => fromTeam.selectBasicContributorData(state.team);
 export const selectRepoList = (state) => fromGithub.selectRepoList(state.github);
 export const selectUserLogin = (state) => fromGithub.selectUserLogin(state.github);
+export const selectTaigaUserID = (state) => fromTaiga.selectTaigaUserID(state.taiga);
+export const selectProjectList = (state) => fromTaiga.selectProjectList(state.taiga);

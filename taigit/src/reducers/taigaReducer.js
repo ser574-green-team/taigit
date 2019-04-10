@@ -1,7 +1,8 @@
 import { 
   GRAB_TAIGA_DATA, GET_SPRINT_STATS, 
   GET_TASK_STATS, GET_SPRINT_NAMES, 
-  GET_SINGLE_SPRINT_STATS 
+  GET_SINGLE_SPRINT_STATS,
+  TAIGA_LOGIN, GET_USER_PROJECTS
 }from '../actions/taigaActions';
 import colors from '../styles/colors';
 
@@ -11,6 +12,8 @@ const initialState = {
   sprintStats: {},
   taigaTaskStats: [],
   singleSprintStats: [],
+  userId: {},
+  projectList: []
 }
 
 /**
@@ -56,6 +59,18 @@ export default function taigaReducer(state = initialState, action) {
       return {
         ...state,
         sprintList: action.payload
+      }
+    case TAIGA_LOGIN:
+      console.log("Getting Taiga login info", action.payload);
+      return {
+        ...state,
+        userId: action.payload
+      }
+    case GET_USER_PROJECTS:
+      console.log("Getting user projects:", action.payload);
+      return {
+        ...state,
+        projectList: action.payload
       }
     default:
       return state;
@@ -253,5 +268,18 @@ export const selectSingleSprintData = (state) => {
       data: readyForTestTaskCount
     }]
   }
+}
 
+export const selectTaigaUserID = (state) => {
+  console.log("user id is ",state.userId.id);
+  return state.userId.id;
+}
+
+export const selectProjectList = (state) => {
+  return state.projectList.map(project => {
+    return {
+      value: project,
+      label: project
+    }
+  });
 }
