@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
 import {Doughnut, Line} from 'react-chartjs-2';
-import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
+import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage} from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 import { Bar } from 'react-chartjs-2';
@@ -19,7 +19,9 @@ class Overview extends Component {
     super(props);
 
     this.state = {
-      layouts: JSON.parse(JSON.stringify(originalLayouts))
+      layouts: JSON.parse(JSON.stringify(originalLayouts)),
+      ghRepo: getFromLocalStorage('github-repo'),
+      taigaSlug: getFromLocalStorage('taiga-slug')
     };
   }
 
@@ -45,7 +47,9 @@ class Overview extends Component {
   render() {
     return (
       <div className="app-page">
-        <h2>Team Project Name</h2>
+        <h2>Overview: <p style={{color: colors.orange.base, display: 'inline'}}>
+            {this.state.ghRepo}</p> | <p style={{color:colors.green.base, display: 'inline'}}>
+            {this.state.taigaSlug}</p></h2>
         <ResponsiveReactGridLayout
           className="layout"
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}

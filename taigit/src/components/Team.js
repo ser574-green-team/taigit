@@ -21,7 +21,7 @@ class Team extends Component {
   render() {
     return(
       <div className="app-page">
-        <h2>TeamName</h2>
+        <h2>Team</h2>
           <div className="team-members">
           {this.props.teamMembers.map((memberObj) => {
             return <div className="team-member-page-card"> 

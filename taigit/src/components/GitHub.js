@@ -35,7 +35,9 @@ class GitHub extends Component {
     super(props);
 
     this.state = {
-      layouts: JSON.parse(JSON.stringify(originalLayouts))
+      layouts: JSON.parse(JSON.stringify(originalLayouts)),
+      githubOwner: getFromLocalStorage('github-owner') || '',
+      githubRepo: getFromLocalStorage('github-repo') || ''
     };
   }
   
@@ -55,17 +57,16 @@ class GitHub extends Component {
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
     let auth = getFromLocalStorage('auth-key');
-    console.log('auth key is', auth);
-    this.props.getUsersRepos('trevorforrey', auth);
-    this.props.getBranchList('ser574-green-team', 'taigit', auth);
-    this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey', auth);
-    this.props.getPullRequests('ser574-green-team', 'taigit', auth);
-    this.props.getContributorData('ser574-green-team', 'taigit', auth);
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'master', auth);
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth);
-    this.props.getMembersInfo('ser574-green-team', auth);
-    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
-    this.props.getAvgCommentsPR('ser574-green-team', 'taigit', auth);
+    this.props.getUsersRepos(this.state.githubOwner, auth);
+    this.props.getBranchList(this.state.githubOwner, this.state.githubRepo, auth);
+    this.props.getCommitsPerUser(this.state.githubOwner, this.state.githubRepo, 'trevorforrey', auth);
+    this.props.getPullRequests(this.state.githubOwner, this.state.githubRepo, auth);
+    this.props.getContributorData(this.state.githubOwner, this.state.githubRepo, auth);
+    this.props.getBranchCommits(this.state.githubOwner, this.state.githubRepo, 'master', auth);
+    this.props.getBranchCommits(this.state.githubOwner, this.state.githubRepo, 'dev', auth);
+    this.props.getMembersInfo(this.state.githubOwner, auth);
+    //this.props.getPullRequestsClosed(this.state.githubOwner, this.state.githubRepo, auth);
+    this.props.getAvgCommentsPR(this.state.githubOwner, this.state.githubRepo, auth);
 
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
@@ -74,7 +75,7 @@ class GitHub extends Component {
   render() {
     return(
       <div className="app-page">
-        <h2>GitHub</h2>
+        <h2>GitHub Repository: <p style={{display: 'inline', color: colors.blue.base}}>{this.state.githubRepo}</p></h2>
         <ResponsiveReactGridLayout
           className="layout"
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}

@@ -13,7 +13,7 @@ import {
   selectSprintBurndownChartData,
   selectSingleSprintData
 } from '../reducers';
-import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
+import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage} from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 
@@ -26,7 +26,9 @@ class Taiga extends Component {
     super(props);
 
     this.state = {
-      layouts: JSON.parse(JSON.stringify(originalLayouts))
+      layouts: JSON.parse(JSON.stringify(originalLayouts)),
+      taigaProjectID: getFromLocalStorage('taiga-project-id'),
+      taigaSlug: getFromLocalStorage('taiga-slug')
     };
   }
 
@@ -44,10 +46,10 @@ class Taiga extends Component {
   }
 
   componentWillMount() {
-    this.props.grabTaigaData('sanaydevi-ser-574');
-    this.props.grabSprintNames(306316);
-    this.props.grabSprintStats();
-    this.props.grabSingleSprintData(220752, 306316,'Sprint 2 - Taiga');
+    this.props.grabTaigaData(this.state.taigaSlug);
+    this.props.grabSprintNames(this.state.taigaProjectID);
+    this.props.grabSprintStats(220659);
+    this.props.grabSingleSprintData(220752, this.state.taigaProjectID,'Sprint 2 - Taiga');
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -55,7 +57,7 @@ class Taiga extends Component {
   render() {
     return(
       <div className="app-page">
-        <h2>Taiga</h2>
+        <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.state.taigaSlug}</p></h2>
         <div className="selector">
           <Select options={this.props.sprintList}
           theme={(theme) => ({

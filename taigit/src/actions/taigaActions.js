@@ -32,8 +32,8 @@ export const setTaigaProjectID = (slugName) => dispatch => {
         });
 }
 
-export const grabSprintStats = (infoForApiCall) => dispatch => {
-  sprint_stats(220659)
+export const grabSprintStats = (sprintID) => dispatch => {
+  sprint_stats(sprintID)
     .then((sprintStats) => {
       console.log(sprintStats);
       dispatch({type: GET_SPRINT_STATS, payload: sprintStats});
