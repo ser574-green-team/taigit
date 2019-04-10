@@ -21,13 +21,14 @@ getNumClosedPullRequest(owner: string, repo: string, auth: string){
                     "/" + repo + "/pulls?state=closed&direction=asc&page=" + j, config);
                 numOfPR += innerpulls.data.length
             }
+        return numOfPR
         }
         else{
             const innerpulls = await axios.get("https://api.github.com/repos/" + owner +
                 "/" + repo + "/pulls?state=closed&direction=asc",config);
             numOfPR += innerpulls.data.length
         }
-        console.log(numOfPR)
+        //console.log(numOfPR)
         return numOfPR
     } catch (error) {
         console.log(error);
@@ -54,13 +55,15 @@ getNumOpenPullRequests(owner: string, repo: string, auth: string){
                     "/" + repo + "/pulls?state=open&direction=asc&page=" + j, config);
                 numOfPR += innerpulls.data.length
             }
+        return numOfPR
         }
         else{
             const innerpulls = await axios.get("https://api.github.com/repos/" + owner +
                 "/" + repo + "/pulls?state=open&direction=asc",config);
             numOfPR += innerpulls.data.length
         }
-        console.log(numOfPR)
+        return numOfPR
+        //console.log(numOfPR)
         return numOfPR
     } catch (error) {
         console.log(error);
