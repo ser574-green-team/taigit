@@ -7,7 +7,8 @@ import {
   getContributorData,
   getBranchCommits,
   getAvgCommentsPR,
-  getMembersInfo } from '../actions/githubActions';
+  getMembersInfo,
+  getBuildsList } from '../actions/githubActions';
 import {
   selectBranchList,
   selectNumCommitsChartData,
@@ -15,7 +16,8 @@ import {
   selectCommitsPerContributorChartData,
   selectNumBranchCommits,
   selectNumPullRequestsClosedData,
-  selectAvgCommentsPRData } from '../reducers';
+  selectAvgCommentsPRData,
+  selectBuildsList } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
@@ -64,7 +66,7 @@ class GitHub extends Component {
     this.props.getMembersInfo('ser574-green-team', auth);
     //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
     this.props.getAvgCommentsPR('ser574-green-team', 'taigit', auth);
-
+    this.props.getBuildsList('ser574-green-team', 'taigit', auth);
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -115,6 +117,12 @@ class GitHub extends Component {
               />
             </div>
           </div>
+          <div className = 'box' key="7" data-grid={{w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0}}>
+            <div className="chart">
+              <span className ="chart-title">Builds Used</span>
+              <ScrollableList items={this.props.buildsList}/>
+            </div>
+          </div>
         </ResponsiveReactGridLayout>
       </div>
     );
@@ -144,7 +152,8 @@ const mapStateToProps = state => ({
   numPullRequests: selectNumPullRequestsData(state),
   commitPerBranchData: selectNumBranchCommits(state),
   numPullRequestsClosed: selectNumPullRequestsClosedData(state),
-  avgCommentsOnPR: selectAvgCommentsPRData(state)
+  avgCommentsOnPR: selectAvgCommentsPRData(state),
+  buildsList: selectBuildsList(state)
 });
 
 /**
@@ -152,4 +161,5 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, {
-  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits, getAvgCommentsPR , getMembersInfo })(GitHub)
+  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits, getAvgCommentsPR , getMembersInfo, getBuildsList})(GitHub)
+
