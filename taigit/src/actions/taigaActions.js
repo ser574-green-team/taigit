@@ -14,14 +14,14 @@ export const GET_SPRINT_NAMES = 'GET_SPRINT_NAMES'
 export const GET_TASK_STATS = 'GET_TASK_STATS'
 export const TAIGA_LOGIN = 'TAIGA_LOGIN'
 export const GET_USER_PROJECTS = 'GET_USER_PROJECTS'
+export const LOADING_TAIGA_DATA = 'LOADING_TAIGA_DATA';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
-export const grabTaigaData = (slugName) => dispatch => {
-  project_info(slugName) // give the slug name
-	    .then((taigaProjectInfo) => {
-        console.log(taigaProjectInfo);
-        dispatch({type: GRAB_TAIGA_DATA, payload: taigaProjectInfo});
-      });
+
+export const grabTaigaData = (slugName) => async(dispatch) => {
+  const taigaProjectInfo = await project_info(slugName);
+  taigaProjectInfo.slugName = slugName;
+  dispatch({type: GRAB_TAIGA_DATA, payload: taigaProjectInfo});
 }
 
 export const setTaigaProjectID = (slugName) => dispatch => {
@@ -86,4 +86,17 @@ export const initializeUserData = (username, password) => dispatch => {
         .then((projectList) => {
             dispatch({type: GET_USER_PROJECTS, payload: projectList});
         });
+}
+
+export const loadAllTaigaProjectData = (slugName) => async (dispatch) => {
+  dispatch({type: LOADING_TAIGA_DATA, payload: true});
+
+  const taigaProject = await project_info(slugName);
+  taigaProject.slugName = slugName;
+  dispatch({type: GRAB_TAIGA_DATA, payload: taigaProject});
+
+  const sprintNames = await sprint_list(taigaProject.id);
+  dispatch({type: GET_SPRINT_NAMES, payload: sprintNames});
+
+  dispatch({type: LOADING_TAIGA_DATA, payload: false});
 }

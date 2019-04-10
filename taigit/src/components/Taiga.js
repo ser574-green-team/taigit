@@ -4,14 +4,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
 import { 
-  grabTaigaData, grabSprintStats, 
-  grabSprintNames, grabSingleSprintData 
+  grabSprintStats, 
+  grabSingleSprintData 
 } from '../actions/taigaActions';
 import {
   selectSprintList,
   selectSprintProgressChartData,
   selectSprintBurndownChartData,
-  selectSingleSprintData
+  selectSingleSprintData,
+  selectTaigaProjectData
 } from '../reducers';
 import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage} from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -46,10 +47,8 @@ class Taiga extends Component {
   }
 
   componentWillMount() {
-    this.props.grabTaigaData(this.state.taigaSlug);
-    this.props.grabSprintNames(this.state.taigaProjectID);
     this.props.grabSprintStats(220659);
-    this.props.grabSingleSprintData(220752, this.state.taigaProjectID,'Sprint 2 - Taiga');
+    this.props.grabSingleSprintData(220752, this.props.projectData.id,'Sprint 2 - Taiga');
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -57,7 +56,7 @@ class Taiga extends Component {
   render() {
     return(
       <div className="app-page">
-        <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.state.taigaSlug}</p></h2>
+        <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.props.projectData.name}</p></h2>
         <div className="selector">
           <Select options={this.props.sprintList}
           theme={(theme) => ({
@@ -96,7 +95,6 @@ class Taiga extends Component {
               <Bar data={this.props.singleSprintData} options={barGraphOptions}/>
             </div>
           </div>
-          <h4>{this.props.storeData}</h4>
         </ResponsiveReactGridLayout>
       </div>
     );
@@ -166,22 +164,13 @@ const burndownOptions = {
       }
     }
 
-
-/**
- * Declaring the types for all props that Taiga component uses
- */
-Taiga.propTypes = {
-  grabTaigaData: PropTypes.func.isRequired,
-  data: PropTypes.string
-}
-
 /**
  * mapStateToProps
  * maps state in redux store (right)
  * to component props property (left)
  */
 const mapStateToProps = state => ({
-  storeData: state.taiga.taigaData,
+  projectData: selectTaigaProjectData(state),
   sprintProgress: selectSprintProgressChartData(state),
   sprintList: selectSprintList(state),
   burnDownData: selectSprintBurndownChartData(state),
@@ -192,5 +181,5 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabSprintNames, grabSingleSprintData })(Taiga)
+export default connect(mapStateToProps, { grabSprintStats, grabSingleSprintData })(Taiga)
 

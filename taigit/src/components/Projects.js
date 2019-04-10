@@ -11,7 +11,8 @@ import {
     grabTaigaUserId,
     grabUserProjects,
     initializeUserData,
-    setTaigaProjectID
+    setTaigaProjectID,
+    loadAllTaigaProjectData,
 } from "../actions/taigaActions";
 import { getUsersRepos, addUserInfo } from "../actions/githubActions";
 import { saveToLocalStorage, getFromLocalStorage } from "../utils/utils";
@@ -51,15 +52,21 @@ class Projects extends Component {
   }
 
   componentWillMount() {
-    if (this.props.repoList || this.props.repoList.length == 0) {
+    // Only reload data if none exists
+    if (typeof this.props.repoList === 'undefined' || this.props.repoList.length == 0) {
       this.props.getUsersRepos(this.props.userLogin, auth);
     }
-    this.props.grabUserProjects(getFromLocalStorage('taiga-user-id'));
+    if (typeof this.props.projectList === 'undefined' || this.props.projectList.length == 0) {
+      this.props.grabUserProjects(getFromLocalStorage('taiga-user-id'));
+    }
   }
 
   onProjectAnalyze = (event) => {
       console.log('analyzing project!');
       event.preventDefault();
+
+      // Load all Taiga Data
+      this.props.loadAllTaigaProjectData(this.state.taigaProject.value);
 
       //save project set to be displayed in project panel
       //redirect to overview page
@@ -86,8 +93,6 @@ class Projects extends Component {
   }
   onTaigaSelectChange = (taigaProject) => {
     this.setState({ taigaProject });
-    saveToLocalStorage('taiga-slug', taigaProject.value);
-    this.props.setTaigaProjectID(taigaProject.value);
   }
 
   // Form change listeners
@@ -226,5 +231,6 @@ export default connect(mapStateToProps, {
     grabTaigaUserId,
     grabUserProjects,
     initializeUserData,
-    setTaigaProjectID
+    setTaigaProjectID,
+    loadAllTaigaProjectData
 })(Projects)
