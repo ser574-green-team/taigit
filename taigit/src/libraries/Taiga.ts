@@ -900,12 +900,12 @@ id_to_roles(projID : number) : Promise <{ [key: string] : string }> {
  * @returns dictionary pairs
  */
 export async function
-id_to_points(projID : number) : Promise <Object[]> {
-    let points : Object[] = [];
+id_to_points(projID : number) : Promise <{ [key: string] : number }> {
+    let points : { [key: string] : number } = {};
     let points_data = (await axios.get(`https://api.taiga.io/api/v1/projects/${projID}`)).data.points;
     points_data.forEach(function  (r : {id : number, value: number}){
         //let value : number = (r.value == null) ? -1 : r.value; // if the null case should be 0, uncomment and replace r.value below with value
-        points.push({'point_id': r.id, 'point_num': r.value});
+        points[r.id.toString()]= r.value;
     });
     return points;
 }
