@@ -7,7 +7,10 @@ import { GET_BRANCH_LIST,
   ADD_AUTH_KEY, 
   GET_PULL_REQUESTS_CLOSED,
   GET_AVG_COMMENTS_PR,
-  GET_BUILDS_LIST
+  GET_BUILDS_LIST,
+  GET_CYCLOMATIC_COMPLEXITY,
+  GET_GRADE,
+  GET_NUM_FILES
 } from '../actions/githubActions';
 
 const initialState = {
@@ -19,7 +22,10 @@ const initialState = {
   authKey: '',
   numPullRequestsClosed: 0,
   avgCommentsOnPR : 0,
-  buildsList: []
+  buildsList: [],
+  cyclomaticComplexity: 0,
+  grade: "?",
+  numFiles: 0
 }
 /**
  * Github Reducer
@@ -78,6 +84,24 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
         buildsList: action.payload
+      }
+    case GET_CYCLOMATIC_COMPLEXITY:
+      console.log('payload for cyclomatic complexity is: ', action.payload);
+      return {
+        ...state,
+        cyclomaticComplexity: action.payload
+      }
+    case GET_GRADE:
+      console.log('payload for grade is: ', action.payload);
+      return {
+        ...state,
+        grade: action.payload
+      }
+    case GET_NUM_FILES:
+      console.log('payload for number of files is: ', action.payload)
+      return {
+        ...state,
+        numFiles: action.payload
       }
     default:
       return {
@@ -164,6 +188,18 @@ export const selectAvgCommentsPRData = (state) => {
 
 export const selectBuildsList = (state) => {
   return state.buildsList;
+}
+
+export const selectGrade = (state) => {
+  return state.grade;
+}
+
+export const selectNumFiles = (state) => {
+  return state.numFiles;
+}
+
+export const selectCyclomaticComplexity = (state) => {
+  return state.cyclomaticComplexity;
 }
 
 export default githubReducer

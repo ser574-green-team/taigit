@@ -4,10 +4,8 @@ import {
   getNumPullRequests,
   contributorData,
   getNumBranchCommits,
-  getNumComments,
   getAuthToken,
-  getMemberInfo,
-  getBuilds } from '../libraries/GitHub/GitHub';
+  getCodeAnalysis } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
@@ -18,8 +16,9 @@ export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
-export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
-export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
+export const GET_GRADE = 'GET_GRADE';
+export const GET_CYCLOMATIC_COMPLEXITY = 'GET_CYCLOMATIC_COMPLEXITY';
+export const GET_NUM_FILES = 'GET_NUM_FILES';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -44,13 +43,6 @@ export const getPullRequests = (owner, repo, auth) => dispatch => {
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );
-}
-
-export const getMembersInfo = (organization, auth) => dispatch => {
-  getMemberInfo(organization, auth)
-    .then(memberInfo => {
-      console.log('Member Info Data: ', memberInfo);
-    });
 }
 
 // component for pull requests closed, to be implemented in the backend
@@ -101,18 +93,14 @@ export const getAuthKey = (auth_server, storeKey) => dispatch => {
       });
 }
 
-export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
-  console.log('about to get Avg comments on the PR');
-  getNumComments(owner, repo, auth)
-    .then(avgNumberofComments =>
-      dispatch({type: GET_AVG_COMMENTS_PR, payload: avgNumberofComments})
-    );
-}
-
-export const getBuildsList = (owner, repo, auth) => dispatch => {
-  console.log('about to perform acquisition of build candidates');
-  getBuilds(owner, repo, auth)
-    .then(buildsList => 
-      dispatch({type: GET_BUILDS_LIST, payload: buildsList})
-    );
-}
+export const getAnalysis = (codacyProjectOwner, codacyProjectName, codacyToken, repoOwner, 
+  repoName, githubToken) => dispatch => {
+    console.log('boutta get that code analysis');
+    getCodeAnalysis(codacyProjectOwner, codacyProjectName, codacyToken, repoOwner, repoName, 
+      githubToken)
+      .then((codeAnalysis) => {
+        dispatch({type: GET_GRADE, payload: codeAnalysis.commit.commit.grade});
+        dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: codeAnalysis.commit.commit.complexity});
+        dispatch({type: GET_NUM_FILES, payload: codeAnalysis.fileCount})
+      });
+  }

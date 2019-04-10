@@ -8,7 +8,8 @@ import {
   getBranchCommits,
   getAvgCommentsPR,
   getMembersInfo,
-  getBuildsList } from '../actions/githubActions';
+  getBuildsList,
+  getAnalysis } from '../actions/githubActions';
 import {
   selectBranchList,
   selectNumCommitsChartData,
@@ -17,7 +18,10 @@ import {
   selectNumBranchCommits,
   selectNumPullRequestsClosedData,
   selectAvgCommentsPRData,
-  selectBuildsList } from '../reducers';
+  selectBuildsList,
+  selectNumFiles,
+  selectCyclomaticComplexity,
+  selectGrade } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
