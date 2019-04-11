@@ -96,7 +96,16 @@ class GitHub extends Component {
           <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
-          <div className="box" key="6" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
+           <div className='box' key="6" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
+            <NumberDisplay number= {200} statistic="Total files"/>
+          </div>
+          <div className='box' key="7" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
+            <NumberDisplay number= {10} statistic="Cyclomatic Complexity"/>
+          </div>
+          <div className='box' key="8" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
+            <NumberDisplay number= {"A"} statistic="Overall Grade of the Project"/>
+          </div>
+          <div className="box" key="9" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className = "chart-title">Commits Per Branch</span>
               <HorizBarChart
@@ -105,49 +114,13 @@ class GitHub extends Component {
               />
             </div>
           </div>
-          <div className='box' key="7" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <span className="chart-title">Code Quality Metrics</span>
-            <Bar
-               data={codeComplexityData}
-               options={{maintainAspectRatio: true, responsive: true}}
-             />
-            </div>
-          </div>
+        
         </ResponsiveReactGridLayout>
       </div>
     );
   }
 }
 
-let codeComplexityData = {
-  labels: ["Code Complexity of a Project"],
-  datasets: [{
-    fill: false,
-    label: 'Total Complexity',
-    data: [200],
-    lineWidth: 2,
-    backgroundColor: [colors.blue.base],
-    borderWidth: 2
-  },
-  {
-    fill: false,
-    label: 'Number of Files',
-    data: [20],
-    lineWidth: 2,
-    backgroundColor: [colors.red.base],
-    borderWidth: 2
-  },
-  {
-    fill: false,
-    label: 'Average Complexity',
-    data: [10],
-    lineWidth: 2,
-    backgroundColor: [colors.yellow.base],
-    borderWidth: 2
-  }
-  ]
-}
 
 
 const horizontalChartOptions = {
