@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
 import {
-  getBranchList,
-  getCommitsPerUser,
-  getPullRequests,
-  getContributorData,
-  getBranchCommits,
-  getAvgCommentsPR,
-  getMembersInfo,
-  getUsersRepos } from '../actions/githubActions';
+  loadAllGitHubProjectData
+} from '../actions/githubActions';
 import {
   selectBranchList,
   selectNumCommitsChartData,
@@ -56,18 +50,11 @@ class GitHub extends Component {
 
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
-    let auth = getFromLocalStorage('auth-key');
-    this.props.getUsersRepos(this.state.githubOwner, auth);
-    this.props.getBranchList(this.state.githubOwner, this.state.githubRepo, auth);
-    this.props.getCommitsPerUser(this.state.githubOwner, this.state.githubRepo, 'trevorforrey', auth);
-    this.props.getPullRequests(this.state.githubOwner, this.state.githubRepo, auth);
-    this.props.getContributorData(this.state.githubOwner, this.state.githubRepo, auth);
-    this.props.getBranchCommits(this.state.githubOwner, this.state.githubRepo, 'master', auth);
-    this.props.getBranchCommits(this.state.githubOwner, this.state.githubRepo, 'dev', auth);
-    this.props.getMembersInfo(this.state.githubOwner, auth);
-    //this.props.getPullRequestsClosed(this.state.githubOwner, this.state.githubRepo, auth);
-    this.props.getAvgCommentsPR(this.state.githubOwner, this.state.githubRepo, auth);
-
+    // Handle if user refreshes on GitHub page
+    if (this.props.branches.length == 0) {
+      const auth = getFromLocalStorage('auth-key');
+      this.props.loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
+    }
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -124,18 +111,6 @@ class GitHub extends Component {
   }
 }
 
-const horizontalChartOptions = {
-  responsive: true,
-  maintainAspectRatio: true,
-  scales: {
-      yAxes: [{
-          ticks: {
-              beginAtZero:true
-          }
-      }]
-  }
-}
-
 /**
  * mapStateToProps
  * maps state in redux store (right)
@@ -154,13 +129,4 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, {
-  getBranchList,
-  getCommitsPerUser,
-  getPullRequests,
-  getContributorData,
-  getBranchCommits,
-  getAvgCommentsPR,
-  getMembersInfo,
-  getUsersRepos
-})(GitHub)
+export default connect(mapStateToProps, { loadAllGitHubProjectData })(GitHub)

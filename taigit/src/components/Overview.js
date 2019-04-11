@@ -7,7 +7,9 @@ import colors from '../styles/colors';
 import { Bar } from 'react-chartjs-2';
 import { selectUserTaskDistributionChartData } from '../reducers';
 import { connect } from 'react-redux';
-import { grabTaskStats } from '../actions/taigaActions';
+import { loadAllTaigaProjectData } from '../actions/taigaActions';
+import { loadAllGitHubProjectData } from '../actions/githubActions';
+import { selectTaigaProjectData } from '../reducers';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
@@ -20,8 +22,9 @@ class Overview extends Component {
 
     this.state = {
       layouts: JSON.parse(JSON.stringify(originalLayouts)),
-      ghRepo: getFromLocalStorage('github-repo'),
-      taigaSlug: getFromLocalStorage('taiga-slug')
+      taigaSlug: getFromLocalStorage('taiga-slug') || '',
+      githubOwner: getFromLocalStorage('github-owner') || '',
+      githubRepo: getFromLocalStorage('github-repo') || ''
     };
   }
 
@@ -39,7 +42,12 @@ class Overview extends Component {
   }
 
   componentWillMount() {
-    this.props.grabTaskStats(306316);
+    // Handle if user refreshes on overview page
+    if (Object.keys(this.props.taigaProjectData).length == 0) {
+      const auth = getFromLocalStorage('auth-key');
+      loadAllTaigaProjectData(this.state.taigaSlug);
+      loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
+    }
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -47,8 +55,8 @@ class Overview extends Component {
   render() {
     return (
       <div className="app-page">
-        <h2>Overview: <p style={{color: colors.orange.base, display: 'inline'}}>
-            {this.state.ghRepo}</p> | <p style={{color:colors.green.base, display: 'inline'}}>
+        <h2>Overview: <p style={{color: colors.blue.base, display: 'inline'}}>
+            {this.state.githubRepo}</p> | <p style={{color:colors.red.base, display: 'inline'}}>
             {this.state.taigaSlug}</p></h2>
         <ResponsiveReactGridLayout
           className="layout"
@@ -142,5 +150,9 @@ const barGraphOptions = {
 }
 const mapStateToProps = state => ({
   taigaTaskDistribution: selectUserTaskDistributionChartData(state),
+  taigaProjectData: selectTaigaProjectData(state)
 });
-export default connect(mapStateToProps, { grabTaskStats })(Overview)
+export default connect(mapStateToProps, { 
+  loadAllGitHubProjectData,
+  loadAllTaigaProjectData
+})(Overview)

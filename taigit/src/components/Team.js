@@ -10,11 +10,19 @@ import {
 import { selectBasicContributorData } from '../reducers';
 
 class Team extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      githubOwner: getFromLocalStorage('github-owner') || '',
+      githubRepo: getFromLocalStorage('github-repo') || ''
+    };
+  }
+
   componentWillMount() {
-    let auth = getFromLocalStorage('auth-key');
-    console.log('auth key is', auth);
     if (this.props.teamMembers.length == 0) {
-      this.props.getContributorData('ser574-green-team', 'taigit', auth);
+      let auth = getFromLocalStorage('auth-key');
+      this.props.getContributorData(this.state.githubOwner, this.state.githubRepo, auth);
     }
   }
 

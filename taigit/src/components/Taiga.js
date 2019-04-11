@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
 import { 
   grabSprintStats, 
-  grabSingleSprintData 
+  grabSingleSprintData,
+  loadAllTaigaProjectData 
 } from '../actions/taigaActions';
 import {
   selectSprintList,
@@ -47,8 +48,10 @@ class Taiga extends Component {
   }
 
   componentWillMount() {
-    this.props.grabSprintStats(220659);
-    this.props.grabSingleSprintData(220752, this.props.projectData.id,'Sprint 2 - Taiga');
+    // Handle if user refreshes on taiga page
+    if (Object.keys(this.props.projectData).length == 0) {
+      this.props.loadAllTaigaProjectData(this.state.taigaSlug);
+    }
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -181,5 +184,9 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { grabSprintStats, grabSingleSprintData })(Taiga)
+export default connect(mapStateToProps, { 
+  grabSprintStats, 
+  grabSingleSprintData, 
+  loadAllTaigaProjectData 
+})(Taiga)
 

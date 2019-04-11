@@ -10,6 +10,7 @@ import {
 import colors from '../styles/colors';
 
 const initialState = {
+  taigaProjectData: {},
   sprintList: [],
   sprintStats: {},
   taigaTaskStats: [],

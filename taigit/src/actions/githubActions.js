@@ -23,6 +23,7 @@ export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
 export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
+export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -138,4 +139,46 @@ export const addUserInfo = (auth) => dispatch => {
     .then(userInfo => 
       dispatch({type: ADD_USER_INFO, payload: userInfo})
     );
+}
+
+export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) => {
+  dispatch({type: LOADING_GITHUB_DATA, payload: true});
+
+  const branches = await getBranches(owner, repo, auth);
+  dispatch({type: GET_BRANCH_LIST, payload: branches});
+
+  // const commitsPerUser = await getNumCommitsFromUser(owner, repo, author, auth);
+  // dispatch({type: GET_COMMITS_PER_USER, payload: commitsPerUser});
+
+  const numberOfPullRequests = await getNumPullRequests(owner, repo, auth)
+  dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
+
+  const contributorInfo = await contributorData(owner, repo, auth);
+  try {
+    console.log('contributor info: ', contributorInfo);
+    const authorList = contributorInfo.map((userInfo) => {
+      let authorInfo = {};
+      authorInfo.avatar_url = userInfo.author.avatar_url;
+      authorInfo.login = userInfo.author.login;
+      authorInfo.id = userInfo.author.id;
+      authorInfo.url = userInfo.author.url;
+      authorInfo.totalCommits = userInfo.total;
+      return authorInfo;
+    });
+    dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList});
+  } catch (error) {
+    console.error('Error getting contributor info: ', error);
+  }
+
+  const numberOfBranchCommits = await getNumBranchCommits(owner, repo, 'master', auth);
+  dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numberOfBranchCommits});
+
+  // TODO check to see if project is in an organization, if so, call the following
+  // const memberInfo = await getMemberInfo(organization, auth);
+  //dispatch({type: GET_MEMBER_INFO, payload: memberInfo});
+
+  const avgPRComments = await getNumComments(owner, repo, auth);
+  dispatch({type: GET_AVG_COMMENTS_PR, payload: avgPRComments});
+
+  dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }

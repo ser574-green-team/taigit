@@ -14,7 +14,10 @@ import {
     setTaigaProjectID,
     loadAllTaigaProjectData,
 } from "../actions/taigaActions";
-import { getUsersRepos, addUserInfo } from "../actions/githubActions";
+import { 
+  getUsersRepos, 
+  addUserInfo,
+  loadAllGitHubProjectData } from "../actions/githubActions";
 import { saveToLocalStorage, getFromLocalStorage } from "../utils/utils";
 import {
     selectRepoList,
@@ -37,8 +40,9 @@ class Projects extends Component {
     this.state = {
       taigaID: '',
       taigaPassword: '',
-      gitHubRepo: '',
-      taigaProject: '',
+      repoOwner: '',
+      repoName: '',
+      taigaProjectSlug: '',
       taigaNumID: '',
       codacyID: ''
     }
@@ -62,14 +66,21 @@ class Projects extends Component {
   }
 
   onProjectAnalyze = (event) => {
-      console.log('analyzing project!');
-      event.preventDefault();
+    console.log('analyzing project!');
+    event.preventDefault();
 
-      // Load all Taiga Data
-      this.props.loadAllTaigaProjectData(this.state.taigaProject.value);
+    // Save necessary data (in case of refresh)
+    saveToLocalStorage('github-owner', this.state.repoOwner);
+    saveToLocalStorage('github-repo', this.state.repoName);
+    saveToLocalStorage('taiga-slug', this.state.taigaProjectSlug);
 
-      //save project set to be displayed in project panel
-      //redirect to overview page
+    // Load all Taiga Data
+    this.props.loadAllTaigaProjectData(this.state.taigaProjectSlug);
+
+    // Load all GitHub Data
+    this.props.loadAllGitHubProjectData(this.state.repoOwner, 
+      this.state.repoName, 
+      auth);
   }
 
   onTaigaSubmit = (e) => {
@@ -79,20 +90,19 @@ class Projects extends Component {
     e.target.reset();
   }
 
-    onCodacySubmit = (e) => {
-        e.preventDefault();
+  onCodacySubmit = (e) => {
+    e.preventDefault();
 
-        e.target.reset();
-    }
+    e.target.reset();
+  }
 
   // Dropdown change listeners
   onGitHubSelectChange = (gitHubRepo) => {
-    this.setState({ gitHubRepo });
-    saveToLocalStorage('github-owner', gitHubRepo.value);
-    saveToLocalStorage('github-repo', gitHubRepo.label);
+    this.setState({ repoOwner: gitHubRepo.value });
+    this.setState({ repoName: gitHubRepo.label})
   }
   onTaigaSelectChange = (taigaProject) => {
-    this.setState({ taigaProject });
+    this.setState({ taigaProjectSlug: taigaProject.value });
   }
 
   // Form change listeners
@@ -232,5 +242,6 @@ export default connect(mapStateToProps, {
     grabUserProjects,
     initializeUserData,
     setTaigaProjectID,
-    loadAllTaigaProjectData
+    loadAllTaigaProjectData,
+    loadAllGitHubProjectData
 })(Projects)

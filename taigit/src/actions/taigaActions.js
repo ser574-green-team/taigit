@@ -91,12 +91,30 @@ export const initializeUserData = (username, password) => dispatch => {
 export const loadAllTaigaProjectData = (slugName) => async (dispatch) => {
   dispatch({type: LOADING_TAIGA_DATA, payload: true});
 
+  // Load basic project info
   const taigaProject = await project_info(slugName);
   taigaProject.slugName = slugName;
+  saveToLocalStorage('taiga-project-id', taigaProject.id);
   dispatch({type: GRAB_TAIGA_DATA, payload: taigaProject});
 
-  const sprintNames = await sprint_list(taigaProject.id);
-  dispatch({type: GET_SPRINT_NAMES, payload: sprintNames});
+  // Load task stats for entire project
+  const projectTaskStats = await get_task_status_count(taigaProject.id);
+  dispatch({type: GET_TASK_STATS, payload: projectTaskStats});
+
+  // Load list of sprint names
+  const sprintList = await sprint_list(taigaProject.id);
+  dispatch({type: GET_SPRINT_NAMES, payload: sprintList});
+
+  const firstSprintID = sprintList[0].id;
+  const firstSprintName = sprintList[0].name;
+
+  // Load stats of the first sprint
+  const firstSprintStats = await sprint_stats(firstSprintID);
+  dispatch({type: GET_SPRINT_STATS, payload: firstSprintStats});
+
+  // Load task details for the first sprint
+  const firstSprintTaskDetails = await get_task_details(firstSprintID, taigaProject.id, firstSprintName);
+  dispatch({type: GET_SINGLE_SPRINT_STATS, payload: firstSprintTaskDetails});
 
   dispatch({type: LOADING_TAIGA_DATA, payload: false});
 }
