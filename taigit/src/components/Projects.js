@@ -56,6 +56,10 @@ class Projects extends Component {
   }
 
   componentWillMount() {
+    this.setState({repoOwner: getFromLocalStorage('github-owner')});
+    this.setState({repoName: getFromLocalStorage('github-repo') || ''});
+    this.setState({taigaProjectSlug: getFromLocalStorage('taiga-slug')});
+
     // Only reload data if none exists
     if (typeof this.props.repoList === 'undefined' || this.props.repoList.length == 0) {
       this.props.getUsersRepos(this.props.userLogin, auth);
@@ -132,7 +136,7 @@ class Projects extends Component {
             <h4 className="project-selector-title">Select A Repo</h4>
             <div className="selector project-selector">
               <Select options={this.props.repoList}
-                placeholder="Select GitHub Repository"
+                placeholder={this.state.repoName == '' ? "Select GitHub Repository" : this.state.repoName}
                 onChange={this.onGitHubSelectChange}
                 theme={(theme) => ({
                     ...theme,
@@ -149,7 +153,7 @@ class Projects extends Component {
             <h4 className="project-selector-title">Select A Project</h4>
             <div className="selector project-selector">
               <Select options={this.props.projectList}
-                placeholder="Select Taiga Project"
+                placeholder={this.state.taigaProjectSlug == '' ? "Select Taiga Project" : this.state.taigaProjectSlug}
                 onChange={this.onTaigaSelectChange}
                 theme={(theme) => ({
                     ...theme,
