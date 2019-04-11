@@ -8,7 +8,8 @@ import {
   getAuthToken,
   getMemberInfo,
   getUserRepos,
-  getUserInfo
+  getUserInfo,
+  getBuilds
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -21,6 +22,7 @@ export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
 export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
+export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
@@ -133,6 +135,15 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
     );
 }
 
+export const getBuildsList = (owner, repo, auth) => dispatch => {
+  console.log('about to perform acquisition of build candidates');
+  getBuilds(owner, repo, auth)
+    .then(buildsList => 
+      dispatch({type: GET_BUILDS_LIST, payload: buildsList})
+    );
+}
+
+
 export const addUserInfo = (auth) => dispatch => {
   console.log('about to get user object');
   getUserInfo(auth)
@@ -179,6 +190,9 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
 
   const avgPRComments = await getNumComments(owner, repo, auth);
   dispatch({type: GET_AVG_COMMENTS_PR, payload: avgPRComments});
+
+  const buildsList = await getBuilds(owner, repo, auth)
+  dispatch({type: GET_BUILDS_LIST, payload: buildsList});
 
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }

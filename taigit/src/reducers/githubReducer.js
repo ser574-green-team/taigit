@@ -7,6 +7,7 @@ import { GET_BRANCH_LIST,
   ADD_AUTH_KEY, 
   GET_PULL_REQUESTS_CLOSED,
   GET_AVG_COMMENTS_PR,
+  GET_BUILDS_LIST,
   ADD_USER_REPOS,
   ADD_USER_INFO
 } from '../actions/githubActions';
@@ -20,6 +21,7 @@ const initialState = {
   authKey: '',
   numPullRequestsClosed: 0,
   avgCommentsOnPR : 0,
+  buildsList: [],
   userRepos: [],
   user: {}
 }
@@ -74,6 +76,12 @@ const githubReducer = (state = {}, action) => {
       return {
           ...state,
           avgCommentsOnPR: action.payload
+      } 
+    case GET_BUILDS_LIST:
+      console.log('payload for builds is: ', action.payload);
+      return {
+        ...state,
+        buildsList: action.payload
       }
     case ADD_USER_REPOS:
       console.log('payload for user repos is: ', action.payload);
@@ -168,6 +176,10 @@ export const selectNumPullRequestsClosedData = (state) => {
 
 export const selectAvgCommentsPRData = (state) => {
   return state.avgCommentsOnPR;
+}
+
+export const selectBuildsList = (state) => {
+  return state.buildsList;
 }
 
 export const selectRepoList = (state) => {
