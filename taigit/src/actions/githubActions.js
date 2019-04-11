@@ -10,7 +10,11 @@ import {
   getUserRepos,
   getUserInfo,
   getBuilds,
+<<<<<<< HEAD
   getBytesOfCode
+=======
+  getCodeAnalysis
+>>>>>>> in progress
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -27,7 +31,13 @@ export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
+<<<<<<< HEAD
 export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
+=======
+export const GET_GRADE = 'GET_GRADE';
+export const GET_NUM_FILES = 'GET_NUM_FILES';
+export const GET_CYCLOMATIC_COMPLEXITY = 'GET_CYCLOMATIC_COMPLEXITY';
+>>>>>>> in progress
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -196,8 +206,14 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const buildsList = await getBuilds(owner, repo, auth);
   dispatch({type: GET_BUILDS_LIST, payload: buildsList});
 
+<<<<<<< HEAD
   const bytesOfCode = await getBytesOfCode(owner, repo, auth);
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
 
+=======
+  const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
+    repo, owner, repo, auth);
+    dispatch({type: GET_GRADE, payload: analysis})
+>>>>>>> in progress
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }
