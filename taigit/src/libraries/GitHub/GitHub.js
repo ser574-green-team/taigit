@@ -1,8 +1,7 @@
 import {gethistoryPR} from "./src/getHistoryOfPR";
 
-export {getNumCommitsFromUser} from "./src/numCommitsFromUser";
 export {getBranches, getNumBranchCommits} from "./src/branches";
-export {getCommitsInTimeWindow} from "./src/commitsInWindow";
+export {getCommitsInTimeWindow, getTotalCommits, getNumCommitsFromUser} from "./src/commitsInWindow";
 export {getNumPullRequests} from "./src/numPullRequests";
 export {getNumComments} from "./src/avgComments";
 export {contributorData} from "./src/contributorData";
@@ -12,7 +11,6 @@ export {getCodeAnalysis} from "./src/codeAnalysis";
 export {usesMaven, usesGradle, usesCMake, usesMake, usesAnt, getBuilds} from "./src/findBuilds";
 export {getMemberInfo} from "./src/getMemberInfo"
 export {gethistoryPR} from "./src/getHistoryOfPR"
-export {getMcCabeComplexity} from "./src/cyclomaticComplexity";
 export {getUserRepos} from './src/reposAvailable';
 export {getUserInfo} from './src/getUserInfo';
 
