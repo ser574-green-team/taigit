@@ -62,6 +62,23 @@ class Taiga extends Component {
         <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.props.projectData.name}</p></h2>
         <div className="selector">
           <Select options={this.props.sprintList}
+          placeholder={'Select A Sprint'}
+          onChange={(sprintSelected) => {
+            console.log('sprint changed to: ', sprintSelected);
+            // Call grabSprintStats & grabSingleSprintData here based on sprintSelected
+            // sprintSelected {
+            //   value: 204069,
+            //   label: 'Sprint Name'
+            // }
+            // Note: this.props.projectData has the following properties that can help
+            // (filled with example data)
+            // {
+            //   id: 285841,
+            //   name: 'Chartreuesehh',
+            //   created_date: '2018-09-05T23:47:01.679Z',
+            //   slugName: 'tforrey-chartreuesehh'
+            // }
+          }}
           theme={(theme) => ({
             ...theme,
             colors: {
