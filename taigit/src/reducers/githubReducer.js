@@ -9,7 +9,8 @@ import { GET_BRANCH_LIST,
   GET_AVG_COMMENTS_PR,
   GET_BUILDS_LIST,
   ADD_USER_REPOS,
-  ADD_USER_INFO
+  ADD_USER_INFO,
+  COMMITS_IN_TIME_WINDOW
 } from '../actions/githubActions';
 
 const initialState = {
@@ -23,7 +24,8 @@ const initialState = {
   avgCommentsOnPR : 0,
   buildsList: [],
   userRepos: [],
-  user: {}
+  user: {},
+  numCommitsInTime: {}
 }
 /**
  * Github Reducer
@@ -95,6 +97,12 @@ const githubReducer = (state = {}, action) => {
         ...state,
         user: action.payload
       }
+    case COMMITS_IN_TIME_WINDOW:
+      console.log('Commits in a time window: ', action.payload);
+      return{
+        ...state,
+        numCommitsInTime: action.payload
+      }
     default:
       return {
         ...initialState,
@@ -164,6 +172,25 @@ export const selectNumBranchCommits = (state) => {
           borderWidth: 1
       }]
   };
+}
+
+/* to fetch number of commits for a time window from github action page*/
+export const selectCommitsInWindow = (state) => {
+  // const commitsInfo = state.commitsInTime;
+  // const start_date = commitsInfo.map((startDay) => startDay.Since);
+  // const end_date = commitsInfo.map((endDay) => endDay.Until);
+
+  return {
+    labels: [state.commitsInTime.Since, state.commitsInTime.Until],
+    datasets: [{
+        label: 'Contribution to Master',
+        color: 'rgba(0,120,200,0.75)',
+        lineWidth: 2,
+        data: state.numBranchCommits,
+        backgroundColor: colors.blue.base,
+        borderColor: colors.blue.base
+    }]
+  }
 }
 
 export const selectAuthKey = (state) => {

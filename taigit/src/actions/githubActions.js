@@ -9,7 +9,8 @@ import {
   getMemberInfo,
   getUserRepos,
   getUserInfo,
-  getBuilds
+  getBuilds,
+  getCommitsInTimeWindow
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -26,6 +27,7 @@ export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
+export const COMMITS_IN_TIME_WINDOW = 'COMMITS_IN_TIME_WINDOW';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -77,6 +79,14 @@ export const getMembersInfo = (organization, auth) => dispatch => {
     .then(memberInfo => {
       console.log('Member Info Data: ', memberInfo);
     });
+}
+
+export const getCommitsTime = (owner, repo, Since, Until, auth) => dispatch => {
+  getCommitsInTimeWindow(owner, repo, Since, Until, auth)
+    .then(numCommitsInTime => 
+      dispatch({
+            type: COMMITS_IN_TIME_WINDOW, payload: numCommitsInTime})
+      );
 }
 
 // component for pull requests closed, to be implemented in the backend
