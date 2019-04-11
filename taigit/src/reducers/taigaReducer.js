@@ -53,6 +53,7 @@ export default function taigaReducer(state = initialState, action) {
       }
     case GET_SPRINT_NAMES:
       console.log("Get sprint name");
+      console.log(action.payload);
       return {
         ...state,
         sprintList: action.payload

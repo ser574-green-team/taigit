@@ -20,13 +20,15 @@ import colors from '../styles/colors';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
-
+//let projectId = '';
+let message = '';
 class Taiga extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       layouts: JSON.parse(JSON.stringify(originalLayouts))
+
     };
   }
 
@@ -47,17 +49,27 @@ class Taiga extends Component {
     this.props.grabTaigaData('sanaydevi-ser-574');
     this.props.grabSprintNames(306316);
     this.props.grabSprintStats();
-    this.props.grabSingleSprintData(220752, 306316,'Sprint 2 - Taiga');
+    //this.props.grabSingleSprintData(220752, 306316,'Sprint 2 - Taiga');
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
-
+  fetchData(sprintId, projectId, sprintName) {
+    this.props.grabSingleSprintData(sprintId, projectId,sprintName);
+  }
+  handleChange = (sprintId, projectId, sprintName, myVar) => {
+    this.props.grabSingleSprintData(sprintId, projectId,sprintName);
+    console.log(`Option selected:`, sprintId, myVar);
+    
+  }
   render() {
     return(
       <div className="app-page">
         <h2>Taiga</h2>
         <div className="selector">
-          <Select options={this.props.sprintList}
+          <Select 
+          options={this.props.sprintList}
+          //value={this.state.sprintList.value}
+          onChange={this.handleChange(220752, 306316,'Sprint 2 - Taiga',)}
           theme={(theme) => ({
             ...theme,
             colors: {
@@ -76,24 +88,12 @@ class Taiga extends Component {
             this.onLayoutChange(layout, layouts)
           }
         >
-          <div className='box' key="1" data-grid={{ w: 4, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart chart-pie">
-              <span className="chart-title">Task Progress</span>
-              <Doughnut data={this.props.sprintProgress} options={{maintainAspectRatio: true, responsive: true}}/>
-            </div>
-          </div>
-          <div className='box' key="3" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <span className="chart-title">Burndown Chart</span>
-            <Line data={this.props.burnDownData} options={burndownOptions}/>
-            </div>
-          </div>
-          <div className='box' key="4" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <span className="chart-title">Single Sprint Taiga Task</span>
+        <div className='box' key="4" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
+        <div className="chart">
+          <span className="chart-title">Single Sprint Taiga Task</span>
               <Bar data={this.props.singleSprintData} options={barGraphOptions}/>
             </div>
-          </div>
+        </div>
           <h4>{this.props.storeData}</h4>
         </ResponsiveReactGridLayout>
       </div>
@@ -191,4 +191,3 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, { grabTaigaData, grabSprintStats, grabSprintNames, grabSingleSprintData })(Taiga)
-

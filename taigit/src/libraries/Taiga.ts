@@ -235,8 +235,7 @@ project_info(slug : string) : Promise<Object> {
  */
 export async function 
 sprint_list(projId : number) : Promise<Array<sprint_info>> {
-    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/milestones?project=${projId}`)).data;
-  
+    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/projects/${projId}`)).data.milestones;
     return data;
 }
 
