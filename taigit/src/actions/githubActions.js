@@ -4,8 +4,13 @@ import {
   getNumPullRequests,
   contributorData,
   getNumBranchCommits,
+  getNumComments,
   getAuthToken,
-  getMemberInfo } from '../libraries/GitHub/GitHub';
+  getMemberInfo,
+  getUserRepos,
+  getUserInfo,
+  getBuilds
+} from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
 /** Actions types */
@@ -16,6 +21,11 @@ export const ADD_CONTRIBUTOR_INFO = 'GET_CONTRIBUTOR_INFO';
 export const GET_NUM_BRANCH_COMMITS = 'GET_NUM_BRANCH_COMMITS';
 export const ADD_AUTH_KEY = 'ADD_AUTH_KEY';
 export const GET_PULL_REQUESTS_CLOSED = 'GET_PULL_REQUESTS_CLOSED';
+export const GET_AVG_COMMENTS_PR = 'GET_AVG_COMMENTS_PR';
+export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
+export const ADD_USER_REPOS = 'ADD_USER_REPOS';
+export const ADD_USER_INFO = 'ADD_USER_INFO';
+export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -24,6 +34,26 @@ export const getBranchList = (owner, repo, auth) => dispatch => {
     .then(branches =>
       dispatch({type: GET_BRANCH_LIST, payload: branches})
     );
+}
+
+export const getUsersRepos = (owner, auth) => dispatch => {
+  console.log('about to get all user owned repos');
+  getUserRepos(owner, auth)
+    .then(repos => {
+      try {
+        const userReposTrimmed = repos.map((repo) => {
+          let trimmedRepo = {};
+          trimmedRepo.id = repo.id;
+          trimmedRepo.name = repo.name;
+          trimmedRepo.full_name = repo.full_name;
+          trimmedRepo.owner = repo.owner.login;
+          return trimmedRepo;
+        })
+        dispatch({type: ADD_USER_REPOS, payload: userReposTrimmed});
+      } catch (e) {
+        console.error(e);
+      }
+    });
 }
 
 export const getCommitsPerUser = (owner, repo, author, auth) => dispatch => {
@@ -95,4 +125,74 @@ export const getAuthKey = (auth_server, storeKey) => dispatch => {
         saveToLocalStorage('auth-key', authKey);
         dispatch({type: ADD_AUTH_KEY, payload: authKey})
       });
+}
+
+export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
+  console.log('about to get Avg comments on the PR');
+  getNumComments(owner, repo, auth)
+    .then(avgNumberofComments =>
+      dispatch({type: GET_AVG_COMMENTS_PR, payload: avgNumberofComments})
+    );
+}
+
+export const getBuildsList = (owner, repo, auth) => dispatch => {
+  console.log('about to perform acquisition of build candidates');
+  getBuilds(owner, repo, auth)
+    .then(buildsList => 
+      dispatch({type: GET_BUILDS_LIST, payload: buildsList})
+    );
+}
+
+
+export const addUserInfo = (auth) => dispatch => {
+  console.log('about to get user object');
+  getUserInfo(auth)
+    .then(userInfo => 
+      dispatch({type: ADD_USER_INFO, payload: userInfo})
+    );
+}
+
+export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) => {
+  dispatch({type: LOADING_GITHUB_DATA, payload: true});
+
+  const branches = await getBranches(owner, repo, auth);
+  dispatch({type: GET_BRANCH_LIST, payload: branches});
+
+  // const commitsPerUser = await getNumCommitsFromUser(owner, repo, author, auth);
+  // dispatch({type: GET_COMMITS_PER_USER, payload: commitsPerUser});
+
+  const numberOfPullRequests = await getNumPullRequests(owner, repo, auth)
+  dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
+
+  const contributorInfo = await contributorData(owner, repo, auth);
+  try {
+    console.log('contributor info: ', contributorInfo);
+    const authorList = contributorInfo.map((userInfo) => {
+      let authorInfo = {};
+      authorInfo.avatar_url = userInfo.author.avatar_url;
+      authorInfo.login = userInfo.author.login;
+      authorInfo.id = userInfo.author.id;
+      authorInfo.url = userInfo.author.url;
+      authorInfo.totalCommits = userInfo.total;
+      return authorInfo;
+    });
+    dispatch({type: ADD_CONTRIBUTOR_INFO, payload: authorList});
+  } catch (error) {
+    console.error('Error getting contributor info: ', error);
+  }
+
+  const numberOfBranchCommits = await getNumBranchCommits(owner, repo, 'master', auth);
+  dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numberOfBranchCommits});
+
+  // TODO check to see if project is in an organization, if so, call the following
+  // const memberInfo = await getMemberInfo(organization, auth);
+  //dispatch({type: GET_MEMBER_INFO, payload: memberInfo});
+
+  const avgPRComments = await getNumComments(owner, repo, auth);
+  dispatch({type: GET_AVG_COMMENTS_PR, payload: avgPRComments});
+
+  const buildsList = await getBuilds(owner, repo, auth)
+  dispatch({type: GET_BUILDS_LIST, payload: buildsList});
+
+  dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }

@@ -5,7 +5,11 @@ import { GET_BRANCH_LIST,
   ADD_CONTRIBUTOR_INFO, 
   GET_NUM_BRANCH_COMMITS, 
   ADD_AUTH_KEY, 
-  GET_PULL_REQUESTS_CLOSED 
+  GET_PULL_REQUESTS_CLOSED,
+  GET_AVG_COMMENTS_PR,
+  GET_BUILDS_LIST,
+  ADD_USER_REPOS,
+  ADD_USER_INFO
 } from '../actions/githubActions';
 
 const initialState = {
@@ -15,7 +19,11 @@ const initialState = {
   contributors: [],
   numBranchCommits: [],
   authKey: '',
-  numPullRequestsClosed: 0
+  numPullRequestsClosed: 0,
+  avgCommentsOnPR : 0,
+  buildsList: [],
+  userRepos: [],
+  user: {}
 }
 /**
  * Github Reducer
@@ -62,6 +70,30 @@ const githubReducer = (state = {}, action) => {
       return {
           ...state,
           authKey: action.payload
+      }
+    case GET_AVG_COMMENTS_PR:
+      console.log('payload for average comments on pr is: ', action.payload);
+      return {
+          ...state,
+          avgCommentsOnPR: action.payload
+      } 
+    case GET_BUILDS_LIST:
+      console.log('payload for builds is: ', action.payload);
+      return {
+        ...state,
+        buildsList: action.payload
+      }
+    case ADD_USER_REPOS:
+      console.log('payload for user repos is: ', action.payload);
+      return {
+        ...state,
+        userRepos: action.payload
+      }
+    case ADD_USER_INFO:
+      console.log('user info: ', action.payload);
+      return {
+        ...state,
+        user: action.payload
       }
     default:
       return {
@@ -140,6 +172,27 @@ export const selectAuthKey = (state) => {
 
 export const selectNumPullRequestsClosedData = (state) => {
   return state.numPullRequestsClosed;
+}
+
+export const selectAvgCommentsPRData = (state) => {
+  return state.avgCommentsOnPR;
+}
+
+export const selectBuildsList = (state) => {
+  return state.buildsList;
+}
+
+export const selectRepoList = (state) => {
+  return state.userRepos.map(repo => {
+    return {
+      value: repo.owner,
+      label: repo.name
+    }
+  });
+}
+
+export const selectUserLogin = (state) => {
+  return state.user && state.user.login;
 }
 
 export default githubReducer

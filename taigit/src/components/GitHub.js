@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import NumberDisplay from './NumberDisplay'
 import {
-  getBranchList,
-  getCommitsPerUser,
-  getPullRequests,
-  getContributorData,
-  getBranchCommits,
-  getMembersInfo } from '../actions/githubActions';
+  loadAllGitHubProjectData
+} from '../actions/githubActions';
 import {
   selectBranchList,
   selectNumCommitsChartData,
   selectNumPullRequestsData,
   selectCommitsPerContributorChartData,
   selectNumBranchCommits,
-  selectNumPullRequestsClosedData } from '../reducers';
+  selectNumPullRequestsClosedData,
+  selectAvgCommentsPRData,
+  selectBuildsList } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
@@ -27,12 +25,16 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
+
+
 class GitHub extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      layouts: JSON.parse(JSON.stringify(originalLayouts))
+      layouts: JSON.parse(JSON.stringify(originalLayouts)),
+      githubOwner: getFromLocalStorage('github-owner') || '',
+      githubRepo: getFromLocalStorage('github-repo') || ''
     };
   }
   
@@ -51,18 +53,11 @@ class GitHub extends Component {
 
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
-    let auth = getFromLocalStorage('auth-key');
-    console.log('auth key is', auth);
-    this.props.getBranchList('ser574-green-team', 'taigit', auth);
-    this.props.getCommitsPerUser('trevorforrey', 'OttoDB', 'trevorforrey', auth);
-    this.props.getPullRequests('ser574-green-team', 'taigit', auth);
-    this.props.getContributorData('ser574-green-team', 'taigit', auth);
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'master', auth);
-    this.props.getBranchCommits('ser574-green-team', 'taigit', 'dev', auth);
-    this.props.getMembersInfo('ser574-green-team', auth);
-
-    //this.props.getPullRequestsClosed('ser574-green-team', 'taigit', auth);
-
+    // Handle if user refreshes on GitHub page
+    if (this.props.branches.length == 0) {
+      const auth = getFromLocalStorage('auth-key');
+      this.props.loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
+    }
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
@@ -70,7 +65,7 @@ class GitHub extends Component {
   render() {
     return(
       <div className="app-page">
-        <h2>GitHub</h2>
+        <h2>GitHub Repository: <p style={{display: 'inline', color: colors.blue.base}}>{this.state.githubRepo}</p></h2>
         <ResponsiveReactGridLayout
           className="layout"
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
@@ -101,7 +96,10 @@ class GitHub extends Component {
           <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequests} statistic="Pull Requests Open"/>
           </div>
-          <div className="box" key="6" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
+          <div className='box' key="6" data-grid={{ w: 2, h: 5, x: 4, y: 0, minW: 0, minH: 0 }}>
+            <NumberDisplay number={this.props.avgCommentsOnPR} statistic="Average Comments on PR"/>
+          </div>
+          <div className="box" key="7" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className = "chart-title">Commits Per Branch</span>
               <HorizBarChart
@@ -110,21 +108,15 @@ class GitHub extends Component {
               />
             </div>
           </div>
+          <div className = 'box' key="8" data-grid={{w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0}}>
+            <div className="chart">
+              <span className ="chart-title">Builds Used</span>
+              <ScrollableList items={this.props.buildsList}/>
+            </div>
+          </div>
         </ResponsiveReactGridLayout>
       </div>
     );
-  }
-}
-
-const horizontalChartOptions = {
-  responsive: true,
-  maintainAspectRatio: true,
-  scales: {
-      yAxes: [{
-          ticks: {
-              beginAtZero:true
-          }
-      }]
   }
 }
 
@@ -138,12 +130,14 @@ const mapStateToProps = state => ({
   commitChartData: selectCommitsPerContributorChartData(state),
   numPullRequests: selectNumPullRequestsData(state),
   commitPerBranchData: selectNumBranchCommits(state),
-  numPullRequestsClosed: selectNumPullRequestsClosedData(state)
+  numPullRequestsClosed: selectNumPullRequestsClosedData(state),
+  avgCommentsOnPR: selectAvgCommentsPRData(state),
+  buildsList: selectBuildsList(state)
 });
 
 /**
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, {
-  getBranchList, getCommitsPerUser, getPullRequests, getContributorData, getBranchCommits, getMembersInfo })(GitHub)
+export default connect(mapStateToProps, { loadAllGitHubProjectData })(GitHub)
+
