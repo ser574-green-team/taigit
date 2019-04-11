@@ -13,5 +13,6 @@ export {getMemberInfo} from "./src/getMemberInfo";
 export {gethistoryPR} from "./src/getHistoryOfPR";
 export{getBytesOfCode} from "./src/bytesOfCode";
 export {getCodeAnalysis} from "./src/codeAnalysis";
-
+export {getUserRepos} from './src/reposAvailable';
+export {getUserInfo} from './src/getUserInfo';
 
