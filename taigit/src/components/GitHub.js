@@ -11,7 +11,8 @@ import {
   selectNumBranchCommits,
   selectNumPullRequestsClosedData,
   selectAvgCommentsPRData,
-  selectBuildsList } from '../reducers';
+  selectBuildsList,
+  selectBytesOfCodeChartData } from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
@@ -114,6 +115,15 @@ class GitHub extends Component {
               <ScrollableList items={this.props.buildsList}/>
             </div>
           </div>
+          <div className="box" key="9" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
+            <div className="chart">
+              <span className = "chart-title">Bytes of Code</span>
+              <HorizBarChart
+                  chartData={this.props.bytesOfCode}
+                  options={{maintainAspectRatio: true, responsive: true}}
+              />
+            </div>
+          </div>
         </ResponsiveReactGridLayout>
       </div>
     );
@@ -132,7 +142,8 @@ const mapStateToProps = state => ({
   commitPerBranchData: selectNumBranchCommits(state),
   numPullRequestsClosed: selectNumPullRequestsClosedData(state),
   avgCommentsOnPR: selectAvgCommentsPRData(state),
-  buildsList: selectBuildsList(state)
+  buildsList: selectBuildsList(state),
+  bytesOfCode: selectBytesOfCodeChartData(state)
 });
 
 /**
