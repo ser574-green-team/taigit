@@ -25,8 +25,11 @@ import {
     selectProjectList
 } from "../reducers";
 import {
-  faGithub
+  faGithub,
 } from '@fortawesome/free-brands-svg-icons';
+import {
+  faQuestionCircle
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { selectUserLogin } from '../reducers';
 
@@ -96,7 +99,7 @@ class Projects extends Component {
 
   onCodacySubmit = (e) => {
     e.preventDefault();
-
+    saveToLocalStorage('codacy-username', this.state.codacyID);
     e.target.reset();
   }
 
@@ -211,6 +214,21 @@ class Projects extends Component {
                          className="btn"
                          style={{ flex: '1', margin: '8px 4px', border: 'none' }}
                   />
+                  <a href="https://www.codacy.com/">
+                    <button type="button" className="gh-btn">
+                      I don't have a Codacy account
+                    </button>
+                  </a>
+                  <div class="tip">
+                    <FontAwesomeIcon className="about" icon={faQuestionCircle} size="2x"
+                                     title=""/>
+                                     <span>Codacy helps us to provide you with code analysis
+                                     for your projects. Click on this button and follow the
+                                     instructions to set up an account. Make sure to add
+                                     each GitHub project to your Codacy account so that you
+                                     can analyze them in Taigit. Then, come back to this
+                                     page and tell us your Codacy username.</span>
+                  </div>
               </form>
           </div>
           <br/>
