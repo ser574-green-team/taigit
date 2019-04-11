@@ -51,17 +51,16 @@ getNumFiles(owner : string, repo : string, auth : string, path? : string) : Prom
  * 
  * @param owner your user name on codacy
  * @param project your project name on codacy
- * @param token  your codacy token
  * @param ownerGit the github owner name--> in case owner of github repo is different from codacy owner
  * @param gitRepo the github repo name --> in case different from project name
  * @param auth Github auth key  
  */
 
 export async function
-getCodeAnalysis(owner: string, project:string, token: string, ownerGit : string, gitRepo : string, auth : string) : Promise<any>{
+getCodeAnalysis(owner: string, project:string, ownerGit : string, gitRepo : string, auth : string) : Promise<any>{
    let jsonObj;
    try{
-    const response = await axios.get('https://taigit-auth.herokuapp.com/codacy/'+owner+"/"+project +"/"+ token);
+    const response = await axios.get('https://taigit-auth.herokuapp.com/codacy/'+owner+"/"+project);
     jsonObj= response.data;
     console.log("JSON data:\n",jsonObj); 
     let fileCount : number = await getNumFiles(ownerGit, gitRepo, auth);
