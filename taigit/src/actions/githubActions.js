@@ -205,27 +205,20 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
 
   const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
     repo, owner, repo, auth);
-  dispatch({type: GET_GRADE, payload: analysis})
   console.log("YO DAVID " + getFromLocalStorage("codacy-username"));
 
   try{
-    console.log("EASY AS");
-    let grade = analysis.commit.commitgrade;
-    let cc = analysis.commit.commit.complexity;
+    let grade = analysis.grade;
+    let cc = analysis.complexity;
     let filecount = analysis.fileCount;
     dispatch({type: GET_GRADE, payload:grade});
-    console.log("~A~");
     dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: cc});
-    console.log("~B~");
     dispatch({type: GET_NUM_FILES, payload: filecount});
-    console.log("~C~");
   } catch (error){
+    console.log(error);
     dispatch({type: GET_GRADE, payload: "ERR"});
-    console.log("~1~");
     dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "ERR"});
-    console.log("~2~");
     dispatch({type: GET_NUM_FILES, payload: "ERR"});
-    console.log("~3~");
   }
     
   dispatch({type: LOADING_GITHUB_DATA, payload: false});

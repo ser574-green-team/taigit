@@ -10,13 +10,11 @@ import {
   selectNumBranchCommits,
   selectNumPullRequestsClosedData,
   selectAvgCommentsPRData,
-<<<<<<< HEAD
-  selectBuildsList,
-  selectBytesOfCodeChartData } from '../reducers';
-=======
+  selectBytesOfCodeChartData,
   selectBuildsList, 
-  selectGrade} from '../reducers';
->>>>>>> preparing to pull from dev
+  selectGrade,
+  selectNumFiles,
+  selectCyclomaticComplexity} from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
@@ -25,7 +23,6 @@ import ScrollableList from './ScrollableList';
 import HorizBarChart from './charts/HorizBarChart';
 import colors from "../styles/colors";
 import { getFromLocalStorage } from "../utils/utils";
-import { selectNumFiles, selectCyclomaticComplexity } from '../reducers/githubReducer';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
@@ -104,13 +101,13 @@ class GitHub extends Component {
             <NumberDisplay number={this.props.avgCommentsOnPR} statistic="Average Comments on PR"/>
           </div>
           <div className="box" key="7" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
-            <NumberDisplay number= {200} statistic="Total files"/>
+            <NumberDisplay number={this.props.numFiles} statistic="Total files"/>
           </div>
           <div className='box' key="8" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number= {10} statistic="Cyclomatic Complexity"/>
+            <NumberDisplay number={this.props.cyclomaticComplexity} statistic="Cyclomatic Complexity"/>
           </div>
           <div className='box' key="9" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number= {"A"} statistic="Overall Grade of the Project"/>
+            <NumberDisplay number={this.props.grade} statistic="Codacy Project Grade"/>
           </div>
           <div className="box" key="10" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
             <div className="chart">
@@ -127,8 +124,7 @@ class GitHub extends Component {
               <ScrollableList items={this.props.buildsList}/>
             </div>
           </div>
-<<<<<<< HEAD
-          <div className="box" key="9" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
+          <div className="box" key="12" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className = "chart-title">Bytes of Code</span>
               <HorizBarChart
@@ -136,17 +132,6 @@ class GitHub extends Component {
                   options={{maintainAspectRatio: true, responsive: true}}
               />
             </div>
-=======
-          <div className='box' key="10" data-grid={{ w: 2, h: 5, x: 4, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.grade} statistic="Codacy Grade"/>
-          </div>
-          <div className='box' key="11" data-grid={{ w: 2, h: 5, x: 4, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.numFiles} statistic="Number of Files"/>
-          </div>
-          <div className='box' key="12" data-grid={{ w: 2, h: 5, x: 4, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.cyclomaticComplexity} 
-              statistic="Project Cyclomatic Complexity"/>
->>>>>>> preparing to pull from dev
           </div>
         </ResponsiveReactGridLayout>
       </div>
@@ -167,13 +152,10 @@ const mapStateToProps = state => ({
   numPullRequestsClosed: selectNumPullRequestsClosedData(state),
   avgCommentsOnPR: selectAvgCommentsPRData(state),
   buildsList: selectBuildsList(state),
-<<<<<<< HEAD
-  bytesOfCode: selectBytesOfCodeChartData(state)
-=======
+  bytesOfCode: selectBytesOfCodeChartData(state),
   grade: selectGrade(state),
   numFiles: selectNumFiles(state),
   cyclomaticComplexity: selectCyclomaticComplexity(state)
->>>>>>> preparing to pull from dev
 });
 
 /**
