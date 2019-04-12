@@ -10,11 +10,8 @@ import {
   getUserRepos,
   getUserInfo,
   getBuilds,
-<<<<<<< HEAD
-  getBytesOfCode
-=======
+  getBytesOfCode,
   getCodeAnalysis
->>>>>>> in progress
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -31,13 +28,10 @@ export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
-<<<<<<< HEAD
 export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
-=======
 export const GET_GRADE = 'GET_GRADE';
-export const GET_NUM_FILES = 'GET_NUM_FILES';
 export const GET_CYCLOMATIC_COMPLEXITY = 'GET_CYCLOMATIC_COMPLEXITY';
->>>>>>> in progress
+export const GET_NUM_FILES = 'GET_NUM_FILES';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -206,14 +200,33 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const buildsList = await getBuilds(owner, repo, auth);
   dispatch({type: GET_BUILDS_LIST, payload: buildsList});
 
-<<<<<<< HEAD
   const bytesOfCode = await getBytesOfCode(owner, repo, auth);
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
 
-=======
   const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
     repo, owner, repo, auth);
-    dispatch({type: GET_GRADE, payload: analysis})
->>>>>>> in progress
+  dispatch({type: GET_GRADE, payload: analysis})
+  console.log("YO DAVID " + getFromLocalStorage("codacy-username"));
+
+  try{
+    console.log("EASY AS");
+    let grade = analysis.commit.commitgrade;
+    let cc = analysis.commit.commit.complexity;
+    let filecount = analysis.fileCount;
+    dispatch({type: GET_GRADE, payload:grade});
+    console.log("~A~");
+    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: cc});
+    console.log("~B~");
+    dispatch({type: GET_NUM_FILES, payload: filecount});
+    console.log("~C~");
+  } catch (error){
+    dispatch({type: GET_GRADE, payload: "ERR"});
+    console.log("~1~");
+    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "ERR"});
+    console.log("~2~");
+    dispatch({type: GET_NUM_FILES, payload: "ERR"});
+    console.log("~3~");
+  }
+    
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }
