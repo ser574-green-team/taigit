@@ -53,40 +53,24 @@ class Taiga extends Component {
     if (Object.keys(this.props.projectData).length == 0) {
       this.props.loadAllTaigaProjectData(this.state.taigaSlug);
     }
+    //this.props.selectSprintList;
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
-  fetchData(sprintId, projectId, sprintName) {
-    this.props.grabSingleSprintData(sprintId, projectId,sprintName);
+
+  onSprintSelection = (selectedSprint) => {
+    this.props.grabSingleSprintData(selectedSprint.value, this.props.projectData.id, selectedSprint.label);
+    this.props.grabSprintStats(selectedSprint.value);
   }
-  handleChange = (sprintId, projectId, sprintName, myVar) => {
-    this.props.grabSingleSprintData(sprintId, projectId,sprintName);
-    console.log(`Option selected:`, sprintId, myVar);
-    
-  }
+  
   render() {
     return(
       <div className="app-page">
         <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.props.projectData.name}</p></h2>
         <div className="selector">
           <Select options={this.props.sprintList}
-          placeholder={'Select A Sprint'}
-          onChange={(sprintSelected) => {
-            console.log('sprint changed to: ', sprintSelected);
-            // Call grabSprintStats & grabSingleSprintData here based on sprintSelected
-            // sprintSelected {
-            //   value: 204069,
-            //   label: 'Sprint Name'
-            // }
-            // Note: this.props.projectData has the following properties that can help
-            // (filled with example data)
-            // {
-            //   id: 285841,
-            //   name: 'Chartreuesehh',
-            //   created_date: '2018-09-05T23:47:01.679Z',
-            //   slugName: 'tforrey-chartreuesehh'
-            // }
-          }}
+          placeholder={this.state.selectedSprint == '' ? "Select A Sprint" : this.state.selectedSprint}
+          onChange={this.onSprintSelection}
           theme={(theme) => ({
             ...theme,
             colors: {
@@ -105,6 +89,18 @@ class Taiga extends Component {
             this.onLayoutChange(layout, layouts)
           }
         >
+        <div className='box' key="1" data-grid={{ w: 4, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
+            <div className="chart chart-pie">
+              <span className="chart-title">Task Progress</span>
+              <Doughnut data={this.props.sprintProgress} options={{maintainAspectRatio: true, responsive: true}}/>
+            </div>
+          </div>
+          <div className='box' key="3" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
+            <div className="chart">
+              <span className="chart-title">Burndown Chart</span>
+            <Line data={this.props.burnDownData} options={burndownOptions}/>
+            </div>
+          </div>
         <div className='box' key="4" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
         <div className="chart">
           <span className="chart-title">Single Sprint Taiga Task</span>
