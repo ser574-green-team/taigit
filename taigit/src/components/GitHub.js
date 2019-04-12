@@ -79,9 +79,9 @@ class GitHub extends Component {
                 <Bar data={this.props.commitChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
+          {/* <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number="13" statistic="Pull Requests Created"/>
-          </div>
+          </div> */}
           <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequestsClosed} statistic="Pull Requests Closed"/>
           </div>
