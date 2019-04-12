@@ -9,7 +9,8 @@ import {
   getMemberInfo,
   getUserRepos,
   getUserInfo,
-  getBuilds
+  getBuilds,
+  getTotalCommits
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -26,6 +27,7 @@ export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
+export const GET_TOTAL_COMMITS = 'GET_TOTAL_COMMITS';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -138,16 +140,24 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
 export const getBuildsList = (owner, repo, auth) => dispatch => {
   console.log('about to perform acquisition of build candidates');
   getBuilds(owner, repo, auth)
-    .then(buildsList => 
+    .then(buildsList =>
       dispatch({type: GET_BUILDS_LIST, payload: buildsList})
     );
+}
+
+export const getTotalNumberCommits = (owner, repo, auth) => dispatch => {
+  console.log('total commits for the project');
+  getTotalCommits(owner, repo, auth)
+    .then(totalCommits =>
+      dispatch({type: GET_TOTAL_COMMITS, payload: totalCommits})
+  );
 }
 
 
 export const addUserInfo = (auth) => dispatch => {
   console.log('about to get user object');
   getUserInfo(auth)
-    .then(userInfo => 
+    .then(userInfo =>
       dispatch({type: ADD_USER_INFO, payload: userInfo})
     );
 }
@@ -193,6 +203,9 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
 
   const buildsList = await getBuilds(owner, repo, auth)
   dispatch({type: GET_BUILDS_LIST, payload: buildsList});
+
+  const totalCommitOverview = await getTotalCommits(owner, repo, auth);
+  dispatch({type: GET_TOTAL_COMMITS, payload: totalCommitOverview});
 
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }

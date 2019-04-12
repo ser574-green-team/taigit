@@ -1,15 +1,16 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, 
-  GET_COMMITS_PER_USER, 
-  GET_NUM_PULL_REQUESTS, 
-  ADD_CONTRIBUTOR_INFO, 
-  GET_NUM_BRANCH_COMMITS, 
-  ADD_AUTH_KEY, 
+import { GET_BRANCH_LIST,
+  GET_COMMITS_PER_USER,
+  GET_NUM_PULL_REQUESTS,
+  ADD_CONTRIBUTOR_INFO,
+  GET_NUM_BRANCH_COMMITS,
+  ADD_AUTH_KEY,
   GET_PULL_REQUESTS_CLOSED,
   GET_AVG_COMMENTS_PR,
   GET_BUILDS_LIST,
   ADD_USER_REPOS,
-  ADD_USER_INFO
+  ADD_USER_INFO,
+  GET_TOTAL_COMMITS
 } from '../actions/githubActions';
 
 const initialState = {
@@ -23,7 +24,8 @@ const initialState = {
   avgCommentsOnPR : 0,
   buildsList: [],
   userRepos: [],
-  user: {}
+  user: {},
+  totalCommits: 0
 }
 /**
  * Github Reducer
@@ -76,7 +78,7 @@ const githubReducer = (state = {}, action) => {
       return {
           ...state,
           avgCommentsOnPR: action.payload
-      } 
+      }
     case GET_BUILDS_LIST:
       console.log('payload for builds is: ', action.payload);
       return {
@@ -95,6 +97,13 @@ const githubReducer = (state = {}, action) => {
         ...state,
         user: action.payload
       }
+    case GET_TOTAL_COMMITS:
+      console.console.log('payload for total commits of the project is: ' , action.payload);
+      return {
+        ...state,
+        totalCommits: action.payload
+      }
+
     default:
       return {
         ...initialState,
@@ -189,6 +198,10 @@ export const selectRepoList = (state) => {
       label: repo.name
     }
   });
+}
+
+export const selectTotalCommitsData = (state) => {
+  return state.totalCommits;
 }
 
 export const selectUserLogin = (state) => {
