@@ -15,26 +15,53 @@ getNumComments(owner : string, repo: string, auth : string){
         }
         let issue_comment = await axios.get("https://api.github.com/repos/" + owner +
             "/" + repo + "/pulls?state=closed", config);
-        let lengthOfClosedPullRequests = issue_comment.data.length
-        let issueNumberArray = Array()
-       // console.log("Total No. Of Closed Pull Requests: "+lengthOfClosedPullRequests)
-        let totalComments = 0
-        issue_comment.data.forEach(function(req : {url:string} ) {
-            let closedIssueNumberArray = req.url.split('/');
-            let issue_number: string = closedIssueNumberArray[closedIssueNumberArray.length - 1];
-            issueNumberArray.push(issue_number)
+        if(issue_comment.headers.hasOwnProperty("link")) {
+            let last = issue_comment.headers["link"].split(',');
+            let total_pages_str = last[1]
+            let total_pages = total_pages_str.substring(total_pages_str.lastIndexOf("page") + 5, total_pages_str.lastIndexOf(">"))
+            total_pages = Number(total_pages)
+            for (var j = 1; j <= total_pages; j++) {
+                let inner_pull = await axios.get("https://api.github.com/repos/" + owner +
+                    "/" + repo + "/pulls?state=closed&page="+j, config);
+                let lengthOfClosedPullRequests = inner_pull.data.length
+                let issueNumberArray = Array()
+                let totalComments = 0
+                inner_pull.data.forEach(function (req: { url: string }) {
+                    let closedIssueNumberArray = req.url.split('/');
+                    let issue_number: string = closedIssueNumberArray[closedIssueNumberArray.length - 1];
+                    issueNumberArray.push(issue_number)
 
-        });
-        for(let issue_number of issueNumberArray){
-            let commentsPerIssue = await getNumberCommentsPerPullRequest(owner,repo,Number(issue_number),auth)
-            totalComments = totalComments + Number(commentsPerIssue)
-            //console.log("Comments for Issue "+issue_number+" = " + Number(commentsPerIssue))
+                });
+                for (let issue_number of issueNumberArray) {
+                    let commentsPerIssue = await getNumberCommentsPerPullRequest(owner, repo, Number(issue_number), auth)
+                    totalComments = totalComments + Number(commentsPerIssue)
+                }
+
+                let averageNoOfComments = (totalComments / lengthOfClosedPullRequests).toFixed(2)
+                return averageNoOfComments;
+
+
+            }
         }
+        else{
+            let lengthOfClosedPullRequests = issue_comment.data.length
+            let issueNumberArray = Array()
+            let totalComments = 0
+            issue_comment.data.forEach(function (req: { url: string }) {
+                let closedIssueNumberArray = req.url.split('/');
+                let issue_number: string = closedIssueNumberArray[closedIssueNumberArray.length - 1];
+                issueNumberArray.push(issue_number)
 
-       // console.log("Total Number Of Comments on PR: "+totalComments)
-        let averageNoOfComments = (totalComments/lengthOfClosedPullRequests).toFixed(2)
-       // console.log("Average Number Of Comments: " +averageNoOfComments)
-        return averageNoOfComments;
+            });
+            for (let issue_number of issueNumberArray) {
+                let commentsPerIssue = await getNumberCommentsPerPullRequest(owner, repo, Number(issue_number), auth)
+                totalComments = totalComments + Number(commentsPerIssue)
+            }
+
+            let averageNoOfComments = (totalComments / lengthOfClosedPullRequests).toFixed(2)
+            return averageNoOfComments;
+
+        }
 
     }
     catch (error) {
@@ -63,8 +90,6 @@ getNumberCommentsPerPullRequest(owner : string, repo: string,  number : number, 
             "/" + repo + "/pulls/" + number + "#/comments", config);
         let comments = issue_comment.data["comments"]
         let reviewComments = issue_comment.data["review_comments"]
-        //  console.log(comments)
-        //  console.log(reviewComments)
         let totalNumberOfComments = Number(comments) + Number(reviewComments)
         return Number(totalNumberOfComments)
     }
@@ -77,4 +102,3 @@ getNumberCommentsPerPullRequest(owner : string, repo: string,  number : number, 
 }
 
 
-//getNumCommets("ser574-green-team", "taigit");

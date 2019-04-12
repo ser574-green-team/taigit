@@ -2,7 +2,7 @@ import {gethistoryPR} from "./src/getHistoryOfPR";
 
 export {getBranches, getNumBranchCommits} from "./src/branches";
 export {getCommitsInTimeWindow, getTotalCommits, getNumCommitsFromUser} from "./src/commitsInWindow";
-export {getNumPullRequests} from "./src/numPullRequests";
+export {getNumOpenPullRequests} from "./src/numPullRequests";
 export {getNumComments} from "./src/avgComments";
 export {contributorData} from "./src/contributorData";
 export {authRedirect, getAuthToken} from "./src/auth"
@@ -14,4 +14,3 @@ export{getBytesOfCode} from "./src/bytesOfCode";
 export {getCodeAnalysis} from "./src/codeAnalysis";
 export {getUserRepos} from './src/reposAvailable';
 export {getUserInfo} from './src/getUserInfo';
-

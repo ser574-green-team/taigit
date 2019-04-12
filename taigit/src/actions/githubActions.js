@@ -1,7 +1,7 @@
 import {
   getBranches,
   getNumCommitsFromUser,
-  getNumPullRequests,
+  getNumOpenPullRequests,
   contributorData,
   getNumBranchCommits,
   getNumComments,
@@ -68,7 +68,7 @@ export const getCommitsPerUser = (owner, repo, author, auth) => dispatch => {
 
 export const getPullRequests = (owner, repo, auth) => dispatch => {
   console.log('about to get number of pull requests');
-  getNumPullRequests(owner, repo, auth)
+  getNumOpenPullRequests(owner, repo, auth)
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
     );
@@ -163,7 +163,7 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   // const commitsPerUser = await getNumCommitsFromUser(owner, repo, author, auth);
   // dispatch({type: GET_COMMITS_PER_USER, payload: commitsPerUser});
 
-  const numberOfPullRequests = await getNumPullRequests(owner, repo, auth)
+  const numberOfPullRequests = await getNumOpenPullRequests(owner, repo, auth)
   dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
 
   const contributorInfo = await contributorData(owner, repo, auth);
