@@ -2,6 +2,7 @@ import {
   getBranches,
   getNumCommitsFromUser,
   getNumOpenPullRequests,
+  getNumClosedPullRequest,
   getContributorData,
   getNumBranchCommits,
   getNumComments,
@@ -14,7 +15,6 @@ import {
   getCodeAnalysis
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
-import { getNumClosedPullRequest } from '../libraries/GitHub/src/numPullRequests';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
@@ -172,7 +172,7 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
 
   const contributorInfo = await getContributorData(owner, repo, auth);
-  
+
   const numberOfClosedPullRequests = await getNumClosedPullRequest(owner, repo, auth)
   dispatch({type: GET_PULL_REQUESTS_CLOSED, payload: numberOfClosedPullRequests});
 
@@ -225,6 +225,6 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
     dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "ERR"});
     dispatch({type: GET_NUM_FILES, payload: "ERR"});
   }
-    
+
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }
