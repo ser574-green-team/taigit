@@ -2,7 +2,8 @@ import {
   getBranches,
   getNumCommitsFromUser,
   getNumOpenPullRequests,
-  contributorData,
+  getNumClosedPullRequest,
+  getContributorData,
   getNumBranchCommits,
   getNumComments,
   getAuthToken,
@@ -14,7 +15,6 @@ import {
   getCodeAnalysis
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
-import { getNumClosedPullRequest } from '../libraries/GitHub/src/numPullRequests';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
@@ -96,9 +96,9 @@ export const getMembersInfo = (organization, auth) => dispatch => {
 //     );
 // }
 
-export const getContributorData = (owner, repo, auth) => dispatch => {
+export const getContributorsData = (owner, repo, auth) => dispatch => {
   console.log('about to grab contributor data');
-  contributorData(owner, repo, auth)
+  getContributorData(owner, repo, auth)
     .then((contributorData) => {
       try {
         const authorList = contributorData.map((userInfo) => {
@@ -145,7 +145,7 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
 export const getBuildsList = (owner, repo, auth) => dispatch => {
   console.log('about to perform acquisition of build candidates');
   getBuilds(owner, repo, auth)
-    .then(buildsList => 
+    .then(buildsList =>
       dispatch({type: GET_BUILDS_LIST, payload: buildsList})
     );
 }
@@ -154,7 +154,7 @@ export const getBuildsList = (owner, repo, auth) => dispatch => {
 export const addUserInfo = (auth) => dispatch => {
   console.log('about to get user object');
   getUserInfo(auth)
-    .then(userInfo => 
+    .then(userInfo =>
       dispatch({type: ADD_USER_INFO, payload: userInfo})
     );
 }
@@ -171,10 +171,11 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const numberOfPullRequests = await getNumOpenPullRequests(owner, repo, auth)
   dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
 
+  const contributorInfo = await getContributorData(owner, repo, auth);
+
   const numberOfClosedPullRequests = await getNumClosedPullRequest(owner, repo, auth)
   dispatch({type: GET_PULL_REQUESTS_CLOSED, payload: numberOfClosedPullRequests});
 
-  const contributorInfo = await contributorData(owner, repo, auth);
   try {
     console.log('contributor info: ', contributorInfo);
     const authorList = contributorInfo.map((userInfo) => {
@@ -224,6 +225,6 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
     dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "ERR"});
     dispatch({type: GET_NUM_FILES, payload: "ERR"});
   }
-    
+
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }
