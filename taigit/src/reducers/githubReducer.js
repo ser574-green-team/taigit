@@ -10,7 +10,8 @@ import { GET_BRANCH_LIST,
   GET_BUILDS_LIST,
   ADD_USER_REPOS,
   ADD_USER_INFO,
-  GET_TOTAL_COMMITS
+  GET_TOTAL_COMMITS,
+  GET_BYTES_OF_CODE
 } from '../actions/githubActions';
 
 const initialState = {
@@ -25,7 +26,8 @@ const initialState = {
   buildsList: [],
   userRepos: [],
   user: {},
-  totalCommits: 0
+  totalCommits: 0,
+  bytesOfCode: {}
 }
 /**
  * Github Reducer
@@ -103,7 +105,11 @@ const githubReducer = (state = {}, action) => {
         ...state,
         totalCommits: action.payload
       }
-
+    case GET_BYTES_OF_CODE:
+      return{
+        ...state,
+        bytesOfCode: action.payload
+      }
     default:
       return {
         ...initialState,
@@ -206,6 +212,24 @@ export const selectTotalCommitsData = (state) => {
 
 export const selectUserLogin = (state) => {
   return state.user && state.user.login;
+}
+
+export const selectBytesOfCodeChartData = (state) => {
+  let languages = []
+  let bytes = []
+  Object.keys(state.bytesOfCode).forEach(function(key) {
+    languages.push(key);
+    bytes.push(state.bytesOfCode[key]);
+  });
+  return {
+    labels: languages,
+    datasets: [{
+        label: 'Bytes of Code',
+        data: bytes,
+        backgroundColor: colors.red.base,
+        borderWidth: 1
+    }]
+  };
 }
 
 export default githubReducer

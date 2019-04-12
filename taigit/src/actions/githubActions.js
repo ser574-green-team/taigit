@@ -10,7 +10,8 @@ import {
   getUserRepos,
   getUserInfo,
   getBuilds,
-  getTotalCommits
+  getTotalCommits,
+  getBytesOfCode
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -28,6 +29,8 @@ export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
 export const GET_TOTAL_COMMITS = 'GET_TOTAL_COMMITS';
+export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
+
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -201,11 +204,14 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const avgPRComments = await getNumComments(owner, repo, auth);
   dispatch({type: GET_AVG_COMMENTS_PR, payload: avgPRComments});
 
-  const buildsList = await getBuilds(owner, repo, auth)
+  const buildsList = await getBuilds(owner, repo, auth);
   dispatch({type: GET_BUILDS_LIST, payload: buildsList});
 
   const totalCommitOverview = await getTotalCommits(owner, repo, auth);
   dispatch({type: GET_TOTAL_COMMITS, payload: totalCommitOverview});
+
+  const bytesOfCode = await getBytesOfCode(owner, repo, auth);
+  dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
 
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }
