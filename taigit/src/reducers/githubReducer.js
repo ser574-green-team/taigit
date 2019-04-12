@@ -6,7 +6,11 @@ import { GET_BRANCH_LIST,
   GET_NUM_BRANCH_COMMITS, 
   ADD_AUTH_KEY, 
   GET_PULL_REQUESTS_CLOSED,
-  GET_AVG_COMMENTS_PR 
+  GET_AVG_COMMENTS_PR,
+  GET_BUILDS_LIST,
+  ADD_USER_REPOS,
+  ADD_USER_INFO,
+  GET_BYTES_OF_CODE
 } from '../actions/githubActions';
 
 const initialState = {
@@ -17,7 +21,11 @@ const initialState = {
   numBranchCommits: [],
   authKey: '',
   numPullRequestsClosed: 0,
-  avgCommentsOnPR : 0
+  avgCommentsOnPR : 0,
+  buildsList: [],
+  userRepos: [],
+  user: {},
+  bytesOfCode: {}
 }
 /**
  * Github Reducer
@@ -71,6 +79,29 @@ const githubReducer = (state = {}, action) => {
           ...state,
           avgCommentsOnPR: action.payload
       } 
+    case GET_BUILDS_LIST:
+      console.log('payload for builds is: ', action.payload);
+      return {
+        ...state,
+        buildsList: action.payload
+      }
+    case ADD_USER_REPOS:
+      console.log('payload for user repos is: ', action.payload);
+      return {
+        ...state,
+        userRepos: action.payload
+      }
+    case ADD_USER_INFO:
+      console.log('user info: ', action.payload);
+      return {
+        ...state,
+        user: action.payload
+      }
+    case GET_BYTES_OF_CODE:
+      return{
+        ...state,
+        bytesOfCode: action.payload
+      }
     default:
       return {
         ...initialState,
@@ -152,6 +183,41 @@ export const selectNumPullRequestsClosedData = (state) => {
 
 export const selectAvgCommentsPRData = (state) => {
   return state.avgCommentsOnPR;
+}
+
+export const selectBuildsList = (state) => {
+  return state.buildsList;
+}
+
+export const selectRepoList = (state) => {
+  return state.userRepos.map(repo => {
+    return {
+      value: repo.owner,
+      label: repo.name
+    }
+  });
+}
+
+export const selectUserLogin = (state) => {
+  return state.user && state.user.login;
+}
+
+export const selectBytesOfCodeChartData = (state) => {
+  let languages = []
+  let bytes = []
+  Object.keys(state.bytesOfCode).forEach(function(key) {
+    languages.push(key);
+    bytes.push(state.bytesOfCode[key]);
+  });
+  return {
+    labels: languages,
+    datasets: [{
+        label: 'Bytes of Code',
+        data: bytes,
+        backgroundColor: colors.red.base,
+        borderWidth: 1
+    }]
+  };
 }
 
 export default githubReducer
