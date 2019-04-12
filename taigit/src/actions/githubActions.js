@@ -14,6 +14,7 @@ import {
   getCodeAnalysis
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
+import { getNumClosedPullRequest } from '../libraries/GitHub/src/numPullRequests';
 
 /** Actions types */
 export const GET_BRANCH_LIST = 'GET_BRANCH_LIST';
@@ -169,6 +170,9 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
 
   const numberOfPullRequests = await getNumOpenPullRequests(owner, repo, auth)
   dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
+
+  const numberOfClosedPullRequests = await getNumClosedPullRequest(owner, repo, auth)
+  dispatch({type: GET_PULL_REQUESTS_CLOSED, payload: numberOfClosedPullRequests});
 
   const contributorInfo = await contributorData(owner, repo, auth);
   try {
