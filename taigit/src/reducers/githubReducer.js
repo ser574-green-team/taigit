@@ -102,6 +102,12 @@ const githubReducer = (state = {}, action) => {
         ...state,
         bytesOfCode: action.payload
       }
+    case GET_PULL_REQUESTS_CLOSED:
+      console.log('payload for pull req closed is: ', action.payload);
+      return {
+        ...state,
+        numPullRequestsClosed: action.payload
+      }
     default:
       return {
         ...initialState,
