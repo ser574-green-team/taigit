@@ -2,7 +2,7 @@ import {
   getBranches,
   getNumCommitsFromUser,
   getNumOpenPullRequests,
-  contributorData,
+  getContributorData,
   getNumBranchCommits,
   getNumComments,
   getAuthToken,
@@ -91,9 +91,9 @@ export const getMembersInfo = (organization, auth) => dispatch => {
 //     );
 // }
 
-export const getContributorData = (owner, repo, auth) => dispatch => {
+export const getContributorsData = (owner, repo, auth) => dispatch => {
   console.log('about to grab contributor data');
-  contributorData(owner, repo, auth)
+  getContributorData(owner, repo, auth)
     .then((contributorData) => {
       try {
         const authorList = contributorData.map((userInfo) => {
@@ -140,7 +140,7 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
 export const getBuildsList = (owner, repo, auth) => dispatch => {
   console.log('about to perform acquisition of build candidates');
   getBuilds(owner, repo, auth)
-    .then(buildsList => 
+    .then(buildsList =>
       dispatch({type: GET_BUILDS_LIST, payload: buildsList})
     );
 }
@@ -149,7 +149,7 @@ export const getBuildsList = (owner, repo, auth) => dispatch => {
 export const addUserInfo = (auth) => dispatch => {
   console.log('about to get user object');
   getUserInfo(auth)
-    .then(userInfo => 
+    .then(userInfo =>
       dispatch({type: ADD_USER_INFO, payload: userInfo})
     );
 }
@@ -166,7 +166,7 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const numberOfPullRequests = await getNumOpenPullRequests(owner, repo, auth)
   dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
 
-  const contributorInfo = await contributorData(owner, repo, auth);
+  const contributorInfo = await getContributorData(owner, repo, auth);
   try {
     console.log('contributor info: ', contributorInfo);
     const authorList = contributorInfo.map((userInfo) => {
