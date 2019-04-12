@@ -33,9 +33,9 @@ getCommitsInTimeWindow(owner: string, repo: string, Since: string,
 
 /**
  * Upon a successful call returns the total number of commits made to the repo within the past year.
- * @param owner 
- * @param repo 
- * @param auth 
+ * @param owner
+ * @param repo
+ * @param auth
  */
 export async function
 getTotalCommits(owner: string, repo: string, auth: string) : Promise<number>{
@@ -90,12 +90,8 @@ getNumCommitsFromUser(owner: string, repo: string, author: string,
        else{
            return userRepos.data.length;
        }
-
-
-
    } catch (error) {
        console.log(error);
    }
-
    return -1;
 }
