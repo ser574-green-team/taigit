@@ -80,7 +80,7 @@ class GitHub extends Component {
             </div>
           </div>
           <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number="13" statistic="Pull Requests Created"/>
+            <NumberDisplay number={this.props.numPullRequests + this.props.numPullRequestsClosed} statistic="Pull Requests Created"/>
           </div>
           <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequestsClosed} statistic="Pull Requests Closed"/>

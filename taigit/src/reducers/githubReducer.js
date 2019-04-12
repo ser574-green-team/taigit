@@ -55,6 +55,11 @@ const githubReducer = (state = {}, action) => {
         ...state,
         numPullRequests: action.payload
       }
+    case GET_PULL_REQUESTS_CLOSED:
+      return {
+        ...state,
+        numPullRequestsClosed: action.payload
+      }
     case ADD_CONTRIBUTOR_INFO:
       console.log('payload for contributor data is: ', action.payload);
       return {
