@@ -880,6 +880,46 @@ check_for_retrospective(project_id : number, sprint_id : number) : Promise<wiki_
 }
 
 /**
+ * @summary check if meeting minutes for a particular sprint exists
+ * @param project_id : number
+ * @param sprint_id : number
+ */
+export async function
+find_meeting_minutes(project_id : number, sprint_id : number) : Promise<wiki_page | undefined> {
+    //get info from taiga
+    let { sprint_start, sprint_end } = await sprint_stats(sprint_id);
+    let wiki_pages : wiki_page[] = await project_wiki(project_id);
+
+    //find searchable date range using helper fnctions created for US 191 Task 239
+    let sprint_len = get_days_between_dates(new Date(sprint_start), new Date(sprint_end));
+    let day_diff: number = 3;
+    if(sprint_len <= 7) {
+        //if sprint length is 1 week, search +-1 day
+        day_diff = 1;
+    } else if(sprint_len <= 14) {
+        //if sprint length is 2 weeks, search +-2 days
+        day_diff = 2;
+    } else {
+        //otherwise search +-3 days
+        day_diff = 3;
+    }
+
+    let meetmins_page : wiki_page | undefined = undefined;
+    for(let entry of wiki_pages) {
+        //check wikipage title for the word "Meeting Minutes"
+        if(/.?(meeting minutes).?/gmi.test(entry.slug)) {
+            //then check that it's "last_modified" date is with an acceptable range from the end of the sprint
+            //using the helper function created for US 191 Task 239
+            if(check_date_in_range(new Date(sprint_end), day_diff, new Date(entry.modified_date))) {
+                //if page matches, then return it.
+                meetmins_page = entry;
+                break;
+            }
+        }
+    }
+    return meetmins_page;
+}
+/**
  * @summary Converts role ids to role names
  * @param projID
  * @returns dictionary pairs
