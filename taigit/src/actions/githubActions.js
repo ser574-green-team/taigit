@@ -10,7 +10,8 @@ import {
   getUserRepos,
   getUserInfo,
   getBuilds,
-  getBytesOfCode
+  getBytesOfCode,
+  getCodeAnalysis
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -28,6 +29,9 @@ export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
 export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
+export const GET_GRADE = 'GET_GRADE';
+export const GET_CYCLOMATIC_COMPLEXITY = 'GET_CYCLOMATIC_COMPLEXITY';
+export const GET_NUM_FILES = 'GET_NUM_FILES';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -199,5 +203,23 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const bytesOfCode = await getBytesOfCode(owner, repo, auth);
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
 
+  const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
+    repo, owner, repo, auth);
+  console.log("YO DAVID " + getFromLocalStorage("codacy-username"));
+
+  try{
+    let grade = analysis.grade;
+    let cc = analysis.complexity;
+    let filecount = analysis.fileCount;
+    dispatch({type: GET_GRADE, payload:grade});
+    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: cc});
+    dispatch({type: GET_NUM_FILES, payload: filecount});
+  } catch (error){
+    console.log(error);
+    dispatch({type: GET_GRADE, payload: "ERR"});
+    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "ERR"});
+    dispatch({type: GET_NUM_FILES, payload: "ERR"});
+  }
+    
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }
