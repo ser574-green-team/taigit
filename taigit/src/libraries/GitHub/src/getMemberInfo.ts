@@ -4,7 +4,7 @@ import axios from 'axios';
  * fields viz. the username of the member and the avatar_url of the member.
  * This method returns both Private and Public members if the user is authenticated and
  * a member of that particular organization.
- * @param owner  The name of the organization in String format.
+ * @param organization  The name of the organization in String format.
  * @return       An Array Of Arrays consisting of username and avatar urls.
  */
 export async function
