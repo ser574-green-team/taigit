@@ -22,7 +22,8 @@ import colors from '../styles/colors';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
-
+//let projectId = '';
+let message = '';
 class Taiga extends Component {
   constructor(props) {
     super(props);
@@ -52,16 +53,24 @@ class Taiga extends Component {
     if (Object.keys(this.props.projectData).length == 0) {
       this.props.loadAllTaigaProjectData(this.state.taigaSlug);
     }
+    //this.props.selectSprintList;
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
   }
 
+  onSprintSelection = (selectedSprint) => {
+    this.props.grabSingleSprintData(selectedSprint.value, this.props.projectData.id, selectedSprint.label);
+    this.props.grabSprintStats(selectedSprint.value);
+  }
+  
   render() {
     return(
       <div className="app-page">
         <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.props.projectData.name}</p></h2>
         <div className="selector">
           <Select options={this.props.sprintList}
+          placeholder={this.state.selectedSprint == '' ? "Select A Sprint" : this.state.selectedSprint}
+          onChange={this.onSprintSelection}
           theme={(theme) => ({
             ...theme,
             colors: {
@@ -80,7 +89,7 @@ class Taiga extends Component {
             this.onLayoutChange(layout, layouts)
           }
         >
-          <div className='box' key="1" data-grid={{ w: 4, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
+        <div className='box' key="1" data-grid={{ w: 4, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
               <span className="chart-title">Task Progress</span>
               <Doughnut data={this.props.sprintProgress} options={{maintainAspectRatio: true, responsive: true}}/>
@@ -92,9 +101,9 @@ class Taiga extends Component {
             <Line data={this.props.burnDownData} options={burndownOptions}/>
             </div>
           </div>
-          <div className='box' key="4" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <span className="chart-title">Single Sprint Taiga Task</span>
+        <div className='box' key="4" data-grid={{ w: 5, h: 10, x: 5, y: 0, minW: 0, minH: 0 }}>
+        <div className="chart">
+          <span className="chart-title">Single Sprint Taiga Task</span>
               <Bar data={this.props.singleSprintData} options={barGraphOptions}/>
             </div>
           </div>

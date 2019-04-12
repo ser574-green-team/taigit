@@ -10,8 +10,11 @@ import {
   selectNumBranchCommits,
   selectNumPullRequestsClosedData,
   selectAvgCommentsPRData,
-  selectBuildsList,
-  selectBytesOfCodeChartData } from '../reducers';
+  selectBytesOfCodeChartData,
+  selectBuildsList, 
+  selectGrade,
+  selectNumFiles,
+  selectCyclomaticComplexity} from '../reducers';
 import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
@@ -80,7 +83,7 @@ class GitHub extends Component {
             </div>
           </div>
           <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number="13" statistic="Pull Requests Created"/>
+            <NumberDisplay number={this.props.numPullRequests + this.props.numPullRequestsClosed} statistic="Pull Requests Created"/>
           </div>
           <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={this.props.numPullRequestsClosed} statistic="Pull Requests Closed"/>
@@ -98,13 +101,13 @@ class GitHub extends Component {
             <NumberDisplay number={this.props.avgCommentsOnPR} statistic="Average Comments on PR"/>
           </div>
           <div className="box" key="7" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
-            <NumberDisplay number= {200} statistic="Total files"/>
+            <NumberDisplay number={this.props.numFiles} statistic="Total files"/>
           </div>
           <div className='box' key="8" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number= {10} statistic="Cyclomatic Complexity"/>
+            <NumberDisplay number={this.props.cyclomaticComplexity} statistic="Cyclomatic Complexity"/>
           </div>
           <div className='box' key="9" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number= {"A"} statistic="Overall Grade of the Project"/>
+            <NumberDisplay number={this.props.grade} statistic="Codacy Project Grade"/>
           </div>
           <div className="box" key="10" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
             <div className="chart">
@@ -149,7 +152,10 @@ const mapStateToProps = state => ({
   numPullRequestsClosed: selectNumPullRequestsClosedData(state),
   avgCommentsOnPR: selectAvgCommentsPRData(state),
   buildsList: selectBuildsList(state),
-  bytesOfCode: selectBytesOfCodeChartData(state)
+  bytesOfCode: selectBytesOfCodeChartData(state),
+  grade: selectGrade(state),
+  numFiles: selectNumFiles(state),
+  cyclomaticComplexity: selectCyclomaticComplexity(state)
 });
 
 /**

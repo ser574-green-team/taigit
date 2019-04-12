@@ -11,7 +11,11 @@ import { GET_BRANCH_LIST,
   ADD_USER_REPOS,
   ADD_USER_INFO,
   GET_BYTES_OF_CODE,
-  GET_COMMITS_FOR_TIME
+  GET_COMMITS_FOR_TIME,
+  GET_CYCLOMATIC_COMPLEXITY,
+  GET_GRADE,
+  GET_NUM_FILES
+
 } from '../actions/githubActions';
 
 const initialState = {
@@ -27,7 +31,10 @@ const initialState = {
   userRepos: [],
   user: {},
   bytesOfCode: {},
-  commitInTime: {}
+  commitInTime: {},
+  grade: "?",
+  cyclomaticComplexity: 0,
+  numFiles: 0
 }
 /**
  * Github Reducer
@@ -56,6 +63,11 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
         numPullRequests: action.payload
+      }
+    case GET_PULL_REQUESTS_CLOSED:
+      return {
+        ...state,
+        numPullRequestsClosed: action.payload
       }
     case ADD_CONTRIBUTOR_INFO:
       console.log('payload for contributor data is: ', action.payload);
@@ -110,7 +122,21 @@ const githubReducer = (state = {}, action) => {
         ...state,
         commitInTime: action.payload
       }
-
+    case GET_GRADE: 
+      return {
+        ...state,
+        grade: action.payload
+      }
+    case GET_CYCLOMATIC_COMPLEXITY:
+      return {
+        ...state,
+        cyclomaticComplexity: action.payload
+      }
+    case GET_NUM_FILES: 
+      return {
+        ...state,
+        numFiles: action.payload
+      }
     default:
       return {
         ...initialState,
@@ -237,7 +263,6 @@ export const selectBytesOfCodeChartData = (state) => {
   };
 }
 
-
 export const selectCommitsInTimeWindow = (state) => {
   let days = []
   let commits = []
@@ -254,6 +279,17 @@ export const selectCommitsInTimeWindow = (state) => {
         borderWidth: 1
     }]
   };
+  
+export const selectGrade = (state) => {
+  return state.grade;
+}
+
+export const selectNumFiles = (state) => {
+  return state.numFiles;
+}
+
+export const selectCyclomaticComplexity = (state) => {
+  return state.cyclomaticComplexity;
 }
 
 export default githubReducer

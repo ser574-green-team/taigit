@@ -274,8 +274,7 @@ project_info(slug : string) : Promise<Object> {
  */
 export async function 
 sprint_list(projId : number) : Promise<Array<sprint_info>> {
-    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/milestones?project=${projId}`)).data;
-  
+    let data : sprint_info[] = (await axios.get(`https://api.taiga.io/api/v1/projects/${projId}`)).data.milestones;
     return data;
 }
 
@@ -534,7 +533,11 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
                 if (name === big_obj[i].name) {
                     big_obj[i].total_task_count = big_obj[i].total_task_count + 1;
                     if (task_status === true) {
-                        big_obj[i].closed_task_count = big_obj[i].closed_task_count + 1;
+                        if (task_status_name === "Ready for test") {
+                            big_obj[i].task_ready_for_test_count = big_obj[i].task_ready_for_test_count + 1;
+                        } else if (task_status_name === "Closed") {
+                            big_obj[i].closed_task_count = big_obj[i].closed_task_count + 1;
+                        }
                     } else {
                         if (task_status_name === "Ready for test") {
                             big_obj[i].task_ready_for_test_count = big_obj[i].task_ready_for_test_count + 1;
@@ -564,8 +567,13 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
             json_obj['closed_task_count'] = 0;
 
             if (task_status === true) {
-                json_obj['closed_task_count'] = 1;
+                
                 json_obj['total_task_count'] = 1;
+                if (task_status_name === "Ready for test") {
+                    json_obj['task_ready_for_test_count'] = 1;
+                } else if (task_status_name === "Closed") {
+                    json_obj['closed_task_count'] = 1;
+                }
             } else {
                 if (task_status_name === "Ready for test") {
                     json_obj['task_ready_for_test_count'] = 1;
@@ -839,7 +847,7 @@ task_of_us(usId : number) : Promise <Object[]>  {
 }
 
 /**
- * @summary check if a retrospective for a particular sprint exists
+ * @summary check if a wiki page containing a sprint retrospective for a particular sprint exists
  * @param project_id : number
  * @param sprint_id : number
  */
@@ -879,6 +887,87 @@ check_for_retrospective(project_id : number, sprint_id : number) : Promise<wiki_
     return retro_page;
 }
 
+/**
+ * @summary check if a wiki page containing a sprint review for a particular sprint exists
+ * @param project_id : number
+ * @param sprint_id : number
+ */
+export async function
+check_for_review(project_id : number, sprint_id : number) : Promise<wiki_page | undefined> {
+    //get info from taiga
+    let { sprint_start, sprint_end } = await sprint_stats(sprint_id);
+    let wiki_pages : wiki_page[] = await project_wiki(project_id);
+
+    //find searchable date range
+    let sprint_len = get_days_between_dates(new Date(sprint_start), new Date(sprint_end));
+    let day_diff: number = 3;
+    if(sprint_len <= 7) {
+        //if sprint length is 1 week, search +-1 day
+        day_diff = 1;
+    } else if(sprint_len <= 14) {
+        //if sprint length is 2 weeks, search +-2 days
+        day_diff = 2;
+    } else {
+        //otherwise search +-3 days
+        day_diff = 3;
+    }
+
+
+    let retro_page : wiki_page | undefined = undefined;
+    for(let entry of wiki_pages) {
+        //check wikipage title for the word "review"
+        if(/.?(review).?/gmi.test(entry.slug)) {
+            //then check that it's "last_modified" date is with an acceptable range from the end of the sprint
+            if(check_date_in_range(new Date(sprint_end), day_diff, new Date(entry.modified_date))) {
+                //if page matches, then return it.
+                retro_page = entry;
+                break;
+            }
+        }
+    }
+    return retro_page;
+}
+
+/**
+ * @summary check if a wiki page containing a sprint review for a particular sprint exists
+ * @param project_id : number
+ * @param sprint_id : number
+ */
+export async function
+check_for_planning(project_id : number, sprint_id : number) : Promise<wiki_page | undefined> {
+    //get info from taiga
+    let { sprint_start, sprint_end } = await sprint_stats(sprint_id);
+    let wiki_pages : wiki_page[] = await project_wiki(project_id);
+
+    //find searchable date range
+    let sprint_len = get_days_between_dates(new Date(sprint_start), new Date(sprint_end));
+    let day_diff: number = 3;
+    if(sprint_len <= 7) {
+        //if sprint length is 1 week, search +-1 day
+        day_diff = 1;
+    } else if(sprint_len <= 14) {
+        //if sprint length is 2 weeks, search +-2 days
+        day_diff = 2;
+    } else {
+        //otherwise search +-3 days
+        day_diff = 3;
+    }
+
+
+    let retro_page : wiki_page | undefined = undefined;
+    for(let entry of wiki_pages) {
+        //check wikipage title for the word "planning"
+        if(/.?(planning).?/gmi.test(entry.slug)) {
+            //then check that it's "last_modified" date is with an acceptable range from the start of the sprint
+            if(check_date_in_range(new Date(sprint_start), day_diff, new Date(entry.modified_date))) {
+                //if page matches, then return it.
+                retro_page = entry;
+                break;
+            }
+        }
+    }
+    return retro_page;
+}
 /**
  * @summary Converts role ids to role names
  * @param projID

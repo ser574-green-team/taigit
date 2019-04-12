@@ -2,7 +2,8 @@ import {
   getBranches,
   getNumCommitsFromUser,
   getNumOpenPullRequests,
-  contributorData,
+  getNumClosedPullRequest,
+  getContributorData,
   getNumBranchCommits,
   getNumComments,
   getAuthToken,
@@ -11,7 +12,8 @@ import {
   getUserInfo,
   getBuilds,
   getBytesOfCode,
-  getCommitsInTimeWindow
+  getCommitsInTimeWindow,
+  getCodeAnalysis
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -30,6 +32,9 @@ export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
 export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
 export const GET_COMMITS_FOR_TIME = 'GET_COMMITS_FOR_TIME';
+export const GET_GRADE = 'GET_GRADE';
+export const GET_CYCLOMATIC_COMPLEXITY = 'GET_CYCLOMATIC_COMPLEXITY';
+export const GET_NUM_FILES = 'GET_NUM_FILES';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -93,9 +98,9 @@ export const getMembersInfo = (organization, auth) => dispatch => {
 //     );
 // }
 
-export const getContributorData = (owner, repo, auth) => dispatch => {
+export const getContributorsData = (owner, repo, auth) => dispatch => {
   console.log('about to grab contributor data');
-  contributorData(owner, repo, auth)
+  getContributorData(owner, repo, auth)
     .then((contributorData) => {
       try {
         const authorList = contributorData.map((userInfo) => {
@@ -175,7 +180,11 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const numberOfPullRequests = await getNumOpenPullRequests(owner, repo, auth)
   dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
 
-  const contributorInfo = await contributorData(owner, repo, auth);
+  const contributorInfo = await getContributorData(owner, repo, auth);
+
+  const numberOfClosedPullRequests = await getNumClosedPullRequest(owner, repo, auth)
+  dispatch({type: GET_PULL_REQUESTS_CLOSED, payload: numberOfClosedPullRequests});
+
   try {
     console.log('contributor info: ', contributorInfo);
     const authorList = contributorInfo.map((userInfo) => {
@@ -210,6 +219,24 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
 
   const commitInTime = await getCommitsInTimeWindow(owner, repo, '01/31/2019', '04/11/2019', auth);
   dispatch({type: GET_COMMITS_FOR_TIME, payload: commitInTime});
+
+  const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
+    repo, owner, repo, auth);
+  console.log("YO DAVID " + getFromLocalStorage("codacy-username"));
+
+  try{
+    let grade = analysis.grade;
+    let cc = analysis.complexity;
+    let filecount = analysis.fileCount;
+    dispatch({type: GET_GRADE, payload:grade});
+    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: cc});
+    dispatch({type: GET_NUM_FILES, payload: filecount});
+  } catch (error){
+    console.log(error);
+    dispatch({type: GET_GRADE, payload: "ERR"});
+    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "ERR"});
+    dispatch({type: GET_NUM_FILES, payload: "ERR"});
+  }
 
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }
