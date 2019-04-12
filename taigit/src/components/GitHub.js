@@ -20,6 +20,7 @@ import ScrollableList from './ScrollableList';
 import HorizBarChart from './charts/HorizBarChart';
 import colors from "../styles/colors";
 import { getFromLocalStorage } from "../utils/utils";
+import Timeline from './Timeline';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'github-layout';
@@ -113,6 +114,9 @@ class GitHub extends Component {
               <span className ="chart-title">Builds Used</span>
               <ScrollableList items={this.props.buildsList}/>
             </div>
+          </div>
+          <div className='box' key="9" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
+            <Timeline timeline statistic="Pull Request Review Timeline"/>
           </div>
         </ResponsiveReactGridLayout>
       </div>
