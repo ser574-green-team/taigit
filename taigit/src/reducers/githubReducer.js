@@ -169,6 +169,36 @@ export const selectNumCommitsChartData = (state) => {
   }
 }
 
+export const selectProjectTechnologiesChartData = (state) => {
+  const languageData = state.bytesOfCode;
+  debugger;
+  let languages = [];
+  let bytes = [];
+  let backgroundColors = [];
+  let colorKeys = Object.keys(colors);
+  let shades = ['light', 'base', 'dark'];
+  if (languageData == undefined || Object.keys(languageData) === 0) {
+    return;
+  }
+  Object.keys(languageData).forEach((language) => {
+    languages.push(language);
+    bytes.push(languageData[language]);
+    let randomShade = shades[shades.lenght * Math.random() << 0];
+    debugger;
+    let randomColor = colors[colorKeys[colorKeys.length * Math.random() << 0]][randomShade];
+    debugger;
+    backgroundColors.push(randomColor);
+  });
+  return {
+    labels: languages,
+    datasets: [{
+      label: 'Technologies Used',
+      data: bytes,
+      backgroundColor: backgroundColors
+    }]
+  }
+}
+
 export const selectNumPullRequestsData = (state) => {
   return state.numPullRequests;
 }

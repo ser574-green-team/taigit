@@ -32,3 +32,4 @@ export const selectTaigaProjectData = (state) => fromTaiga.selectTaigaProjectDat
 export const selectNumFiles = (state) => fromGithub.selectNumFiles(state.github);
 export const selectGrade = (state) => fromGithub.selectGrade(state.github);
 export const selectCyclomaticComplexity = (state) => fromGithub.selectCyclomaticComplexity(state.github);
+export const selectProjectTechnologiesChartData = (state) => fromGithub.selectProjectTechnologiesChartData(state.github);

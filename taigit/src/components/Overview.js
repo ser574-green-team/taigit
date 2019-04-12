@@ -9,7 +9,10 @@ import { selectUserTaskDistributionChartData } from '../reducers';
 import { connect } from 'react-redux';
 import { loadAllTaigaProjectData } from '../actions/taigaActions';
 import { loadAllGitHubProjectData } from '../actions/githubActions';
-import { selectTaigaProjectData } from '../reducers';
+import { 
+  selectTaigaProjectData,
+  selectProjectTechnologiesChartData 
+} from '../reducers';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
@@ -73,7 +76,7 @@ class Overview extends Component {
           <div className='box' key="2" data-grid={{ w: 3, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
               <span className="chart-title">Technologies Used</span>
-              <Doughnut data={technologiesUsed} options={{maintainAspectRatio: true, responsive: true}}/>
+              <Doughnut data={this.props.techUsedChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
@@ -93,19 +96,6 @@ class Overview extends Component {
       </div>
     )
   }
-}
-
-let technologiesUsed = {
-  labels: ["ReactJS", "Python", "HTML"],
-  datasets: [{
-    label: 'Technologies Used',
-    data: [6, 4, 3],
-    backgroundColor: [
-        colors.yellow.base,
-        colors.red.base,
-        colors.blue.base,
-    ],
-  }]
 }
 
 let gitContributionsData = {
@@ -150,7 +140,8 @@ const barGraphOptions = {
 }
 const mapStateToProps = state => ({
   taigaTaskDistribution: selectUserTaskDistributionChartData(state),
-  taigaProjectData: selectTaigaProjectData(state)
+  taigaProjectData: selectTaigaProjectData(state),
+  techUsedChartData: selectProjectTechnologiesChartData(state)
 });
 export default connect(mapStateToProps, { 
   loadAllGitHubProjectData,
