@@ -3,6 +3,7 @@ import {gethistoryPR} from "./src/getHistoryOfPR";
 export {getBranches, getNumBranchCommits} from "./src/branches";
 export {getCommitsInTimeWindow, getTotalCommits, getNumCommitsFromUser} from "./src/commitsInWindow";
 export {getNumOpenPullRequests} from "./src/numPullRequests";
+export {getNumClosedPullRequest} from "./src/numPullRequests";
 export {getNumComments} from "./src/avgComments";
 export {contributorData} from "./src/contributorData";
 export {authRedirect, getAuthToken} from "./src/auth"

@@ -2,6 +2,7 @@ import {
   getBranches,
   getNumCommitsFromUser,
   getNumOpenPullRequests,
+  getNumClosedPullRequest,
   contributorData,
   getNumBranchCommits,
   getNumComments,
@@ -81,15 +82,13 @@ export const getMembersInfo = (organization, auth) => dispatch => {
     });
 }
 
-// component for pull requests closed, to be implemented in the backend
-
-// export const getPullRequestsClosed = (owner, repo, auth) => dispatch => {
-//   console.log('about to get number of pull requests closed');
-//   getNumPullRequestsClosed(owner, repo, auth)
-//     .then(numberOfPullRequestsClosed =>
-//       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequestsClosed})
-//     );
-// }
+export const getPullRequestsClosed = (owner, repo, auth) => dispatch => {
+  console.log('about to get number of pull requests closed');
+  getNumClosedPullRequest(owner, repo, auth)
+    .then(numberOfPullRequestsClosed =>
+      dispatch({type: GET_PULL_REQUESTS_CLOSED, payload: numberOfPullRequestsClosed})
+    );
+}
 
 export const getContributorData = (owner, repo, auth) => dispatch => {
   console.log('about to grab contributor data');
