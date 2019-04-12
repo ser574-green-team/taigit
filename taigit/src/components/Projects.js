@@ -219,7 +219,7 @@ class Projects extends Component {
                       I don't have a Codacy account
                     </button>
                   </a>
-                  <div class="tip">
+                  <div className="tip">
                     <FontAwesomeIcon className="about" icon={faQuestionCircle} size="2x"
                                      title=""/>
                                      <span>Codacy helps us to provide you with code analysis
