@@ -533,7 +533,11 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
                 if (name === big_obj[i].name) {
                     big_obj[i].total_task_count = big_obj[i].total_task_count + 1;
                     if (task_status === true) {
-                        big_obj[i].closed_task_count = big_obj[i].closed_task_count + 1;
+                        if (task_status_name === "Ready for test") {
+                            big_obj[i].task_ready_for_test_count = big_obj[i].task_ready_for_test_count + 1;
+                        } else if (task_status_name === "Closed") {
+                            big_obj[i].closed_task_count = big_obj[i].closed_task_count + 1;
+                        }
                     } else {
                         if (task_status_name === "Ready for test") {
                             big_obj[i].task_ready_for_test_count = big_obj[i].task_ready_for_test_count + 1;
@@ -563,8 +567,13 @@ get_task_details(sprint_id: number, project_id: any, sprint_name: string)  : Pro
             json_obj['closed_task_count'] = 0;
 
             if (task_status === true) {
-                json_obj['closed_task_count'] = 1;
+                
                 json_obj['total_task_count'] = 1;
+                if (task_status_name === "Ready for test") {
+                    json_obj['task_ready_for_test_count'] = 1;
+                } else if (task_status_name === "Closed") {
+                    json_obj['closed_task_count'] = 1;
+                }
             } else {
                 if (task_status_name === "Ready for test") {
                     json_obj['task_ready_for_test_count'] = 1;
