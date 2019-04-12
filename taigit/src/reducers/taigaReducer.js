@@ -1,16 +1,22 @@
 import { 
-  GRAB_TAIGA_DATA, GET_SPRINT_STATS, 
-  GET_TASK_STATS, GET_SPRINT_NAMES, 
-  GET_SINGLE_SPRINT_STATS 
-}from '../actions/taigaActions';
+  GRAB_TAIGA_DATA,
+  GET_SPRINT_STATS,
+  GET_TASK_STATS,
+  GET_SPRINT_NAMES,
+  GET_SINGLE_SPRINT_STATS,
+  TAIGA_LOGIN,
+  GET_USER_PROJECTS
+} from '../actions/taigaActions';
 import colors from '../styles/colors';
 
 const initialState = {
-  taigaData: 'initialData',
+  taigaProjectData: {},
   sprintList: [],
   sprintStats: {},
   taigaTaskStats: [],
   singleSprintStats: [],
+  userId: {},
+  projectList: []
 }
 
 /**
@@ -21,46 +27,50 @@ const initialState = {
  */
 export default function taigaReducer(state = initialState, action) {
   switch(action.type) {
-    case GRAB_TAIGA_DATA: 
-      console.log('in reducer of grab taiga data');
-      console.log('payload is: ', action.payload);
-      console.log('returning state', { ...state, taigaData: action.payload });
-      
+    case GRAB_TAIGA_DATA:       
       // Return new object of current state spread and new property (taigaData)
       return {
         ...state,
         taigaProjectData: action.payload
       }
     case GET_SPRINT_STATS:
-      console.log('got sprint stats');
-      console.log('stats: ', action.payload);
       return {
         ...state,
         sprintStats: action.payload
       }
     case GET_TASK_STATS:
-      //console.log('in Task details reducer');
       return {
         ...state,
         taigaTaskStats: action.payload
       }
     case GET_SINGLE_SPRINT_STATS:
-      console.log('got sprint stats');
-      console.log('singleSprintStats: ', action.payload);
       return {
         ...state,
         singleSprintStats: action.payload
       }
     case GET_SPRINT_NAMES:
-      console.log("Get sprint name");
       return {
         ...state,
         sprintList: action.payload
+      }
+    case TAIGA_LOGIN:
+      return {
+        ...state,
+        userId: action.payload
+      }
+    case GET_USER_PROJECTS:
+      return {
+        ...state,
+        projectList: action.payload
       }
     default:
       return state;
   }
 }
+
+/**
+ * Selectors - interface between component props and redux state
+ */
 
 /**
  * Getting current sprint task progress
@@ -180,6 +190,13 @@ export const selectSprintBurndownChartData = (state) => {
 }
 
 /**
+ * Selects project data from state
+ */
+export const selectTaigaProjectData = (state) => {
+  return state.taigaProjectData;
+}
+
+/**
  * Getting list of sprints
  * Returns an array of sprint names wrapped in objects
  * that the sprint dropdown component will render
@@ -253,5 +270,18 @@ export const selectSingleSprintData = (state) => {
       data: readyForTestTaskCount
     }]
   }
+}
 
+export const selectTaigaUserID = (state) => {
+  console.log("user id is ",state.userId.id);
+  return state.userId.id;
+}
+
+export const selectProjectList = (state) => {
+  return state.projectList.map(project => {
+    return {
+      value: project,
+      label: project
+    }
+  });
 }

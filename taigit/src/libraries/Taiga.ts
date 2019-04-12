@@ -878,3 +878,34 @@ check_for_retrospective(project_id : number, sprint_id : number) : Promise<wiki_
     }
     return retro_page;
 }
+
+/**
+ * @summary Converts role ids to role names
+ * @param projID
+ * @returns dictionary pairs
+ */
+export async function
+id_to_roles(projID : number) : Promise <{ [key: string] : string }> {
+    let roles : { [key: string] : string } = {};
+    let roles_data = (await axios.get(`https://api.taiga.io/api/v1/projects/${projID}`)).data.roles;
+    roles_data.forEach(function  (r : {id : number, name: string}){
+        roles[r.id.toString()] = r.name;
+    });
+    return roles;
+}
+
+/**
+ * @summary converts points to numbers for distributions
+ * @param projID
+ * @returns dictionary pairs
+ */
+export async function
+id_to_points(projID : number) : Promise <{ [key: string] : number }> {
+    let points : { [key: string] : number } = {};
+    let points_data = (await axios.get(`https://api.taiga.io/api/v1/projects/${projID}`)).data.points;
+    points_data.forEach(function  (r : {id : number, value: number}){
+        //let value : number = (r.value == null) ? -1 : r.value; // if the null case should be 0, uncomment and replace r.value below with value
+        points[r.id.toString()]= r.value;
+    });
+    return points;
+}
