@@ -112,10 +112,10 @@ export const getContributorData = (owner, repo, auth) => dispatch => {
     });
 }
 
-export const getBranchCommits = (owner, repo, branch, auth) => dispatch => {
+export const getBranchCommits = (owner, repository, branch, auth) => dispatch => {
   console.log('about to grab number of branch commits');
-  getNumBranchCommits(owner, repo, branch, auth)
-    .then(numBranchCommits =>
+  getNumBranchCommits(owner, repository, branch, auth)
+    .then((numBranchCommits) =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
 }
@@ -140,7 +140,7 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
 export const getBuildsList = (owner, repo, auth) => dispatch => {
   console.log('about to perform acquisition of build candidates');
   getBuilds(owner, repo, auth)
-    .then(buildsList => 
+    .then(buildsList =>
       dispatch({type: GET_BUILDS_LIST, payload: buildsList})
     );
 }
@@ -149,7 +149,7 @@ export const getBuildsList = (owner, repo, auth) => dispatch => {
 export const addUserInfo = (auth) => dispatch => {
   console.log('about to get user object');
   getUserInfo(auth)
-    .then(userInfo => 
+    .then(userInfo =>
       dispatch({type: ADD_USER_INFO, payload: userInfo})
     );
 }
@@ -183,7 +183,7 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
     console.error('Error getting contributor info: ', error);
   }
 
-  const numberOfBranchCommits = await getNumBranchCommits(owner, repo, 'master', auth);
+  const numberOfBranchCommits = await getNumBranchCommits(owner, repo, branches, auth);
   dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numberOfBranchCommits});
 
   // TODO check to see if project is in an organization, if so, call the following

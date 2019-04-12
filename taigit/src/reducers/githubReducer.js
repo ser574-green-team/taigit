@@ -1,10 +1,10 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, 
-  GET_COMMITS_PER_USER, 
-  GET_NUM_PULL_REQUESTS, 
-  ADD_CONTRIBUTOR_INFO, 
-  GET_NUM_BRANCH_COMMITS, 
-  ADD_AUTH_KEY, 
+import { GET_BRANCH_LIST,
+  GET_COMMITS_PER_USER,
+  GET_NUM_PULL_REQUESTS,
+  ADD_CONTRIBUTOR_INFO,
+  GET_NUM_BRANCH_COMMITS,
+  ADD_AUTH_KEY,
   GET_PULL_REQUESTS_CLOSED,
   GET_AVG_COMMENTS_PR,
   GET_BUILDS_LIST,
@@ -63,9 +63,9 @@ const githubReducer = (state = {}, action) => {
       }
     case GET_NUM_BRANCH_COMMITS:
       console.log('payload for number of branch commits is: ', action.payload);
-      state.numBranchCommits.push(action.payload);
       return {
         ...state,
+        numBranchCommits: action.payload
       }
     case ADD_AUTH_KEY:
       console.log('payload is: ', action.payload);
@@ -78,7 +78,7 @@ const githubReducer = (state = {}, action) => {
       return {
           ...state,
           avgCommentsOnPR: action.payload
-      } 
+      }
     case GET_BUILDS_LIST:
       console.log('payload for builds is: ', action.payload);
       return {
@@ -161,17 +161,7 @@ export const selectCommitsPerContributorChartData = (state) => {
   }
 }
 
-export const selectNumBranchCommits = (state) => {
-  return {
-      labels: ['master', 'dev'],
-      datasets: [{
-          label: 'Number of Commits',
-          data: [state.numBranchCommits[0], state.numBranchCommits[1]],
-          backgroundColor: colors.red.base,
-          borderWidth: 1
-      }]
-  };
-}
+
 
 export const selectAuthKey = (state) => {
   return state.authKey;
@@ -200,6 +190,24 @@ export const selectRepoList = (state) => {
 
 export const selectUserLogin = (state) => {
   return state.user && state.user.login;
+}
+
+export const selectNumBranchCommits = (state) => {
+  let branches = []
+  let commits = []
+  Object.keys(state.numBranchCommits).forEach(function(key) {
+    branches.push(key);
+    commits.push(state.numBranchCommits[key]);
+  });
+  return {
+    labels: branches,
+    datasets: [{
+      label: 'Commits Per Branch',
+      data: commits,
+      backgroundColor: colors.blue.base,
+      borderWidth: 1
+    }]
+  };
 }
 
 export const selectBytesOfCodeChartData = (state) => {

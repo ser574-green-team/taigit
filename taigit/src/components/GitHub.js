@@ -52,7 +52,7 @@ class GitHub extends Component {
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
     // Handle if user refreshes on GitHub page
-    if (this.props.branches.length == 0) {
+    if (this.props.branches.length === 0) {
       const auth = getFromLocalStorage('auth-key');
       this.props.loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
     }
@@ -121,7 +121,7 @@ class GitHub extends Component {
               <ScrollableList items={this.props.buildsList}/>
             </div>
           </div>
-          <div className="box" key="9" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
+          <div className="box" key="12" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
             <div className="chart">
               <span className = "chart-title">Bytes of Code</span>
               <HorizBarChart
@@ -157,4 +157,3 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, { loadAllGitHubProjectData })(GitHub)
-
