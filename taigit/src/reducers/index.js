@@ -29,3 +29,4 @@ export const selectUserLogin = (state) => fromGithub.selectUserLogin(state.githu
 export const selectTaigaUserID = (state) => fromTaiga.selectTaigaUserID(state.taiga);
 export const selectProjectList = (state) => fromTaiga.selectProjectList(state.taiga);
 export const selectTaigaProjectData = (state) => fromTaiga.selectTaigaProjectData(state.taiga);
+export const selectCommitsInTimeWindow = (state) => fromGithub.selectCommitsInTimeWindow(state.github);

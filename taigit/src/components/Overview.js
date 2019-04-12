@@ -5,7 +5,7 @@ import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 import { Bar } from 'react-chartjs-2';
-import { selectUserTaskDistributionChartData } from '../reducers';
+import { selectUserTaskDistributionChartData, selectCommitsInTimeWindow } from '../reducers';
 import { connect } from 'react-redux';
 import { loadAllTaigaProjectData } from '../actions/taigaActions';
 import { loadAllGitHubProjectData } from '../actions/githubActions';
@@ -15,7 +15,7 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
-//export default 
+//export default
 class Overview extends Component {
   constructor(props) {
     super(props);
@@ -78,8 +78,8 @@ class Overview extends Component {
           </div>
           <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-horizontal-primary">
-              <span className="chart-title">Github Contributions</span>
-              <Line data={gitContributionsData} options={{maintainAspectRatio: true, responsive: true}}/>
+              <span className="chart-title">Github Contributions to Master</span>
+              <Line data={this.props.commitsInWindowData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="4" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
@@ -150,9 +150,10 @@ const barGraphOptions = {
 }
 const mapStateToProps = state => ({
   taigaTaskDistribution: selectUserTaskDistributionChartData(state),
-  taigaProjectData: selectTaigaProjectData(state)
+  taigaProjectData: selectTaigaProjectData(state),
+  commitsInWindowData: selectCommitsInTimeWindow(state)
 });
-export default connect(mapStateToProps, { 
+export default connect(mapStateToProps, {
   loadAllGitHubProjectData,
   loadAllTaigaProjectData
 })(Overview)

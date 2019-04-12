@@ -10,7 +10,8 @@ import {
   getUserRepos,
   getUserInfo,
   getBuilds,
-  getBytesOfCode
+  getBytesOfCode,
+  getCommitsInTimeWindow
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
 
@@ -28,6 +29,7 @@ export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
 export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
+export const GET_COMMITS_FOR_TIME = 'GET_COMMITS_FOR_TIME';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -119,6 +121,13 @@ export const getBranchCommits = (owner, repository, branch, auth) => dispatch =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
 }
+export const getCommitsInWindow = (owner, repo, Since, Until, auth) => dispatch => {
+  console.log('about to grab commits for a time period');
+  getCommitsInTimeWindow(owner, repo, Since, Until, auth)
+    .then((commitsInWindow) =>
+        dispatch({type: GET_COMMITS_FOR_TIME, payload: commitsInWindow})
+  );
+}
 
 export const getAuthKey = (auth_server, storeKey) => dispatch => {
   console.log('about to get auth key');
@@ -198,6 +207,9 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
 
   const bytesOfCode = await getBytesOfCode(owner, repo, auth);
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
+
+  const commitInTime = await getCommitsInTimeWindow(owner, repo, '01/31/2019', '04/11/2019', auth);
+  dispatch({type: GET_COMMITS_FOR_TIME, payload: commitInTime});
 
   dispatch({type: LOADING_GITHUB_DATA, payload: false});
 }

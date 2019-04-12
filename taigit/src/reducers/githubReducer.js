@@ -10,7 +10,8 @@ import { GET_BRANCH_LIST,
   GET_BUILDS_LIST,
   ADD_USER_REPOS,
   ADD_USER_INFO,
-  GET_BYTES_OF_CODE
+  GET_BYTES_OF_CODE,
+  GET_COMMITS_FOR_TIME
 } from '../actions/githubActions';
 
 const initialState = {
@@ -25,7 +26,8 @@ const initialState = {
   buildsList: [],
   userRepos: [],
   user: {},
-  bytesOfCode: {}
+  bytesOfCode: {},
+  commitInTime: {}
 }
 /**
  * Github Reducer
@@ -102,6 +104,13 @@ const githubReducer = (state = {}, action) => {
         ...state,
         bytesOfCode: action.payload
       }
+
+    case GET_COMMITS_FOR_TIME:
+      return{
+        ...state,
+        commitInTime: action.payload
+      }
+
     default:
       return {
         ...initialState,
@@ -222,6 +231,25 @@ export const selectBytesOfCodeChartData = (state) => {
     datasets: [{
         label: 'Bytes of Code',
         data: bytes,
+        backgroundColor: colors.red.base,
+        borderWidth: 1
+    }]
+  };
+}
+
+
+export const selectCommitsInTimeWindow = (state) => {
+  let days = []
+  let commits = []
+  Object.keys(state.commitInTime).forEach(function(key) {
+    days.push(key);
+    commits.push(state.commitInTime[key]);
+  });
+  return {
+    labels: days,
+    datasets: [{
+        label: 'Commits in time window',
+        data: commits,
         backgroundColor: colors.red.base,
         borderWidth: 1
     }]
