@@ -100,7 +100,7 @@ const githubReducer = (state = {}, action) => {
         user: action.payload
       }
     case GET_TOTAL_COMMITS:
-      console.console.log('payload for total commits of the project is: ' , action.payload);
+      console.log('payload for total commits of the project is: ' , action.payload);
       return {
         ...state,
         totalCommits: action.payload
