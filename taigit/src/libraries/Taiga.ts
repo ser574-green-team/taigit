@@ -881,7 +881,7 @@ check_for_retrospective(project_id : number, sprint_id : number) : Promise<wiki_
 
 
 
-**
+/**
  * @summary This call return estimate of sprint plan need to finish the project (unit points) based on project Id
  * @param projectId the ID for the access of project
  * @returns
@@ -891,7 +891,6 @@ check_for_retrospective(project_id : number, sprint_id : number) : Promise<wiki_
  *          velocity : number //estimate sprint velocity
  * }
  */
-
 export async function
 proj_spplan_res(projId : number) : Promise<Array<[number,number]>> {
     let velocity_list : Array<[boolean, number]> =  (await proj_spvelocity(projId));
@@ -911,7 +910,6 @@ proj_spplan_res(projId : number) : Promise<Array<[number,number]>> {
              v_sum += v[1];
              n_s += 1;
          }
-
     }
     v_avg=v_sum/n_s;
     //estimate future sprint planning
