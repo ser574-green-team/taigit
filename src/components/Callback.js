@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
-import * as keys from '../keys.json';
 import queryString from 'query-string';
 import {getAuthKey} from '../actions/githubActions';
 import {selectAuthKey} from '../reducers/githubReducer';
