@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { faConnectdevelop } from '@fortawesome/free-brands-svg-icons';
 import { getFromLocalStorage } from "../utils/utils";
 import {
-  getContributorData
+  getContributorsData
 } from '../actions/githubActions';
 import { selectBasicContributorData } from '../reducers';
 
@@ -32,7 +32,7 @@ class Team extends Component {
         <h2>Team</h2>
           <div className="team-members">
           {this.props.teamMembers.map((memberObj) => {
-            return <div className="team-member-page-card"> 
+            return <div className="team-member-page-card">
                     <Link to={`/team/members/${memberObj.login}`}>
                       <TeamMemberCard taigaId={memberObj.taigaId} githubId={memberObj.login} name={memberObj.login} pictureUrl={memberObj.avatar_url}/>
                     </Link>
@@ -55,4 +55,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { getContributorData })(Team)
+export default connect(mapStateToProps, { getContributorsData })(Team)

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import ProjectPanel from './ProjectPanel'
 import * as keys from '../keys.json';
-import { authRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
+import { getAuthRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
 import Select from 'react-select';
 import colors from "../styles/colors";
 import { connect } from "react-redux";
@@ -14,8 +14,8 @@ import {
     setTaigaProjectID,
     loadAllTaigaProjectData,
 } from "../actions/taigaActions";
-import { 
-  getUsersRepos, 
+import {
+  getUsersRepos,
   addUserInfo,
   loadAllGitHubProjectData } from "../actions/githubActions";
 import { saveToLocalStorage, getFromLocalStorage } from "../utils/utils";
@@ -33,7 +33,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { selectUserLogin } from '../reducers';
 
-const redirect = authRedirect(keys.GH_CLIENT_ID);
+const redirect = getAuthRedirect(keys.GH_CLIENT_ID);
 let storedProjects = getFromLocalStorage('project-list') || {};
 let auth = getFromLocalStorage('auth-key');
 
@@ -85,8 +85,8 @@ class Projects extends Component {
     this.props.loadAllTaigaProjectData(this.state.taigaProjectSlug);
 
     // Load all GitHub Data
-    this.props.loadAllGitHubProjectData(this.state.repoOwner, 
-      this.state.repoName, 
+    this.props.loadAllGitHubProjectData(this.state.repoOwner,
+      this.state.repoName,
       auth);
   }
 
@@ -148,7 +148,7 @@ class Projects extends Component {
                         primary25: colors.yellow.light,
                         primary: colors.blue.light,
                     },
-                })} 
+                })}
               />
             </div>
           </div>
@@ -165,7 +165,7 @@ class Projects extends Component {
                         primary25: colors.yellow.light,
                         primary: colors.blue.light,
                     },
-                })} 
+                })}
               />
             </div>
           </div>
@@ -219,7 +219,7 @@ class Projects extends Component {
                       I don't have a Codacy account
                     </button>
                   </a>
-                  <div class="tip">
+                  <div className="tip">
                     <FontAwesomeIcon className="about" icon={faQuestionCircle} size="2x"
                                      title=""/>
                                      <span>Codacy helps us to provide you with code analysis

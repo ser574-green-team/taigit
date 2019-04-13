@@ -6,7 +6,7 @@ import axios from "axios"
  * @return           a url to the authorization system
  */
 export function
-authRedirect(client_id : string) : string {
+getAuthRedirect(client_id : string) : string {
     if(client_id == null){
         throw new Error("keys.json file is missing proper values! " +
         "Please check with the development team to ensure the GitHub " +
