@@ -879,9 +879,6 @@ check_for_retrospective(project_id : number, sprint_id : number) : Promise<wiki_
     return retro_page;
 }
 
-
-
-
 /**
  * @summary This call return list of sprint velocity (unit points) based on project Id
  * @param projectId the ID for the access of project
