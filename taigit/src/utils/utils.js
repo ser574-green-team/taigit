@@ -1,4 +1,4 @@
-export function getFromLocalStorage(name, key) {
+export function getLayoutFromLocalStorage(name, key) {
   let ls = {};
   if (global.localStorage) {
     try {
@@ -10,7 +10,8 @@ export function getFromLocalStorage(name, key) {
   return ls[key];
 }
 
-export function saveToLocalStorage(name, key, value) {
+export function saveLayoutToLocalStorage(name, key, value) {
+  console.log("LOCAL STORAGE: KEY: " + key + " VALUE: " + value);
   if (global.localStorage) {
     global.localStorage.setItem(
       name,
@@ -18,5 +19,22 @@ export function saveToLocalStorage(name, key, value) {
         [key]: value
       })
     );
+  }
+}
+
+export function saveToLocalStorage(key, value) {
+  if (global.localStorage) {
+    console.log("LOCAL STORAGE: KEY: " + key + " VALUE: " + value);
+    global.localStorage.setItem(key, value);
+  }
+}
+
+export function getFromLocalStorage(key) {
+  if (global.localStorage) {
+    try {
+      return global.localStorage.getItem(key) || "";
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

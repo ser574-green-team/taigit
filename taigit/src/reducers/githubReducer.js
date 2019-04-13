@@ -1,9 +1,37 @@
 import colors from '../styles/colors';
-import { GET_BRANCH_LIST, GET_COMMITS_PER_USER } from '../actions/githubActions';
+import { GET_BRANCH_LIST, 
+  GET_COMMITS_PER_USER, 
+  GET_NUM_PULL_REQUESTS, 
+  ADD_CONTRIBUTOR_INFO, 
+  GET_NUM_BRANCH_COMMITS, 
+  ADD_AUTH_KEY, 
+  GET_PULL_REQUESTS_CLOSED,
+  GET_AVG_COMMENTS_PR,
+  GET_BUILDS_LIST,
+  ADD_USER_REPOS,
+  ADD_USER_INFO,
+  GET_BYTES_OF_CODE,
+  GET_CYCLOMATIC_COMPLEXITY,
+  GET_GRADE,
+  GET_NUM_FILES
+} from '../actions/githubActions';
 
 const initialState = {
   branchesList: [],
-  numOfCommits: 0
+  numOfCommits: 0,
+  numPullRequests: 0,
+  contributors: [],
+  numBranchCommits: [],
+  authKey: '',
+  numPullRequestsClosed: 0,
+  avgCommentsOnPR : 0,
+  buildsList: [],
+  userRepos: [],
+  user: {},
+  bytesOfCode: {},
+  grade: "?",
+  cyclomaticComplexity: 0,
+  numFiles: 0
 }
 /**
  * Github Reducer
@@ -27,10 +55,83 @@ const githubReducer = (state = {}, action) => {
         ...state,
         numOfCommits: action.payload
       }
-    default:
+    case GET_NUM_PULL_REQUESTS:
+      console.log('payload for pull req is: ', action.payload);
       return {
         ...state,
-        ...initialState
+        numPullRequests: action.payload
+      }
+    case GET_PULL_REQUESTS_CLOSED:
+      return {
+        ...state,
+        numPullRequestsClosed: action.payload
+      }
+    case ADD_CONTRIBUTOR_INFO:
+      console.log('payload for contributor data is: ', action.payload);
+      return {
+        ...state,
+        contributors: action.payload
+      }
+    case GET_NUM_BRANCH_COMMITS:
+      console.log('payload for number of branch commits is: ', action.payload);
+      state.numBranchCommits.push(action.payload);
+      return {
+        ...state,
+      }
+    case ADD_AUTH_KEY:
+      console.log('payload is: ', action.payload);
+      return {
+          ...state,
+          authKey: action.payload
+      }
+    case GET_AVG_COMMENTS_PR:
+      console.log('payload for average comments on pr is: ', action.payload);
+      return {
+          ...state,
+          avgCommentsOnPR: action.payload
+      } 
+    case GET_BUILDS_LIST:
+      console.log('payload for builds is: ', action.payload);
+      return {
+        ...state,
+        buildsList: action.payload
+      }
+    case ADD_USER_REPOS:
+      console.log('payload for user repos is: ', action.payload);
+      return {
+        ...state,
+        userRepos: action.payload
+      }
+    case ADD_USER_INFO:
+      console.log('user info: ', action.payload);
+      return {
+        ...state,
+        user: action.payload
+      }
+    case GET_BYTES_OF_CODE:
+      return{
+        ...state,
+        bytesOfCode: action.payload
+      }
+    case GET_GRADE: 
+      return {
+        ...state,
+        grade: action.payload
+      }
+    case GET_CYCLOMATIC_COMPLEXITY:
+      return {
+        ...state,
+        cyclomaticComplexity: action.payload
+      }
+    case GET_NUM_FILES: 
+      return {
+        ...state,
+        numFiles: action.payload
+      }
+    default:
+      return {
+        ...initialState,
+        ...state
       }
   }
 }
@@ -47,7 +148,7 @@ const githubReducer = (state = {}, action) => {
  * (An example of creating new data from the store)
  */
 export const selectBranchList = (state) => {
-  return state.branchesList.map(branch => `Branch: ${branch}`);
+  return state.branchesList;
 }
 
 /**
@@ -66,6 +167,95 @@ export const selectNumCommitsChartData = (state) => {
       borderWidth: 1
     }],
   }
+}
+
+export const selectNumPullRequestsData = (state) => {
+  return state.numPullRequests;
+}
+
+export const selectCommitsPerContributorChartData = (state) => {
+  let contributorList = state.contributors.map((contributor) => contributor.login);
+  let commitsList = state.contributors.map((contributor) => contributor.totalCommits);
+  return {
+    labels: contributorList,
+    datasets: [{
+      label: 'Number of Commits',
+      data: commitsList,
+      backgroundColor: colors.yellow.base,
+      borderWidth: 1
+    }],
+  }
+}
+
+export const selectNumBranchCommits = (state) => {
+  return {
+      labels: ['master', 'dev'],
+      datasets: [{
+          label: 'Number of Commits',
+          data: [state.numBranchCommits[0], state.numBranchCommits[1]],
+          backgroundColor: colors.red.base,
+          borderWidth: 1
+      }]
+  };
+}
+
+export const selectAuthKey = (state) => {
+  return state.authKey;
+}
+
+export const selectNumPullRequestsClosedData = (state) => {
+  return state.numPullRequestsClosed;
+}
+
+export const selectAvgCommentsPRData = (state) => {
+  return state.avgCommentsOnPR;
+}
+
+export const selectBuildsList = (state) => {
+  return state.buildsList;
+}
+
+export const selectRepoList = (state) => {
+  return state.userRepos.map(repo => {
+    return {
+      value: repo.owner,
+      label: repo.name
+    }
+  });
+}
+
+export const selectUserLogin = (state) => {
+  return state.user && state.user.login;
+}
+
+export const selectBytesOfCodeChartData = (state) => {
+  let languages = []
+  let bytes = []
+  Object.keys(state.bytesOfCode).forEach(function(key) {
+    languages.push(key);
+    bytes.push(state.bytesOfCode[key]);
+  });
+  return {
+    labels: languages,
+    datasets: [{
+        label: 'Bytes of Code',
+        data: bytes,
+        backgroundColor: colors.red.base,
+        borderWidth: 1
+    }]
+  };
+}
+
+export const selectGrade = (state) => {
+  return state.grade;
+}
+
+export const selectNumFiles = (state) => {
+  return state.numFiles;
+}
+
+export const selectCyclomaticComplexity = (state) => {
+  return state.cyclomaticComplexity;
 }
 
 export default githubReducer

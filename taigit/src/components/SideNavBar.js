@@ -7,7 +7,8 @@ import {
   faUser,
   faUsers,
   faChartPie,
-  faCertificate
+  faCertificate,
+  faArrowAltCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -16,6 +17,11 @@ export default class SideNavBar extends Component {
     return(
       <div className="navbar">
         <Link to="/">
+          <div className='navButton'>
+            <FontAwesomeIcon className="navFont" icon={faArrowAltCircleLeft} size="2x"/>
+          </div>
+        </Link>
+        <Link to="/overview">
           <div className='navButton'>
             <FontAwesomeIcon className="navFont" icon={faChartPie} size="2x"/>
           </div>
