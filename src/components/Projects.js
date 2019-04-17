@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import ProjectPanel from './ProjectPanel'
-import * as keys from '../keys.json';
 import { getAuthRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
 import Select from 'react-select';
 import colors from "../styles/colors";
@@ -33,7 +32,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { selectUserLogin } from '../reducers';
 
-const redirect = getAuthRedirect(keys.GH_CLIENT_ID);
+const redirect = getAuthRedirect(process.env.GH_CLIENT_ID);
 let storedProjects = getFromLocalStorage('project-list') || {};
 let auth = getFromLocalStorage('auth-key');
 
