@@ -8,7 +8,7 @@ import {selectAuthKey} from '../reducers/githubReducer';
 class Callback extends Component {
     componentWillMount() {
         const values = queryString.parse(this.props.location.search);
-        this.props.getAuthKey(keys.GH_AUTH_SERVER, values.code);
+        this.props.getAuthKey(process.env.GH_AUTH_SERVER, values.code);
     }
 
     render() {
