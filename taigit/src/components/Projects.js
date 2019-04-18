@@ -44,7 +44,8 @@ class Projects extends Component {
       repoName: '',
       taigaProjectSlug: '',
       taigaNumID: '',
-      codacyID: ''
+      codacyID: '',
+      auth: ''
     }
 
     this.onProjectAnalyze = this.onProjectAnalyze.bind(this);
@@ -62,6 +63,8 @@ class Projects extends Component {
 
     // Only reload data if none exists
     if (typeof this.props.repoList === 'undefined' || this.props.repoList.length === 0) {
+      const auth = getFromLocalStorage('auth-key');
+      this.setState({auth: getFromLocalStorage('auth-key')});
       this.props.getUsersRepos(this.props.userLogin, auth);
     }
     if (typeof this.props.projectList === 'undefined' || this.props.projectList.length === 0) {
@@ -84,7 +87,7 @@ class Projects extends Component {
     // Load all GitHub Data
     this.props.loadAllGitHubProjectData(this.state.repoOwner,
       this.state.repoName,
-      auth);
+      this.state.auth);
   }
 
   onTaigaSubmit = (e) => {

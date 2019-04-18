@@ -24,11 +24,11 @@ export const grabTaigaData = (slugName) => async(dispatch) => {
 }
 
 export const setTaigaProjectID = (slugName) => dispatch => {
-    project_info(slugName) // give the slug name
-        .then((taigaProjectInfo) => {
-            saveToLocalStorage('taiga-project-id', taigaProjectInfo.id);
-            dispatch({type: GRAB_TAIGA_DATA, payload: taigaProjectInfo});
-        });
+  project_info(slugName) // give the slug name
+    .then((taigaProjectInfo) => {
+        saveToLocalStorage('taiga-project-id', taigaProjectInfo.id);
+        dispatch({type: GRAB_TAIGA_DATA, payload: taigaProjectInfo});
+    });
 }
 
 export const grabSprintStats = (sprintID) => dispatch => {
@@ -57,32 +57,37 @@ export const grabSprintNames = (projectId) => dispatch => {
 }
 
 export const grabTaigaUserId = (taigaId, taigaPass) => dispatch => {
-    taiga_login(taigaId, taigaPass)
-        .then((loginData) => {
-            dispatch({type: TAIGA_LOGIN, payload: loginData});
-        });
+  taiga_login(taigaId, taigaPass)
+    .then((loginData) => {
+        dispatch({type: TAIGA_LOGIN, payload: loginData});
+    });
 }
 
-export const grabUserProjects = (userId) => dispatch => {
-    get_projects_for_user(userId)
-        .then((projectList) => {
-            dispatch({type: GET_USER_PROJECTS, payload: projectList});
-        });
+export const grabUserProjects = (userId) => async(dispatch) => {
+  dispatch({type: LOADING_TAIGA_DATA, payload: true});
+  try {
+    const projectList = await get_projects_for_user(userId);
+    dispatch({type: GET_USER_PROJECTS, payload: projectList});
+  } catch (e) {
+    console.error(e);
+  } finally {
+    dispatch({type: LOADING_TAIGA_DATA, payload: false});
+  }
 }
 
 export const initializeUserData = (username, password) => dispatch => {
-    taiga_login(username, password)
-        .then((loginData) => {
-            dispatch({type: TAIGA_LOGIN, payload: loginData});
-            return loginData.id;
-        })
-        .then((userId) => {
-            saveToLocalStorage('taiga-user-id', userId);
-            return get_projects_for_user(userId);
-        })
-        .then((projectList) => {
-            dispatch({type: GET_USER_PROJECTS, payload: projectList});
-        });
+  taiga_login(username, password)
+    .then((loginData) => {
+        dispatch({type: TAIGA_LOGIN, payload: loginData});
+        return loginData.id;
+    })
+    .then((userId) => {
+        saveToLocalStorage('taiga-user-id', userId);
+        return get_projects_for_user(userId);
+    })
+    .then((projectList) => {
+        dispatch({type: GET_USER_PROJECTS, payload: projectList});
+    });
 }
 
 export const loadAllTaigaProjectData = (slugName) => async (dispatch) => {

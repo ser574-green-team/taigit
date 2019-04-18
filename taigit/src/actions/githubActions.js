@@ -48,6 +48,7 @@ export const getBranchList = (owner, repo, auth) => dispatch => {
 }
 
 export const getUsersRepos = (owner, auth) => dispatch => {
+  dispatch({type: LOADING_GITHUB_DATA, payload: true});
   getUserRepos(owner, auth)
     .then(repos => {
       try {
@@ -62,6 +63,8 @@ export const getUsersRepos = (owner, auth) => dispatch => {
         dispatch({type: ADD_USER_REPOS, payload: userReposTrimmed});
       } catch (e) {
         console.error(e);
+      } finally {
+        dispatch({type: LOADING_GITHUB_DATA, payload: false});
       }
     });
 }
