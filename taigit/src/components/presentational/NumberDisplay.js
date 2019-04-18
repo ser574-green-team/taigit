@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import TeamMemberCard from './TeamMemberCard'
 
 export default class NumberDisplay extends Component {
   render() {

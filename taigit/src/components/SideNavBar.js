@@ -4,7 +4,6 @@ import {
   faGithub
 } from '@fortawesome/free-brands-svg-icons';
 import {
-  faUser,
   faUsers,
   faChartPie,
   faCertificate,

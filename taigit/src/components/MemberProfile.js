@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import TeamMemberCard from './presentational/TeamMemberCard'
 import NumberDisplay from './presentational/NumberDisplay'
 import { WidthProvider, Responsive } from "react-grid-layout";
-import { Radar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { selectBasicContributorData } from '../reducers';
 
@@ -39,7 +38,7 @@ class MemberProfile extends Component {
   }
 
   render() {
-    let member = this.props.teamMembers.filter(member => member.login == this.props.match.params.memberId)[0];
+    let member = this.props.teamMembers.filter(member => member.login === this.props.match.params.memberId)[0];
     return(
       <div className="app-page">
         <h2>TeamMemberId: {this.props.match.params.memberId}</h2>
@@ -75,17 +74,6 @@ const mapStateToProps = state => {
   return {
     teamMembers: selectBasicContributorData(state)
   }
-}
-
-const radarChartData = {
-  labels: ["Commits", "Tasks Completed", "PRs Reviewed", "Taiga Edits", "Issues Documented"],
-  datasets: [{
-    label: 'Work Distribution',
-    data: [12, 19, 15, 10, 2],
-    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    borderColor: 'rgba(255,99,132,1)',
-    borderWidth: 1,
-  }]
 }
 
 export default connect(mapStateToProps)(MemberProfile)

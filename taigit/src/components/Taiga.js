@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Select from 'react-select'
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
 import {
@@ -49,7 +48,7 @@ class Taiga extends Component {
 
   componentWillMount() {
     // Handle if user refreshes on taiga page
-    if (Object.keys(this.props.projectData).length == 0) {
+    if (Object.keys(this.props.projectData).length === 0) {
       this.props.loadAllTaigaProjectData(this.state.taigaSlug);
     }
     //this.props.selectSprintList;
@@ -68,7 +67,7 @@ class Taiga extends Component {
         <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.props.projectData.name}</p></h2>
         <div className="selector">
           <Select options={this.props.sprintList}
-          placeholder={this.state.selectedSprint == '' ? "Select A Sprint" : this.state.selectedSprint}
+          placeholder={this.state.selectedSprint === '' ? "Select A Sprint" : this.state.selectedSprint}
           onChange={this.onSprintSelection}
           theme={(theme) => ({
             ...theme,

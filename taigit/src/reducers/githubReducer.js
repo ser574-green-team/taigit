@@ -182,7 +182,7 @@ export const selectProjectTechnologiesChartData = (state) => {
   let backgroundColors = [];
   let colorKeys = Object.keys(colors);
   let shades = ['light', 'base', 'dark'];
-  if (languageData == undefined || Object.keys(languageData) === 0) {
+  if (languageData === undefined || Object.keys(languageData) === 0) {
     return;
   }
   Object.keys(languageData).forEach((language) => {
