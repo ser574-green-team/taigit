@@ -1,6 +1,6 @@
-import { 
-  project_info, sprint_list, 
-  get_task_details, sprint_stats, 
+import {
+  project_info, sprint_list,
+  get_task_details, sprint_stats,
   get_task_status_count,
   taiga_login, get_projects_for_user
 } from '../libraries/Taiga';
@@ -17,7 +17,6 @@ export const GET_USER_PROJECTS = 'GET_USER_PROJECTS'
 export const LOADING_TAIGA_DATA = 'LOADING_TAIGA_DATA';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
-
 export const grabTaigaData = (slugName) => async(dispatch) => {
   const taigaProjectInfo = await project_info(slugName);
   taigaProjectInfo.slugName = slugName;
@@ -35,7 +34,6 @@ export const setTaigaProjectID = (slugName) => dispatch => {
 export const grabSprintStats = (sprintID) => dispatch => {
   sprint_stats(sprintID)
     .then((sprintStats) => {
-      console.log(sprintStats);
       dispatch({type: GET_SPRINT_STATS, payload: sprintStats});
     });
 }
@@ -48,7 +46,6 @@ export const grabTaskStats = (projectId) => dispatch => {
 export const grabSingleSprintData = (sprintId, projectId, sprintName) => dispatch => {
   get_task_details(sprintId, projectId, sprintName)
     .then((singleSprintStats) => {
-      console.log(singleSprintStats);
       dispatch({type: GET_SINGLE_SPRINT_STATS, payload: singleSprintStats});
     });
 }
