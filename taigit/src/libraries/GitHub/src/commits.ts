@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 /**
  * Returns: -1 if error, list of comits if successful.
  * Commit structure: https://developer.github.com/v3/repos/commits/
@@ -97,7 +96,6 @@ getNumCommitsFromUser(owner: string, repo: string, author: string,
 }
 
 
-
 /**
  * Gets weekly commits starting from the first commit time in the past year.
  * @param owner
@@ -105,15 +103,15 @@ getNumCommitsFromUser(owner: string, repo: string, author: string,
  * @param auth
  */
 export async function
-    getWeeklyCommits(owner: string, repo: string,
-        auth: string): Promise<{ date: string, commits: number }[]> {
-    let commits: { date: string, commits: number }[] = [];
-    try {
+getWeeklyCommits(owner: string, repo: string,
+    auth: string) : Promise<{date: string, commits: number}[]>{
+    let commits : { date: string, commits: number }[] = [];
+    try{
         var config = {
-            headers: { 'Authorization': "Bearer " + auth },
+            headers: {'Authorization': "Bearer " + auth},
         }
-        const response = await axios.get('https://api.github.com/repos/' + owner +
-            '/' + repo + '/stats/commit_activity', config);
+        const response = await axios.get('https://api.github.com/repos/'+owner+
+            '/'+ repo+'/stats/commit_activity',config);
         var start = 0;
         while (response.data[start].total == 0) {
             start++;
@@ -129,3 +127,4 @@ export async function
     }
     return commits;
 }
+
