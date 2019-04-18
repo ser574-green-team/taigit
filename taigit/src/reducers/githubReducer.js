@@ -31,7 +31,7 @@ const initialState = {
   userRepos: [],
   user: {},
   bytesOfCode: {},
-  commitInTime: {},
+  commitInTime: [],
   grade: "?",
   cyclomaticComplexity: 0,
   numFiles: 0
@@ -266,20 +266,21 @@ export const selectBytesOfCodeChartData = (state) => {
 export const selectCommitsInTimeWindow = (state) => {
   let days = []
   let commits = []
-  Object.keys(state.commitInTime).forEach(function(key) {
-    days.push(key);
-    commits.push(state.commitInTime[key]);
+  state.commitInTime.forEach(function(entry){
+    days.push(entry.date);
+    commits.push(entry.commits);
   });
-  return {
+  return{ 
     labels: days,
     datasets: [{
-        label: 'Commits in time window',
+        label: 'Commits in Master',
         data: commits,
-        backgroundColor: colors.red.base,
+        backgroundColor: colors.blue.base,
         borderWidth: 1
-    }]
-  };
-  
+    }] 
+  }; 
+}
+
 export const selectGrade = (state) => {
   return state.grade;
 }
