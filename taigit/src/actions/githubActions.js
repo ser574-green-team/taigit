@@ -11,6 +11,7 @@ import {
   getUserRepos,
   getUserInfo,
   getBuilds,
+  getTotalCommits,
   getBytesOfCode,
   getWeeklyCommits,
   getCodeAnalysis
@@ -30,11 +31,13 @@ export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
+export const GET_TOTAL_COMMITS = 'GET_TOTAL_COMMITS';
 export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
 export const GET_COMMITS_FOR_TIME = 'GET_COMMITS_FOR_TIME';
 export const GET_GRADE = 'GET_GRADE';
 export const GET_CYCLOMATIC_COMPLEXITY = 'GET_CYCLOMATIC_COMPLEXITY';
 export const GET_NUM_FILES = 'GET_NUM_FILES';
+
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -159,6 +162,14 @@ export const getBuildsList = (owner, repo, auth) => dispatch => {
     );
 }
 
+export const getTotalNumberCommits = (owner, repo, auth) => dispatch => {
+  console.log('total commits for the project');
+  getTotalCommits(owner, repo, auth)
+    .then(totalCommits =>
+      dispatch({type: GET_TOTAL_COMMITS, payload: totalCommits})
+  );
+}
+
 
 export const addUserInfo = (auth) => dispatch => {
   console.log('about to get user object');
@@ -213,6 +224,9 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
 
   const buildsList = await getBuilds(owner, repo, auth);
   dispatch({type: GET_BUILDS_LIST, payload: buildsList});
+
+  const totalCommitOverview = await getTotalCommits(owner, repo, auth);
+  dispatch({type: GET_TOTAL_COMMITS, payload: totalCommitOverview});
 
   const bytesOfCode = await getBytesOfCode(owner, repo, auth);
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});

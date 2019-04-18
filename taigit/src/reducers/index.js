@@ -30,6 +30,7 @@ export const selectTaigaUserID = (state) => fromTaiga.selectTaigaUserID(state.ta
 export const selectProjectList = (state) => fromTaiga.selectProjectList(state.taiga);
 export const selectTaigaProjectData = (state) => fromTaiga.selectTaigaProjectData(state.taiga);
 export const selectCommitsInTimeWindow = (state) => fromGithub.selectCommitsInTimeWindow(state.github);
+export const selectTotalCommitsData = (state) => fromGithub.selectTotalCommitsData(state.github);
 export const selectNumFiles = (state) => fromGithub.selectNumFiles(state.github);
 export const selectGrade = (state) => fromGithub.selectGrade(state.github);
 export const selectCyclomaticComplexity = (state) => fromGithub.selectCyclomaticComplexity(state.github);

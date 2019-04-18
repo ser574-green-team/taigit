@@ -10,6 +10,7 @@ import { GET_BRANCH_LIST,
   GET_BUILDS_LIST,
   ADD_USER_REPOS,
   ADD_USER_INFO,
+  GET_TOTAL_COMMITS,
   GET_BYTES_OF_CODE,
   GET_COMMITS_FOR_TIME,
   GET_CYCLOMATIC_COMPLEXITY,
@@ -30,6 +31,7 @@ const initialState = {
   buildsList: [],
   userRepos: [],
   user: {},
+  totalCommits: 0,
   bytesOfCode: {},
   commitInTime: [],
   grade: "?",
@@ -110,6 +112,12 @@ const githubReducer = (state = {}, action) => {
       return {
         ...state,
         user: action.payload
+      }
+    case GET_TOTAL_COMMITS:
+      console.log('payload for total commits of the project is: ' , action.payload);
+      return {
+        ...state,
+        totalCommits: action.payload
       }
     case GET_BYTES_OF_CODE:
       return{
@@ -221,6 +229,10 @@ export const selectRepoList = (state) => {
       label: repo.name
     }
   });
+}
+
+export const selectTotalCommitsData = (state) => {
+  return state.totalCommits;
 }
 
 export const selectUserLogin = (state) => {
