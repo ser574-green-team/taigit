@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NumberDisplay from './NumberDisplay'
+import NumberDisplay from './presentational/NumberDisplay'
 import {Doughnut, Line} from 'react-chartjs-2';
 import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage} from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -9,9 +9,9 @@ import { selectUserTaskDistributionChartData, selectCommitsInTimeWindow, selectT
 import { connect } from 'react-redux';
 import { loadAllTaigaProjectData } from '../actions/taigaActions';
 import { loadAllGitHubProjectData } from '../actions/githubActions';
-import { 
+import {
   selectTaigaProjectData,
-  selectProjectTechnologiesChartData 
+  selectProjectTechnologiesChartData
 } from '../reducers';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -48,8 +48,8 @@ class Overview extends Component {
     // Handle if user refreshes on overview page
     if (Object.keys(this.props.taigaProjectData).length === 0) {
       const auth = getFromLocalStorage('auth-key');
-      loadAllTaigaProjectData(this.state.taigaSlug);
-      loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
+      this.props.loadAllTaigaProjectData(this.state.taigaSlug);
+      this.props.loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
     }
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
@@ -100,21 +100,6 @@ class Overview extends Component {
     )
   }
 }
-
-let gitContributionsData = {
-  labels: ["1/31", "2/3", "2/7", "2/10", "2/14", "2/17", "2/18", '2/19', '2/20', '2/21'],
-  datasets: [{
-    fill: false,
-    label: 'Commits on Master',
-    data: [1, 2, 5, 8, 10, 15, 17, 18, 22, 27, 30, 32],
-    lineWidth: 2,
-    borderColor: [
-      colors.blue.base
-    ],
-    borderWidth: 3
-  }]
-}
-
 
 const barGraphOptions = {
   maintainAspectRatio: true,

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import Select from 'react-select'
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import { 
-  grabSprintStats, 
+import {
+  grabSprintStats,
   grabSingleSprintData,
-  loadAllTaigaProjectData 
+  loadAllTaigaProjectData
 } from '../actions/taigaActions';
 import {
   selectSprintList,
@@ -22,8 +21,7 @@ import colors from '../styles/colors';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
-//let projectId = '';
-let message = '';
+
 class Taiga extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +48,7 @@ class Taiga extends Component {
 
   componentWillMount() {
     // Handle if user refreshes on taiga page
-    if (Object.keys(this.props.projectData).length == 0) {
+    if (Object.keys(this.props.projectData).length === 0) {
       this.props.loadAllTaigaProjectData(this.state.taigaSlug);
     }
     //this.props.selectSprintList;
@@ -62,14 +60,14 @@ class Taiga extends Component {
     this.props.grabSingleSprintData(selectedSprint.value, this.props.projectData.id, selectedSprint.label);
     this.props.grabSprintStats(selectedSprint.value);
   }
-  
+
   render() {
     return(
       <div className="app-page">
         <h2>Taiga: <p style={{color: colors.red.base, display: 'inline'}}>{this.props.projectData.name}</p></h2>
         <div className="selector">
           <Select options={this.props.sprintList}
-          placeholder={this.state.selectedSprint == '' ? "Select A Sprint" : this.state.selectedSprint}
+          placeholder={this.state.selectedSprint === '' ? "Select A Sprint" : this.state.selectedSprint}
           onChange={this.onSprintSelection}
           theme={(theme) => ({
             ...theme,
@@ -193,9 +191,9 @@ const mapStateToProps = state => ({
  * connect(mapStateToProps, actions)(componentName)
  * connects the component to the redux store
  */
-export default connect(mapStateToProps, { 
-  grabSprintStats, 
-  grabSingleSprintData, 
-  loadAllTaigaProjectData 
+export default connect(mapStateToProps, {
+  grabSprintStats,
+  grabSingleSprintData,
+  loadAllTaigaProjectData
 })(Taiga)
 

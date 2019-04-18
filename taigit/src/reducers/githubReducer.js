@@ -3,7 +3,6 @@ import { GET_BRANCH_LIST,
   GET_COMMITS_PER_USER,
   GET_NUM_PULL_REQUESTS,
   ADD_CONTRIBUTOR_INFO,
-  GET_NUM_BRANCH_COMMITS,
   ADD_AUTH_KEY,
   GET_PULL_REQUESTS_CLOSED,
   GET_AVG_COMMENTS_PR,
@@ -15,8 +14,8 @@ import { GET_BRANCH_LIST,
   GET_COMMITS_FOR_TIME,
   GET_CYCLOMATIC_COMPLEXITY,
   GET_GRADE,
-  GET_NUM_FILES
-
+  GET_NUM_FILES,
+  LOADING_GITHUB_DATA
 } from '../actions/githubActions';
 
 const initialState = {
@@ -24,7 +23,6 @@ const initialState = {
   numOfCommits: 0,
   numPullRequests: 0,
   contributors: [],
-  numBranchCommits: [],
   authKey: '',
   numPullRequestsClosed: 0,
   avgCommentsOnPR : 0,
@@ -36,7 +34,8 @@ const initialState = {
   commitInTime: [],
   grade: "?",
   cyclomaticComplexity: 0,
-  numFiles: 0
+  numFiles: 0,
+  loading: false
 }
 /**
  * Github Reducer
@@ -45,23 +44,18 @@ const initialState = {
  * as well as the mock data above in the property totalNumberOfCommits
  */
 const githubReducer = (state = {}, action) => {
-  console.log('in github reducer');
   switch(action.type) {
     case GET_BRANCH_LIST:
-      console.log('payload is: ', action.payload);
-      // Return new object of current state spread and new property (taigaData)
       return {
         ...state,
         branchesList: action.payload
       }
     case GET_COMMITS_PER_USER:
-      console.log('payload is: ', action.payload);
       return {
         ...state,
         numOfCommits: action.payload
       }
     case GET_NUM_PULL_REQUESTS:
-      console.log('payload for pull req is: ', action.payload);
       return {
         ...state,
         numPullRequests: action.payload
@@ -72,49 +66,36 @@ const githubReducer = (state = {}, action) => {
         numPullRequestsClosed: action.payload
       }
     case ADD_CONTRIBUTOR_INFO:
-      console.log('payload for contributor data is: ', action.payload);
       return {
         ...state,
         contributors: action.payload
       }
-    case GET_NUM_BRANCH_COMMITS:
-      console.log('payload for number of branch commits is: ', action.payload);
-      return {
-        ...state,
-        numBranchCommits: action.payload
-      }
     case ADD_AUTH_KEY:
-      console.log('payload is: ', action.payload);
       return {
           ...state,
           authKey: action.payload
       }
     case GET_AVG_COMMENTS_PR:
-      console.log('payload for average comments on pr is: ', action.payload);
       return {
           ...state,
           avgCommentsOnPR: action.payload
       }
     case GET_BUILDS_LIST:
-      console.log('payload for builds is: ', action.payload);
       return {
         ...state,
         buildsList: action.payload
       }
     case ADD_USER_REPOS:
-      console.log('payload for user repos is: ', action.payload);
       return {
         ...state,
         userRepos: action.payload
       }
     case ADD_USER_INFO:
-      console.log('user info: ', action.payload);
       return {
         ...state,
         user: action.payload
       }
     case GET_TOTAL_COMMITS:
-      console.log('payload for total commits of the project is: ' , action.payload);
       return {
         ...state,
         totalCommits: action.payload
@@ -124,13 +105,12 @@ const githubReducer = (state = {}, action) => {
         ...state,
         bytesOfCode: action.payload
       }
-
     case GET_COMMITS_FOR_TIME:
       return{
         ...state,
         commitInTime: action.payload
       }
-    case GET_GRADE: 
+    case GET_GRADE:
       return {
         ...state,
         grade: action.payload
@@ -140,10 +120,15 @@ const githubReducer = (state = {}, action) => {
         ...state,
         cyclomaticComplexity: action.payload
       }
-    case GET_NUM_FILES: 
+    case GET_NUM_FILES:
       return {
         ...state,
         numFiles: action.payload
+      }
+    case LOADING_GITHUB_DATA:
+      return {
+        ...state,
+        loading: action.payload
       }
     default:
       return {
@@ -186,6 +171,9 @@ export const selectNumCommitsChartData = (state) => {
   }
 }
 
+/**
+ * Returns technologies used in project data back in pie chart format
+ */
 export const selectProjectTechnologiesChartData = (state) => {
   const languageData = state.bytesOfCode;
   let languages = [];
@@ -193,7 +181,7 @@ export const selectProjectTechnologiesChartData = (state) => {
   let backgroundColors = [];
   let colorKeys = Object.keys(colors);
   let shades = ['light', 'base', 'dark'];
-  if (languageData == undefined || Object.keys(languageData) === 0) {
+  if (languageData === undefined || Object.keys(languageData) === 0) {
     return;
   }
   Object.keys(languageData).forEach((language) => {
@@ -231,8 +219,6 @@ export const selectCommitsPerContributorChartData = (state) => {
   }
 }
 
-
-
 export const selectAuthKey = (state) => {
   return state.authKey;
 }
@@ -266,42 +252,6 @@ export const selectUserLogin = (state) => {
   return state.user && state.user.login;
 }
 
-export const selectNumBranchCommits = (state) => {
-  let branches = []
-  let commits = []
-  Object.keys(state.numBranchCommits).forEach(function(key) {
-    branches.push(key);
-    commits.push(state.numBranchCommits[key]);
-  });
-  return {
-    labels: branches,
-    datasets: [{
-      label: 'Commits Per Branch',
-      data: commits,
-      backgroundColor: colors.blue.base,
-      borderWidth: 1
-    }]
-  };
-}
-
-export const selectBytesOfCodeChartData = (state) => {
-  let languages = []
-  let bytes = []
-  Object.keys(state.bytesOfCode).forEach(function(key) {
-    languages.push(key);
-    bytes.push(state.bytesOfCode[key]);
-  });
-  return {
-    labels: languages,
-    datasets: [{
-        label: 'Bytes of Code',
-        data: bytes,
-        backgroundColor: colors.red.base,
-        borderWidth: 1
-    }]
-  };
-}
-
 export const selectCommitsInTimeWindow = (state) => {
   let days = []
   let commits = []
@@ -309,15 +259,15 @@ export const selectCommitsInTimeWindow = (state) => {
     days.push(entry.date);
     commits.push(entry.commits);
   });
-  return{ 
+  return{
     labels: days,
     datasets: [{
         label: 'Commits in Master',
         data: commits,
         backgroundColor: colors.blue.base,
         borderWidth: 1
-    }] 
-  }; 
+    }]
+  };
 }
 
 export const selectGrade = (state) => {
@@ -330,6 +280,10 @@ export const selectNumFiles = (state) => {
 
 export const selectCyclomaticComplexity = (state) => {
   return state.cyclomaticComplexity;
+}
+
+export const selectIsLoading = (state) => {
+  return state.loading;
 }
 
 export default githubReducer

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import ProjectPanel from './ProjectPanel'
 import * as keys from '../keys.json';
-import { getAuthRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
+import { getAuthRedirect } from '../libraries/GitHub/GitHub';
 import Select from 'react-select';
 import colors from "../styles/colors";
 import { connect } from "react-redux";
@@ -34,7 +32,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { selectUserLogin } from '../reducers';
 
 const redirect = getAuthRedirect(keys.GH_CLIENT_ID);
-let storedProjects = getFromLocalStorage('project-list') || {};
 let auth = getFromLocalStorage('auth-key');
 
 class Projects extends Component {
@@ -47,7 +44,8 @@ class Projects extends Component {
       repoName: '',
       taigaProjectSlug: '',
       taigaNumID: '',
-      codacyID: ''
+      codacyID: '',
+      auth: ''
     }
 
     this.onProjectAnalyze = this.onProjectAnalyze.bind(this);
@@ -64,10 +62,12 @@ class Projects extends Component {
     this.setState({taigaProjectSlug: getFromLocalStorage('taiga-slug')});
 
     // Only reload data if none exists
-    if (typeof this.props.repoList === 'undefined' || this.props.repoList.length == 0) {
+    if (typeof this.props.repoList === 'undefined' || this.props.repoList.length === 0) {
+      const auth = getFromLocalStorage('auth-key');
+      this.setState({auth: getFromLocalStorage('auth-key')});
       this.props.getUsersRepos(this.props.userLogin, auth);
     }
-    if (typeof this.props.projectList === 'undefined' || this.props.projectList.length == 0) {
+    if (typeof this.props.projectList === 'undefined' || this.props.projectList.length === 0) {
       this.props.grabUserProjects(getFromLocalStorage('taiga-user-id'));
     }
   }
@@ -87,7 +87,7 @@ class Projects extends Component {
     // Load all GitHub Data
     this.props.loadAllGitHubProjectData(this.state.repoOwner,
       this.state.repoName,
-      auth);
+      this.state.auth);
   }
 
   onTaigaSubmit = (e) => {
@@ -124,10 +124,6 @@ class Projects extends Component {
     this.setState({codacyID: event.target.value});
   }
 
-  showProject = (proj) => (
-    storedProjects.map((proj) => (<ProjectPanel project={proj} />))
-  )
-
   render() {
     return (
       <div className="app-page">
@@ -139,7 +135,7 @@ class Projects extends Component {
             <h4 className="project-selector-title">Select A Repo</h4>
             <div className="selector project-selector">
               <Select options={this.props.repoList}
-                placeholder={this.state.repoName == '' ? "Select GitHub Repository" : this.state.repoName}
+                placeholder={this.state.repoName === '' ? "Select GitHub Repository" : this.state.repoName}
                 onChange={this.onGitHubSelectChange}
                 theme={(theme) => ({
                     ...theme,
@@ -156,7 +152,7 @@ class Projects extends Component {
             <h4 className="project-selector-title">Select A Project</h4>
             <div className="selector project-selector">
               <Select options={this.props.projectList}
-                placeholder={this.state.taigaProjectSlug == '' ? "Select Taiga Project" : this.state.taigaProjectSlug}
+                placeholder={this.state.taigaProjectSlug === '' ? "Select Taiga Project" : this.state.taigaProjectSlug}
                 onChange={this.onTaigaSelectChange}
                 theme={(theme) => ({
                     ...theme,

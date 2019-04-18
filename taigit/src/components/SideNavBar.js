@@ -1,18 +1,23 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
 import {
   faGithub
 } from '@fortawesome/free-brands-svg-icons';
 import {
-  faUser,
   faUsers,
   faChartPie,
   faCertificate,
-  faArrowAltCircleLeft
+  faArrowAltCircleLeft,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  selectGitHubDataIsLoading,
+  selectTaigaDataIsLoading
+} from '../reducers';
 
-export default class SideNavBar extends Component {
+class SideNavBar extends Component {
   render() {
     return(
       <div className="navbar">
@@ -41,7 +46,18 @@ export default class SideNavBar extends Component {
             <FontAwesomeIcon className="navFont" icon={faUsers} size="2x"/>
           </div>
         </Link>
+        <div className={
+          this.props.gitHubDataIsLoading ||
+          this.props.taigaDataIsLoading ? 'nav-spinner loading' : 'nav-spinner'}>
+          <FontAwesomeIcon className="navFont spinner" icon={faSpinner} size="2x"/>
+        </div>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  gitHubDataIsLoading: selectGitHubDataIsLoading(state),
+  taigaDataIsLoading: selectTaigaDataIsLoading(state)
+});
+export default connect(mapStateToProps, {})(SideNavBar)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NumberDisplay from './NumberDisplay'
+import NumberDisplay from './presentational/NumberDisplay'
 import {
   loadAllGitHubProjectData
 } from '../actions/githubActions';
@@ -7,11 +7,9 @@ import {
   selectBranchList,
   selectNumPullRequestsData,
   selectCommitsPerContributorChartData,
-  selectNumBranchCommits,
   selectNumPullRequestsClosedData,
   selectAvgCommentsPRData,
-  selectBytesOfCodeChartData,
-  selectBuildsList, 
+  selectBuildsList,
   selectGrade,
   selectNumFiles,
   selectCyclomaticComplexity} from '../reducers';
@@ -19,8 +17,7 @@ import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
-import ScrollableList from './ScrollableList';
-import HorizBarChart from './charts/HorizBarChart';
+import ScrollableList from './presentational/ScrollableList';
 import colors from "../styles/colors";
 import { getFromLocalStorage } from "../utils/utils";
 
@@ -78,8 +75,8 @@ class GitHub extends Component {
         >
           <div className='box' key="1" data-grid={{ w: 3, h: 5, x: 4, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
-                <span className="chart-title">Commits Per Member</span>
-                <Bar data={this.props.commitChartData} options={{maintainAspectRatio: true, responsive: true}}/>
+              <span className="chart-title">Commits Per Member</span>
+              <Bar data={this.props.commitChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className='box' key="2" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
@@ -101,36 +98,21 @@ class GitHub extends Component {
             <NumberDisplay number={this.props.avgCommentsOnPR} statistic="Average Comments on PR"/>
           </div>
           <div className="box" key="7" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.numFiles} statistic="Total files"/>
+            <NumberDisplay number={this.props.numFiles} statistic="Total files"
+            notAvailable={this.props.numFiles === 'NA'}/>
           </div>
           <div className='box' key="8" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.cyclomaticComplexity} statistic="Cyclomatic Complexity"/>
+            <NumberDisplay number={this.props.cyclomaticComplexity} statistic="Cyclomatic Complexity"
+            notAvailable={this.props.numFiles === 'NA'}/>
           </div>
           <div className='box' key="9" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.grade} statistic="Codacy Project Grade"/>
+            <NumberDisplay number={this.props.grade} statistic="Codacy Project Grade"
+            notAvailable={this.props.numFiles === 'NA'}/>
           </div>
-          <div className="box" key="10" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <span className = "chart-title">Commits Per Branch</span>
-              <HorizBarChart
-                  chartData={this.props.commitPerBranchData}
-                  options={{maintainAspectRatio: true, responsive: true}}
-              />
-            </div>
-          </div>
-          <div className = 'box' key="11" data-grid={{w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0}}>
+          <div className = 'box' key="10" data-grid={{w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0}}>
             <div className="chart">
               <span className ="chart-title">Builds Used</span>
               <ScrollableList items={this.props.buildsList}/>
-            </div>
-          </div>
-          <div className="box" key="12" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <span className = "chart-title">Bytes of Code</span>
-              <HorizBarChart
-                  chartData={this.props.bytesOfCode}
-                  options={{maintainAspectRatio: true, responsive: true}}
-              />
             </div>
           </div>
         </ResponsiveReactGridLayout>
@@ -148,11 +130,9 @@ const mapStateToProps = state => ({
   branches: selectBranchList(state),
   commitChartData: selectCommitsPerContributorChartData(state),
   numPullRequests: selectNumPullRequestsData(state),
-  commitPerBranchData: selectNumBranchCommits(state),
   numPullRequestsClosed: selectNumPullRequestsClosedData(state),
   avgCommentsOnPR: selectAvgCommentsPRData(state),
   buildsList: selectBuildsList(state),
-  bytesOfCode: selectBytesOfCodeChartData(state),
   grade: selectGrade(state),
   numFiles: selectNumFiles(state),
   cyclomaticComplexity: selectCyclomaticComplexity(state)

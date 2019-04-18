@@ -41,7 +41,6 @@ export const GET_NUM_FILES = 'GET_NUM_FILES';
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
-  console.log('about to get branches list');
   getBranches(owner, repo, auth)
     .then(branches =>
       dispatch({type: GET_BRANCH_LIST, payload: branches})
@@ -49,7 +48,7 @@ export const getBranchList = (owner, repo, auth) => dispatch => {
 }
 
 export const getUsersRepos = (owner, auth) => dispatch => {
-  console.log('about to get all user owned repos');
+  dispatch({type: LOADING_GITHUB_DATA, payload: true});
   getUserRepos(owner, auth)
     .then(repos => {
       try {
@@ -64,12 +63,13 @@ export const getUsersRepos = (owner, auth) => dispatch => {
         dispatch({type: ADD_USER_REPOS, payload: userReposTrimmed});
       } catch (e) {
         console.error(e);
+      } finally {
+        dispatch({type: LOADING_GITHUB_DATA, payload: false});
       }
     });
 }
 
 export const getCommitsPerUser = (owner, repo, author, auth) => dispatch => {
-  console.log('about to get commits for one user');
   getNumCommitsFromUser(owner, repo, author, auth)
     .then(numberOfCommits =>
       dispatch({type: GET_COMMITS_PER_USER, payload: numberOfCommits})
@@ -77,7 +77,6 @@ export const getCommitsPerUser = (owner, repo, author, auth) => dispatch => {
 }
 
 export const getPullRequests = (owner, repo, auth) => dispatch => {
-  console.log('about to get number of pull requests');
   getNumOpenPullRequests(owner, repo, auth)
     .then(numberOfPullRequests =>
       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests})
@@ -87,22 +86,11 @@ export const getPullRequests = (owner, repo, auth) => dispatch => {
 export const getMembersInfo = (organization, auth) => dispatch => {
   getMemberInfo(organization, auth)
     .then(memberInfo => {
-      console.log('Member Info Data: ', memberInfo);
+      //TODO call members info dispatch
     });
 }
 
-// component for pull requests closed, to be implemented in the backend
-
-// export const getPullRequestsClosed = (owner, repo, auth) => dispatch => {
-//   console.log('about to get number of pull requests closed');
-//   getNumPullRequestsClosed(owner, repo, auth)
-//     .then(numberOfPullRequestsClosed =>
-//       dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequestsClosed})
-//     );
-// }
-
 export const getContributorsData = (owner, repo, auth) => dispatch => {
-  console.log('about to grab contributor data');
   getContributorData(owner, repo, auth)
     .then((contributorData) => {
       try {
@@ -123,14 +111,12 @@ export const getContributorsData = (owner, repo, auth) => dispatch => {
 }
 
 export const getBranchCommits = (owner, repository, branch, auth) => dispatch => {
-  console.log('about to grab number of branch commits');
   getNumBranchCommits(owner, repository, branch, auth)
     .then((numBranchCommits) =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
 }
 export const getCommitsInWindow = (owner, repo, auth) => dispatch => {
-  console.log('about to grab commits for a time period');
   getWeeklyCommits(owner, repo, auth)
     .then((commitsInWindow) =>
         dispatch({type: GET_COMMITS_FOR_TIME, payload: commitsInWindow})
@@ -138,7 +124,6 @@ export const getCommitsInWindow = (owner, repo, auth) => dispatch => {
 }
 
 export const getAuthKey = (auth_server, storeKey) => dispatch => {
-  console.log('about to get auth key');
   getAuthToken(auth_server, storeKey)
       .then((authKey) => {
         saveToLocalStorage('auth-key', authKey);
@@ -147,7 +132,6 @@ export const getAuthKey = (auth_server, storeKey) => dispatch => {
 }
 
 export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
-  console.log('about to get Avg comments on the PR');
   getNumComments(owner, repo, auth)
     .then(avgNumberofComments =>
       dispatch({type: GET_AVG_COMMENTS_PR, payload: avgNumberofComments})
@@ -155,7 +139,6 @@ export const getAvgCommentsPR = (owner, repo, auth) => dispatch => {
 }
 
 export const getBuildsList = (owner, repo, auth) => dispatch => {
-  console.log('about to perform acquisition of build candidates');
   getBuilds(owner, repo, auth)
     .then(buildsList =>
       dispatch({type: GET_BUILDS_LIST, payload: buildsList})
@@ -163,7 +146,6 @@ export const getBuildsList = (owner, repo, auth) => dispatch => {
 }
 
 export const getTotalNumberCommits = (owner, repo, auth) => dispatch => {
-  console.log('total commits for the project');
   getTotalCommits(owner, repo, auth)
     .then(totalCommits =>
       dispatch({type: GET_TOTAL_COMMITS, payload: totalCommits})
@@ -172,21 +154,23 @@ export const getTotalNumberCommits = (owner, repo, auth) => dispatch => {
 
 
 export const addUserInfo = (auth) => dispatch => {
-  console.log('about to get user object');
   getUserInfo(auth)
     .then(userInfo =>
       dispatch({type: ADD_USER_INFO, payload: userInfo})
     );
 }
 
+/**
+ * Calls all github api calls and dispatches result to the redux store
+ * @param {\Owner of the repo} owner
+ * @param {Name of the repository} repo
+ * @param {Github auth token} auth
+ */
 export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) => {
   dispatch({type: LOADING_GITHUB_DATA, payload: true});
 
   const branches = await getBranches(owner, repo, auth);
   dispatch({type: GET_BRANCH_LIST, payload: branches});
-
-  // const commitsPerUser = await getNumCommitsFromUser(owner, repo, author, auth);
-  // dispatch({type: GET_COMMITS_PER_USER, payload: commitsPerUser});
 
   const numberOfPullRequests = await getNumOpenPullRequests(owner, repo, auth)
   dispatch({type: GET_NUM_PULL_REQUESTS, payload: numberOfPullRequests});
@@ -232,13 +216,12 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
 
   const commitInTime = await getWeeklyCommits(owner, repo, auth);
-  // console.log("There is an error in commits for a window: " + getWeeklyCommits("Commits"));
   dispatch({type: GET_COMMITS_FOR_TIME, payload: commitInTime});
 
   const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
     repo, owner, repo, auth);
-  console.log("YO DAVID " + getFromLocalStorage("codacy-username"));
 
+  // Try to access codacy values (user might not be connected)
   try{
     let grade = analysis.grade;
     let cc = analysis.complexity;
@@ -248,9 +231,9 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
     dispatch({type: GET_NUM_FILES, payload: filecount});
   } catch (error){
     console.log(error);
-    dispatch({type: GET_GRADE, payload: "ERR"});
-    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "ERR"});
-    dispatch({type: GET_NUM_FILES, payload: "ERR"});
+    dispatch({type: GET_GRADE, payload: "NA"});
+    dispatch({type: GET_CYCLOMATIC_COMPLEXITY, payload: "NA"});
+    dispatch({type: GET_NUM_FILES, payload: "NA"});
   }
 
   dispatch({type: LOADING_GITHUB_DATA, payload: false});

@@ -1,11 +1,12 @@
-import { 
+import {
   GRAB_TAIGA_DATA,
   GET_SPRINT_STATS,
   GET_TASK_STATS,
   GET_SPRINT_NAMES,
   GET_SINGLE_SPRINT_STATS,
   TAIGA_LOGIN,
-  GET_USER_PROJECTS
+  GET_USER_PROJECTS,
+  LOADING_TAIGA_DATA
 } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
@@ -16,7 +17,8 @@ const initialState = {
   taigaTaskStats: [],
   singleSprintStats: [],
   userId: {},
-  projectList: []
+  projectList: [],
+  loading: false
 }
 
 /**
@@ -27,7 +29,7 @@ const initialState = {
  */
 export default function taigaReducer(state = initialState, action) {
   switch(action.type) {
-    case GRAB_TAIGA_DATA:       
+    case GRAB_TAIGA_DATA:
       // Return new object of current state spread and new property (taigaData)
       return {
         ...state,
@@ -63,6 +65,11 @@ export default function taigaReducer(state = initialState, action) {
         ...state,
         projectList: action.payload
       }
+    case LOADING_TAIGA_DATA:
+    return {
+      ...state,
+      loading: action.payload
+    }
     default:
       return state;
   }
@@ -114,7 +121,6 @@ export const selectUserTaskDistributionChartData = (state) => {
       }
     }
   }
-  
   // create X and Y axis data
   let xAxisNameData = [];
   let closedTaskCount = [];
@@ -128,11 +134,10 @@ export const selectUserTaskDistributionChartData = (state) => {
     readyForTestTaskCount.push(dictToProcessData[name]['task_ready_for_test_count']);
     newTaskCount.push(0);
     inprogressTaskCount.push(dictToProcessData[name]['inprogress_task_count']);
-  } 
+  }
   // Keep Track of unassigned/New Task
   xAxisNameData.push('Unassigned');
   newTaskCount.push(unassignedTaskCount);
-  
   return {
     labels: xAxisNameData,
     datasets: [{
@@ -202,7 +207,6 @@ export const selectTaigaProjectData = (state) => {
  * that the sprint dropdown component will render
  */
 export const selectSprintList = (state) => {
-  //console.log(state.taiga.taigaData);
   return state.sprintList.map(sprintName => {
     return {
       value: sprintName.id,
@@ -273,8 +277,11 @@ export const selectSingleSprintData = (state) => {
 }
 
 export const selectTaigaUserID = (state) => {
-  console.log("user id is ",state.userId.id);
   return state.userId.id;
+}
+
+export const selectIsLoading = (state) => {
+  return state.loading;
 }
 
 export const selectProjectList = (state) => {

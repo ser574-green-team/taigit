@@ -11,7 +11,6 @@ export function getLayoutFromLocalStorage(name, key) {
 }
 
 export function saveLayoutToLocalStorage(name, key, value) {
-  console.log("LOCAL STORAGE: KEY: " + key + " VALUE: " + value);
   if (global.localStorage) {
     global.localStorage.setItem(
       name,
@@ -24,7 +23,6 @@ export function saveLayoutToLocalStorage(name, key, value) {
 
 export function saveToLocalStorage(key, value) {
   if (global.localStorage) {
-    console.log("LOCAL STORAGE: KEY: " + key + " VALUE: " + value);
     global.localStorage.setItem(key, value);
   }
 }

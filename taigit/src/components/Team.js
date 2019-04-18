@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import TeamMemberCard from './TeamMemberCard'
+import TeamMemberCard from './presentational/TeamMemberCard'
 import { Link } from 'react-router-dom';
-import { faConnectdevelop } from '@fortawesome/free-brands-svg-icons';
 import { getFromLocalStorage } from "../utils/utils";
 import {
   getContributorsData
@@ -20,7 +19,7 @@ class Team extends Component {
   }
 
   componentWillMount() {
-    if (this.props.teamMembers.length == 0) {
+    if (this.props.teamMembers.length === 0) {
       let auth = getFromLocalStorage('auth-key');
       this.props.getContributorData(this.state.githubOwner, this.state.githubRepo, auth);
     }
