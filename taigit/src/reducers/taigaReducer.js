@@ -5,7 +5,8 @@ import {
   GET_SPRINT_NAMES,
   GET_SINGLE_SPRINT_STATS,
   TAIGA_LOGIN,
-  GET_USER_PROJECTS
+  GET_USER_PROJECTS,
+  LOADING_TAIGA_DATA
 } from '../actions/taigaActions';
 import colors from '../styles/colors';
 
@@ -16,7 +17,8 @@ const initialState = {
   taigaTaskStats: [],
   singleSprintStats: [],
   userId: {},
-  projectList: []
+  projectList: [],
+  loading: false
 }
 
 /**
@@ -63,6 +65,11 @@ export default function taigaReducer(state = initialState, action) {
         ...state,
         projectList: action.payload
       }
+    case LOADING_TAIGA_DATA:
+    return {
+      ...state,
+      loading: action.payload
+    }
     default:
       return state;
   }
@@ -271,6 +278,10 @@ export const selectSingleSprintData = (state) => {
 
 export const selectTaigaUserID = (state) => {
   return state.userId.id;
+}
+
+export const selectIsLoading = (state) => {
+  return state.loading;
 }
 
 export const selectProjectList = (state) => {
