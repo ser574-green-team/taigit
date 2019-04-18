@@ -101,21 +101,6 @@ class Overview extends Component {
   }
 }
 
-let gitContributionsData = {
-  labels: ["1/31", "2/3", "2/7", "2/10", "2/14", "2/17", "2/18", '2/19', '2/20', '2/21'],
-  datasets: [{
-    fill: false,
-    label: 'Commits on Master',
-    data: [1, 2, 5, 8, 10, 15, 17, 18, 22, 27, 30, 32],
-    lineWidth: 2,
-    borderColor: [
-      colors.blue.base
-    ],
-    borderWidth: 3
-  }]
-}
-
-
 const barGraphOptions = {
   maintainAspectRatio: true,
   responsive: true,
