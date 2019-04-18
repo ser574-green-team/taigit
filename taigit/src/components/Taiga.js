@@ -22,8 +22,7 @@ import colors from '../styles/colors';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'taiga-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
-//let projectId = '';
-let message = '';
+
 class Taiga extends Component {
   constructor(props) {
     super(props);

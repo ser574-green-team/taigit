@@ -19,7 +19,7 @@ class MemberProfile extends Component {
       layouts: JSON.parse(JSON.stringify(originalLayouts))
     };
   }
-  
+
   static get defaultProps() {
     return {
       className: "layout",
@@ -51,25 +51,14 @@ class MemberProfile extends Component {
           onLayoutChange={(layout, layouts) =>
             this.onLayoutChange(layout, layouts)
           }
-        >          
+        >
           <div className='box' key="1" data-grid={{ w: 3, h: 9, x: 0, y: 0, minW: 0, minH: 0 }}>
             <div className="chart">
               <TeamMemberCard taigaId={member.taigaId} githubId={member.login} name={member.login} pictureUrl={member.avatar_url}/>
             </div>
           </div>
-          <div className='box' key="2" data-grid={{ w: 4, h: 7, x: 3, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart">
-              <Radar data={radarChartData}/>
-            </div>
-          </div>
           <div className='box' key="3" data-grid={{ w: 2, h: 5, x: 3, y: 0, minW: 0, minH: 0 }}>
             <NumberDisplay number={member.totalCommits} statistic="Total Commits"/>
-          </div>
-          <div className='box' key="4" data-grid={{ w: 2, h: 5, x: 7, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number="52" statistic="PRs Reviewed"/>
-          </div>
-          <div className='box' key="5" data-grid={{ w: 2, h: 5, x: 9, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number="23" statistic="Tasks Completed"/>
           </div>
         </ResponsiveReactGridLayout>
       </div>

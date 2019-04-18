@@ -5,7 +5,7 @@ export default class NumberDisplay extends Component {
   render() {
     return(
       <div className="number-display">
-        <div className="number-display-number">
+        <div className={this.props.notAvailable ? 'not-available': 'number-display-number'}>
           <span>{this.props.number}</span>
         </div>
         <div className="number-display-title">

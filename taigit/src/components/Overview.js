@@ -9,9 +9,9 @@ import { selectUserTaskDistributionChartData, selectCommitsInTimeWindow, selectT
 import { connect } from 'react-redux';
 import { loadAllTaigaProjectData } from '../actions/taigaActions';
 import { loadAllGitHubProjectData } from '../actions/githubActions';
-import { 
+import {
   selectTaigaProjectData,
-  selectProjectTechnologiesChartData 
+  selectProjectTechnologiesChartData
 } from '../reducers';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);

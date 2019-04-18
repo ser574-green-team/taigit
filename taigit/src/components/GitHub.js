@@ -100,13 +100,17 @@ class GitHub extends Component {
             <NumberDisplay number={this.props.avgCommentsOnPR} statistic="Average Comments on PR"/>
           </div>
           <div className="box" key="7" data-grid={{ w: 5, h: 5, x: 2, y: 2, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.numFiles} statistic="Total files"/>
+            <NumberDisplay number={this.props.numFiles} statistic="Total files"
+            notAvailable={this.props.numFiles == 'NA'}/>
           </div>
           <div className='box' key="8" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.cyclomaticComplexity} statistic="Cyclomatic Complexity"/>
+            <NumberDisplay notAvailable={this.props.numFiles == 'NA'}
+            number={this.props.cyclomaticComplexity} statistic="Cyclomatic Complexity"
+            notAvailable={this.props.numFiles == 'NA'}/>
           </div>
           <div className='box' key="9" data-grid={{ w: 2, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number={this.props.grade} statistic="Codacy Project Grade"/>
+            <NumberDisplay number={this.props.grade} statistic="Codacy Project Grade"
+            notAvailable={this.props.numFiles == 'NA'}/>
           </div>
           <div className = 'box' key="10" data-grid={{w: 2, h: 9, x: 0, y: 0, minW: 0, minH: 0}}>
             <div className="chart">

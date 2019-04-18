@@ -14,7 +14,6 @@ class Callback extends Component {
 
     render() {
         console.log(this.props.location.search);
-
         return (
             <div style={{position: 'relative', left: '40%'}}>
                 <p>Authentication success!</p>
