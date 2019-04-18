@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import ProjectPanel from './ProjectPanel'
 import * as keys from '../keys.json';
 import { getAuthRedirect, getAuthToken } from '../libraries/GitHub/GitHub';
 import Select from 'react-select';
@@ -123,10 +122,6 @@ class Projects extends Component {
   handleCodacyChange(event) {
     this.setState({codacyID: event.target.value});
   }
-
-  showProject = (proj) => (
-    storedProjects.map((proj) => (<ProjectPanel project={proj} />))
-  )
 
   render() {
     return (
