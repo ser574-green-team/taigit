@@ -48,8 +48,8 @@ class Overview extends Component {
     // Handle if user refreshes on overview page
     if (Object.keys(this.props.taigaProjectData).length === 0) {
       const auth = getFromLocalStorage('auth-key');
-      loadAllTaigaProjectData(this.state.taigaSlug);
-      loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
+      this.props.loadAllTaigaProjectData(this.state.taigaSlug);
+      this.props.loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
     }
     originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || [];
     this.setState({ layouts: JSON.parse(JSON.stringify(originalLayouts)) });
