@@ -188,7 +188,6 @@ export const selectNumCommitsChartData = (state) => {
 
 export const selectProjectTechnologiesChartData = (state) => {
   const languageData = state.bytesOfCode;
-  debugger;
   let languages = [];
   let bytes = [];
   let backgroundColors = [];
@@ -201,9 +200,7 @@ export const selectProjectTechnologiesChartData = (state) => {
     languages.push(language);
     bytes.push(languageData[language]);
     let randomShade = shades[shades.lenght * Math.random() << 0];
-    debugger;
     let randomColor = colors[colorKeys[colorKeys.length * Math.random() << 0]][randomShade];
-    debugger;
     backgroundColors.push(randomColor);
   });
   return {
