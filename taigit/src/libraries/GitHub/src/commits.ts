@@ -118,7 +118,7 @@ getWeeklyCommits(owner: string, repo: string,
         for (let i = start; i < response.data.length; i++) {
             commits.push({
                 "commits": response.data[i].total,
-                "date": new Date(response.data[i].week*1000).toString()
+                "date": new Date(response.data[i].week*1000).toDateString()
             });
         }
     }catch(error){
