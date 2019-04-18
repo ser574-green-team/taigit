@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import TeamMemberCard from './TeamMemberCard'
+import TeamMemberCard from './presentational/TeamMemberCard'
 import { Link } from 'react-router-dom';
 import { faConnectdevelop } from '@fortawesome/free-brands-svg-icons';
 import { getFromLocalStorage } from "../utils/utils";

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import TeamMemberCard from './TeamMemberCard'
-import NumberDisplay from './NumberDisplay'
+import TeamMemberCard from './presentational/TeamMemberCard'
+import NumberDisplay from './presentational/NumberDisplay'
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { Radar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';

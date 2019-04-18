@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NumberDisplay from './NumberDisplay'
+import NumberDisplay from './presentational/NumberDisplay'
 import {
   loadAllGitHubProjectData
 } from '../actions/githubActions';
@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { saveLayoutToLocalStorage, getLayoutFromLocalStorage } from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
-import ScrollableList from './ScrollableList';
+import ScrollableList from './presentational/ScrollableList';
 import colors from "../styles/colors";
 import { getFromLocalStorage } from "../utils/utils";
 

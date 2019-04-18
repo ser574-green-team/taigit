@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NumberDisplay from './NumberDisplay'
+import NumberDisplay from './presentational/NumberDisplay'
 import {Doughnut, Line} from 'react-chartjs-2';
 import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage} from '../utils/utils';
 import { WidthProvider, Responsive } from "react-grid-layout";
