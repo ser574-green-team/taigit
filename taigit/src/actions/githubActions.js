@@ -12,7 +12,7 @@ import {
   getUserInfo,
   getBuilds,
   getBytesOfCode,
-  getCommitsInTimeWindow,
+  getWeeklyCommits,
   getCodeAnalysis
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
@@ -126,9 +126,9 @@ export const getBranchCommits = (owner, repository, branch, auth) => dispatch =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
 }
-export const getCommitsInWindow = (owner, repo, Since, Until, auth) => dispatch => {
+export const getCommitsInWindow = (owner, repo, auth) => dispatch => {
   console.log('about to grab commits for a time period');
-  getCommitsInTimeWindow(owner, repo, Since, Until, auth)
+  getWeeklyCommits(owner, repo, auth)
     .then((commitsInWindow) =>
         dispatch({type: GET_COMMITS_FOR_TIME, payload: commitsInWindow})
   );
@@ -217,7 +217,8 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const bytesOfCode = await getBytesOfCode(owner, repo, auth);
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
 
-  const commitInTime = await getCommitsInTimeWindow(owner, repo, '01/31/2019', '04/11/2019', auth);
+  const commitInTime = await getWeeklyCommits(owner, repo, auth);
+  // console.log("There is an error in commits for a window: " + getWeeklyCommits("Commits"));
   dispatch({type: GET_COMMITS_FOR_TIME, payload: commitInTime});
 
   const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
