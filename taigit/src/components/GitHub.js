@@ -55,7 +55,7 @@ class GitHub extends Component {
   // Calls methods in actions/githubActions to fetch data from API
   componentWillMount() {
     // Handle if user refreshes on GitHub page
-    if (this.props.branches.length == 0) {
+    if (this.props.branches.length === 0) {
       const auth = getFromLocalStorage('auth-key');
       this.props.loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
     }
@@ -163,4 +163,3 @@ const mapStateToProps = state => ({
  * connects the component to the redux store
  */
 export default connect(mapStateToProps, { loadAllGitHubProjectData })(GitHub)
-

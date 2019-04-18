@@ -12,9 +12,11 @@ import { GET_BRANCH_LIST,
   ADD_USER_INFO,
   GET_TOTAL_COMMITS,
   GET_BYTES_OF_CODE,
+  GET_COMMITS_FOR_TIME,
   GET_CYCLOMATIC_COMPLEXITY,
   GET_GRADE,
   GET_NUM_FILES
+
 } from '../actions/githubActions';
 
 const initialState = {
@@ -31,6 +33,7 @@ const initialState = {
   user: {},
   totalCommits: 0,
   bytesOfCode: {},
+  commitInTime: [],
   grade: "?",
   cyclomaticComplexity: 0,
   numFiles: 0
@@ -76,9 +79,9 @@ const githubReducer = (state = {}, action) => {
       }
     case GET_NUM_BRANCH_COMMITS:
       console.log('payload for number of branch commits is: ', action.payload);
-      state.numBranchCommits.push(action.payload);
       return {
         ...state,
+        numBranchCommits: action.payload
       }
     case ADD_AUTH_KEY:
       console.log('payload is: ', action.payload);
@@ -120,6 +123,12 @@ const githubReducer = (state = {}, action) => {
       return{
         ...state,
         bytesOfCode: action.payload
+      }
+
+    case GET_COMMITS_FOR_TIME:
+      return{
+        ...state,
+        commitInTime: action.payload
       }
     case GET_GRADE: 
       return {
@@ -195,17 +204,7 @@ export const selectCommitsPerContributorChartData = (state) => {
   }
 }
 
-export const selectNumBranchCommits = (state) => {
-  return {
-      labels: ['master', 'dev'],
-      datasets: [{
-          label: 'Number of Commits',
-          data: [state.numBranchCommits[0], state.numBranchCommits[1]],
-          backgroundColor: colors.red.base,
-          borderWidth: 1
-      }]
-  };
-}
+
 
 export const selectAuthKey = (state) => {
   return state.authKey;
@@ -240,6 +239,24 @@ export const selectUserLogin = (state) => {
   return state.user && state.user.login;
 }
 
+export const selectNumBranchCommits = (state) => {
+  let branches = []
+  let commits = []
+  Object.keys(state.numBranchCommits).forEach(function(key) {
+    branches.push(key);
+    commits.push(state.numBranchCommits[key]);
+  });
+  return {
+    labels: branches,
+    datasets: [{
+      label: 'Commits Per Branch',
+      data: commits,
+      backgroundColor: colors.blue.base,
+      borderWidth: 1
+    }]
+  };
+}
+
 export const selectBytesOfCodeChartData = (state) => {
   let languages = []
   let bytes = []
@@ -256,6 +273,24 @@ export const selectBytesOfCodeChartData = (state) => {
         borderWidth: 1
     }]
   };
+}
+
+export const selectCommitsInTimeWindow = (state) => {
+  let days = []
+  let commits = []
+  state.commitInTime.forEach(function(entry){
+    days.push(entry.date);
+    commits.push(entry.commits);
+  });
+  return{ 
+    labels: days,
+    datasets: [{
+        label: 'Commits in Master',
+        data: commits,
+        backgroundColor: colors.blue.base,
+        borderWidth: 1
+    }] 
+  }; 
 }
 
 export const selectGrade = (state) => {

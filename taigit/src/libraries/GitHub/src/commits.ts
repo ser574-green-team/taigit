@@ -95,6 +95,7 @@ getNumCommitsFromUser(owner: string, repo: string, author: string,
    return -1;
 }
 
+
 /**
  * Gets weekly commits starting from the first commit time in the past year.
  * @param owner
@@ -121,8 +122,9 @@ getWeeklyCommits(owner: string, repo: string,
                 "date": new Date(response.data[i].week*1000).toDateString()
             });
         }
-    }catch(error){
+    } catch (error) {
         console.log("Error Weekly Commits:\n", error);
     }
     return commits;
 }
+

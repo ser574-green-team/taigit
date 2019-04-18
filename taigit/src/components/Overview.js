@@ -5,7 +5,7 @@ import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 import { Bar } from 'react-chartjs-2';
-import { selectUserTaskDistributionChartData, selectTotalCommitsData } from '../reducers';
+import { selectUserTaskDistributionChartData, selectCommitsInTimeWindow, selectTotalCommitsData } from '../reducers';
 import { connect } from 'react-redux';
 import { loadAllTaigaProjectData } from '../actions/taigaActions';
 import { loadAllGitHubProjectData } from '../actions/githubActions';
@@ -76,10 +76,13 @@ class Overview extends Component {
               <Doughnut data={technologiesUsed} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart chart-horizontal-primary">
-              <span className="chart-title">Github Contributions</span>
-              <Line data={gitContributionsData} options={{maintainAspectRatio: true, responsive: true}}/>
+          <div className="box" key="3" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
+            <div className="chart">
+              <span className = "chart-title">GitHub Contribution</span>
+              <Line
+                  data={this.props.commitsInWindowData}
+                  options={{maintainAspectRatio: true, responsive: true}}
+              />
             </div>
           </div>
           <div className='box' key="4" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
@@ -107,21 +110,6 @@ let technologiesUsed = {
     ],
   }]
 }
-
-let gitContributionsData = {
-  labels: ["1/31", "2/3", "2/7", "2/10", "2/14", "2/17", "2/18", '2/19', '2/20', '2/21'],
-  datasets: [{
-    fill: false,
-    label: 'Commits on Master',
-    data: [1, 2, 5, 8, 10, 15, 17, 18, 22, 27, 30, 32],
-    lineWidth: 2,
-    borderColor: [
-      colors.blue.base
-    ],
-    borderWidth: 3
-  }]
-}
-
 
 const barGraphOptions = {
   maintainAspectRatio: true,
@@ -151,6 +139,7 @@ const barGraphOptions = {
 const mapStateToProps = state => ({
   taigaTaskDistribution: selectUserTaskDistributionChartData(state),
   taigaProjectData: selectTaigaProjectData(state),
+  commitsInWindowData: selectCommitsInTimeWindow(state),
   totalCommitsData: selectTotalCommitsData(state)
 });
 export default connect(mapStateToProps, {
