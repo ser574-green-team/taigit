@@ -998,3 +998,26 @@ id_to_points(projID : number) : Promise <{ [key: string] : number }> {
     });
     return points;
 }
+
+/**
+ * @summary This call return list of sprint velocity (unit points) based on project Id
+ * @param projectId the ID for the access of project
+ * @returns
+ *  * Array of [sprint_end, velocity]
+ * * {
+ *          sprint_end : boolen // if sprint end currently
+ *          velocity : number //sprint velocity
+ * }
+ */
+export async function
+proj_spvelocity(projId : number) : Promise<Array<[boolean, number]>> {
+    //let data = (await axios.get("https://api.taiga.io/api/v1/milestones/"+sprintId.toString()+ '/stats')).data;
+    let sp_list =  (await axios.get(`https://api.taiga.io/api/v1/milestones?project=${projId}`)).data;
+    let output : Array<[boolean, number]> = [];
+    for(let sp of sp_list){
+        let sp_velocity = (await sprint_velocity_pts(sp.id));
+        output.push(sp_velocity);
+    }
+    return output.reverse();
+}
+

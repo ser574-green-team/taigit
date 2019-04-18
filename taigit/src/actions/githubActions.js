@@ -11,7 +11,9 @@ import {
   getUserRepos,
   getUserInfo,
   getBuilds,
+  getTotalCommits,
   getBytesOfCode,
+  getWeeklyCommits,
   getCodeAnalysis
 } from '../libraries/GitHub/GitHub';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils/utils';
@@ -29,10 +31,13 @@ export const GET_BUILDS_LIST = 'GET_BUILDS_LIST';
 export const ADD_USER_REPOS = 'ADD_USER_REPOS';
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const LOADING_GITHUB_DATA = 'LOADING_GITHUB_DATA';
+export const GET_TOTAL_COMMITS = 'GET_TOTAL_COMMITS';
 export const GET_BYTES_OF_CODE = 'GET_BYTES_OF_CODE';
+export const GET_COMMITS_FOR_TIME = 'GET_COMMITS_FOR_TIME';
 export const GET_GRADE = 'GET_GRADE';
 export const GET_CYCLOMATIC_COMPLEXITY = 'GET_CYCLOMATIC_COMPLEXITY';
 export const GET_NUM_FILES = 'GET_NUM_FILES';
+
 
 /** Thunks (actions that return a function that calls dispatch after async request(s)) */
 export const getBranchList = (owner, repo, auth) => dispatch => {
@@ -117,12 +122,19 @@ export const getContributorsData = (owner, repo, auth) => dispatch => {
     });
 }
 
-export const getBranchCommits = (owner, repo, branch, auth) => dispatch => {
+export const getBranchCommits = (owner, repository, branch, auth) => dispatch => {
   console.log('about to grab number of branch commits');
-  getNumBranchCommits(owner, repo, branch, auth)
-    .then(numBranchCommits =>
+  getNumBranchCommits(owner, repository, branch, auth)
+    .then((numBranchCommits) =>
         dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numBranchCommits})
     );
+}
+export const getCommitsInWindow = (owner, repo, auth) => dispatch => {
+  console.log('about to grab commits for a time period');
+  getWeeklyCommits(owner, repo, auth)
+    .then((commitsInWindow) =>
+        dispatch({type: GET_COMMITS_FOR_TIME, payload: commitsInWindow})
+  );
 }
 
 export const getAuthKey = (auth_server, storeKey) => dispatch => {
@@ -148,6 +160,14 @@ export const getBuildsList = (owner, repo, auth) => dispatch => {
     .then(buildsList =>
       dispatch({type: GET_BUILDS_LIST, payload: buildsList})
     );
+}
+
+export const getTotalNumberCommits = (owner, repo, auth) => dispatch => {
+  console.log('total commits for the project');
+  getTotalCommits(owner, repo, auth)
+    .then(totalCommits =>
+      dispatch({type: GET_TOTAL_COMMITS, payload: totalCommits})
+  );
 }
 
 
@@ -192,7 +212,7 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
     console.error('Error getting contributor info: ', error);
   }
 
-  const numberOfBranchCommits = await getNumBranchCommits(owner, repo, 'master', auth);
+  const numberOfBranchCommits = await getNumBranchCommits(owner, repo, branches, auth);
   dispatch({type: GET_NUM_BRANCH_COMMITS, payload: numberOfBranchCommits});
 
   // TODO check to see if project is in an organization, if so, call the following
@@ -205,8 +225,15 @@ export const loadAllGitHubProjectData = (owner, repo, auth) => async(dispatch) =
   const buildsList = await getBuilds(owner, repo, auth);
   dispatch({type: GET_BUILDS_LIST, payload: buildsList});
 
+  const totalCommitOverview = await getTotalCommits(owner, repo, auth);
+  dispatch({type: GET_TOTAL_COMMITS, payload: totalCommitOverview});
+
   const bytesOfCode = await getBytesOfCode(owner, repo, auth);
   dispatch({type: GET_BYTES_OF_CODE, payload: bytesOfCode});
+
+  const commitInTime = await getWeeklyCommits(owner, repo, auth);
+  // console.log("There is an error in commits for a window: " + getWeeklyCommits("Commits"));
+  dispatch({type: GET_COMMITS_FOR_TIME, payload: commitInTime});
 
   const analysis = await getCodeAnalysis(getFromLocalStorage("codacy-username"),
     repo, owner, repo, auth);

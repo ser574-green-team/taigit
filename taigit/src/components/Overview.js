@@ -5,7 +5,7 @@ import {saveLayoutToLocalStorage, getLayoutFromLocalStorage, getFromLocalStorage
 import { WidthProvider, Responsive } from "react-grid-layout";
 import colors from '../styles/colors';
 import { Bar } from 'react-chartjs-2';
-import { selectUserTaskDistributionChartData } from '../reducers';
+import { selectUserTaskDistributionChartData, selectCommitsInTimeWindow, selectTotalCommitsData } from '../reducers';
 import { connect } from 'react-redux';
 import { loadAllTaigaProjectData } from '../actions/taigaActions';
 import { loadAllGitHubProjectData } from '../actions/githubActions';
@@ -18,7 +18,7 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
 let originalLayouts = getLayoutFromLocalStorage(layoutname, 'layouts') || {};
 
-//export default 
+//export default
 class Overview extends Component {
   constructor(props) {
     super(props);
@@ -46,7 +46,7 @@ class Overview extends Component {
 
   componentWillMount() {
     // Handle if user refreshes on overview page
-    if (Object.keys(this.props.taigaProjectData).length == 0) {
+    if (Object.keys(this.props.taigaProjectData).length === 0) {
       const auth = getFromLocalStorage('auth-key');
       loadAllTaigaProjectData(this.state.taigaSlug);
       loadAllGitHubProjectData(this.state.githubOwner, this.state.githubRepo, auth);
@@ -71,7 +71,7 @@ class Overview extends Component {
           }
         >
           <div className='box' key="1" data-grid={{ w: 2, h: 5, x: 0, y: 0, minW: 0, minH: 0 }}>
-            <NumberDisplay number="43" statistic="Total Commits"/>
+            <NumberDisplay number={this.props.totalCommitsData} statistic="Total Commits"/>
           </div>
           <div className='box' key="2" data-grid={{ w: 3, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
@@ -79,10 +79,13 @@ class Overview extends Component {
               <Doughnut data={this.props.techUsedChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
-          <div className='box' key="3" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
-            <div className="chart chart-horizontal-primary">
-              <span className="chart-title">Github Contributions</span>
-              <Line data={gitContributionsData} options={{maintainAspectRatio: true, responsive: true}}/>
+          <div className="box" key="3" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
+            <div className="chart">
+              <span className = "chart-title">GitHub Contribution</span>
+              <Line
+                  data={this.props.commitsInWindowData}
+                  options={{maintainAspectRatio: true, responsive: true}}
+              />
             </div>
           </div>
           <div className='box' key="4" data-grid={{ w: 5, h: 7, x: 5, y: 0, minW: 0, minH: 0 }}>
@@ -141,9 +144,11 @@ const barGraphOptions = {
 const mapStateToProps = state => ({
   taigaTaskDistribution: selectUserTaskDistributionChartData(state),
   taigaProjectData: selectTaigaProjectData(state),
+  commitsInWindowData: selectCommitsInTimeWindow(state),
+  totalCommitsData: selectTotalCommitsData(state),
   techUsedChartData: selectProjectTechnologiesChartData(state)
 });
-export default connect(mapStateToProps, { 
+export default connect(mapStateToProps, {
   loadAllGitHubProjectData,
   loadAllTaigaProjectData
 })(Overview)

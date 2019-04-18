@@ -1,7 +1,7 @@
 export {getBranches, getNumBranchCommits} from "./src/branches";
 
 export {getCommitsInTimeWindow, getTotalCommits,
-    getNumCommitsFromUser} from "./src/commits";
+    getNumCommitsFromUser, getWeeklyCommits} from "./src/commits";
 
 export {getHistoryPR, getNumComments,
      getNumberCommentsPerPullRequest,
