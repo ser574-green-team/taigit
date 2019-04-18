@@ -9,7 +9,10 @@ import { selectUserTaskDistributionChartData, selectCommitsInTimeWindow, selectT
 import { connect } from 'react-redux';
 import { loadAllTaigaProjectData } from '../actions/taigaActions';
 import { loadAllGitHubProjectData } from '../actions/githubActions';
-import { selectTaigaProjectData } from '../reducers';
+import { 
+  selectTaigaProjectData,
+  selectProjectTechnologiesChartData 
+} from '../reducers';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const layoutname = 'overview-layout';
@@ -73,7 +76,7 @@ class Overview extends Component {
           <div className='box' key="2" data-grid={{ w: 3, h: 5, x: 2, y: 0, minW: 0, minH: 0 }}>
             <div className="chart chart-pie">
               <span className="chart-title">Technologies Used</span>
-              <Doughnut data={technologiesUsed} options={{maintainAspectRatio: true, responsive: true}}/>
+              <Doughnut data={this.props.techUsedChartData} options={{maintainAspectRatio: true, responsive: true}}/>
             </div>
           </div>
           <div className="box" key="3" data-grid={{ w: 5, h: 5, x: 3, y: 1, minW: 0, minH: 0 }}>
@@ -98,18 +101,20 @@ class Overview extends Component {
   }
 }
 
-let technologiesUsed = {
-  labels: ["ReactJS", "Python", "HTML"],
+let gitContributionsData = {
+  labels: ["1/31", "2/3", "2/7", "2/10", "2/14", "2/17", "2/18", '2/19', '2/20', '2/21'],
   datasets: [{
-    label: 'Technologies Used',
-    data: [6, 4, 3],
-    backgroundColor: [
-        colors.yellow.base,
-        colors.red.base,
-        colors.blue.base,
+    fill: false,
+    label: 'Commits on Master',
+    data: [1, 2, 5, 8, 10, 15, 17, 18, 22, 27, 30, 32],
+    lineWidth: 2,
+    borderColor: [
+      colors.blue.base
     ],
+    borderWidth: 3
   }]
 }
+
 
 const barGraphOptions = {
   maintainAspectRatio: true,
@@ -140,7 +145,8 @@ const mapStateToProps = state => ({
   taigaTaskDistribution: selectUserTaskDistributionChartData(state),
   taigaProjectData: selectTaigaProjectData(state),
   commitsInWindowData: selectCommitsInTimeWindow(state),
-  totalCommitsData: selectTotalCommitsData(state)
+  totalCommitsData: selectTotalCommitsData(state),
+  techUsedChartData: selectProjectTechnologiesChartData(state)
 });
 export default connect(mapStateToProps, {
   loadAllGitHubProjectData,

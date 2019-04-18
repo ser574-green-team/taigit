@@ -34,3 +34,4 @@ export const selectTotalCommitsData = (state) => fromGithub.selectTotalCommitsDa
 export const selectNumFiles = (state) => fromGithub.selectNumFiles(state.github);
 export const selectGrade = (state) => fromGithub.selectGrade(state.github);
 export const selectCyclomaticComplexity = (state) => fromGithub.selectCyclomaticComplexity(state.github);
+export const selectProjectTechnologiesChartData = (state) => fromGithub.selectProjectTechnologiesChartData(state.github);
