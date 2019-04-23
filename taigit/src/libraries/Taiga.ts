@@ -153,7 +153,7 @@ task_history(taskId : number) : Promise<Object> {
  * @returns userstory history data object
  */
 export async function
-us_history(userstoryId : number) : Promise<Object> {
+us_history(userstoryId : number) : Promise<Object[]> {
     let data = (await axios.get("https://api.taiga.io/api/v1/history/userstory/" + userstoryId.toString())).data;
     //https://api.taiga.io/api/v1/history/userstory/2698838
 
