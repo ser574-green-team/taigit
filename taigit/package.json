@@ -9,7 +9,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.7.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "axios": "^0.18.0",
-    "chart.js": "^2.7.3",
+    "chart.js": "^2.9.4",
     "node-sass": "^4.11.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.4.0",
